@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,8 +13,13 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function Pest\Laravel\actingAs;
+
+pest()->extend(TestCase::class)
+//    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,7 +48,11 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function filamentActingAs(?User $user = null): User
 {
-    // ..
+    $user = $user ?? User::factory()->create();
+
+    actingAs($user, 'web');
+
+    return $user;
 }
