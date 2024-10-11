@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Account;
+use App\Models\Expense;
 use App\Models\User;
 
-class AccountPolicy
+class ExpensePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -18,9 +18,9 @@ class AccountPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Account $account): bool
+    public function view(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $account->user_id;
+        return true;
     }
 
     /**
@@ -34,32 +34,32 @@ class AccountPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Account $account): bool
+    public function update(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $account->user_id;
+        return $user->id === $expenseCategory->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Account $account): bool
+    public function delete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $account->user_id;
+        return $user->id === $expenseCategory->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Account $account): bool
+    public function restore(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $account->user_id;
+        return $user->id === $expenseCategory->user_id;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Account $account): bool
+    public function forceDelete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $account->user_id;
+        return $user->id === $expenseCategory->user_id;
     }
 }

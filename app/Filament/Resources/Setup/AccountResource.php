@@ -24,14 +24,10 @@ class AccountResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Details')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required(),
-                        Forms\Components\ColorPicker::make('legend')
-                            ->regex('/^#([a-f0-9]{6}|[a-f0-9]{3})\b$/'),
-                    ])
-                    ->columns(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\ColorPicker::make('legend')
+                    ->regex('/^#([a-f0-9]{6}|[a-f0-9]{3})\b$/'),
             ]);
     }
 

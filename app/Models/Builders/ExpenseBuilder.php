@@ -2,14 +2,14 @@
 
 namespace App\Models\Builders;
 
-use App\Models\Account;
 use App\Models\Builders\Concerns\InteractsWithRecordOwner;
+use App\Models\Expense;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @extends Builder<Account>
+ * @extends Builder<Expense>
  */
-class AccountBuilder extends Builder
+class ExpenseBuilder extends Builder
 {
     use InteractsWithRecordOwner;
 }
