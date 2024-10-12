@@ -1,7 +1,10 @@
 <?php
 
 use App\Filament\Resources\MasterData\ExpenseResource;
+use App\Models\Account;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\ExpenseCategoryAccount;
 use App\Models\User;
 use Filament\Actions\CreateAction;
 
@@ -18,7 +21,7 @@ test('able to render the page', function () {
 test('able to get user expenses', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5)->for(\App\Models\ExpenseCategory::factory(), 'category'),
+            Expense::factory(5)->for(ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -31,7 +34,7 @@ test('able to get user expenses', function () {
 test('cannot see other user\'s expenses', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5)->for(\App\Models\ExpenseCategory::factory(), 'category'),
+            Expense::factory(5)->for(ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -44,7 +47,7 @@ test('cannot see other user\'s expenses', function () {
 test('expenses created by the current user that hit the action', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(1)->for(\App\Models\ExpenseCategory::factory(), 'category'),
+            Expense::factory(1)->for(ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -57,10 +60,67 @@ test('expenses created by the current user that hit the action', function () {
             CreateAction::getDefaultName(),
             [
                 'name' => fake()->hexColor(),
-                'expense_category_id' => \App\Models\ExpenseCategory::factory()->create()->id,
+                'expense_category_id' => ExpenseCategory::factory()->create()->id,
             ],
         )
         ->assertHasNoActionErrors();
 
     expect($user->expenses()->count())->toBeGreaterThan(1);
+})->group('feature', 'master-data', 'expense');
+
+test('able to set account for expense categories', function () {
+    $user = User::factory()
+        ->has(
+            Expense::factory(1)->for(ExpenseCategory::factory(), 'category'),
+            'expenses'
+        )
+        ->has(Account::factory())
+        ->create();
+
+    filamentActingAs($user);
+
+    livewire(ExpenseResource\Pages\ManageExpenses::class)
+        ->callAction(
+            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            [
+                ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    expect(ExpenseCategoryAccount::where('user_id', $user->id)->count())->toBe(1);
+})->group('feature', 'master-data', 'expense');
+
+test('able to update account for expense categories if already settled previously', function () {
+    $user = User::factory()
+        ->has(
+            Expense::factory(1)->for(ExpenseCategory::factory(), 'category'),
+            'expenses'
+        )
+        ->has(Account::factory())
+        ->create();
+
+    filamentActingAs($user);
+
+    livewire(ExpenseResource\Pages\ManageExpenses::class)
+        ->callAction(
+            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            [
+                ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    expect(ExpenseCategoryAccount::where('user_id', $user->id)->count())->toBe(1);
+
+    livewire(ExpenseResource\Pages\ManageExpenses::class)
+        ->callAction(
+            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            [
+                ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    expect(ExpenseCategoryAccount::where('user_id', $user->id)->count())->toBe(1);
 })->group('feature', 'master-data', 'expense');

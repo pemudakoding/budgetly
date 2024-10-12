@@ -37,6 +37,7 @@ class ManageExpenses extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
+            ExpenseResource\Actions\ManageAccountAction::make(),
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
                     $data = [
@@ -62,6 +63,7 @@ class ManageExpenses extends ManageRecords
 
                     return $record;
                 }),
+
         ];
     }
 }
