@@ -13,7 +13,7 @@ test('able to render the page', function () {
     filamentActingAs();
 
     get(IncomeResource::getUrl())->assertOk();
-})->group('feature', 'setup', 'income');
+})->group('feature', 'master-data', 'income');
 
 test('able to get user incomes', function () {
     $user = User::factory()
@@ -26,7 +26,7 @@ test('able to get user incomes', function () {
 
     livewire(IncomeResource\Pages\ManageIncomes::class)
         ->assertCanSeeTableRecords($user->incomes);
-})->group('feature', 'setup', 'income');
+})->group('feature', 'master-data', 'income');
 
 test('cannot see other user\'s incomes', function () {
     $user = User::factory()
@@ -39,7 +39,7 @@ test('cannot see other user\'s incomes', function () {
 
     livewire(IncomeResource\Pages\ManageIncomes::class)
         ->assertCanNotSeeTableRecords($user->incomes);
-})->group('feature', 'setup', 'income');
+})->group('feature', 'master-data', 'income');
 
 test('incomes created by the current user that hit the action', function () {
     $user = User::factory()
@@ -62,4 +62,4 @@ test('incomes created by the current user that hit the action', function () {
         ->assertHasNoActionErrors();
 
     expect($user->incomes()->count())->toBeGreaterThan(1);
-})->group('feature', 'setup', 'income');
+})->group('feature', 'master-data', 'income');

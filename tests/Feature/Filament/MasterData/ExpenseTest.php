@@ -14,7 +14,7 @@ test('able to render the page', function () {
     filamentActingAs();
 
     get(ExpenseResource::getUrl())->assertOk();
-})->group('feature', 'setup', 'expense');
+})->group('feature', 'master-data', 'expense');
 
 test('able to get user expenses', function () {
     $user = User::factory()
@@ -27,7 +27,7 @@ test('able to get user expenses', function () {
 
     livewire(ExpenseResource\Pages\ManageExpenses::class)
         ->assertCanSeeTableRecords($user->expenses);
-})->group('feature', 'setup', 'expense');
+})->group('feature', 'master-data', 'expense');
 
 test('cannot see other user\'s expenses', function () {
     $user = User::factory()
@@ -40,7 +40,7 @@ test('cannot see other user\'s expenses', function () {
 
     livewire(ExpenseResource\Pages\ManageExpenses::class)
         ->assertCanNotSeeTableRecords($user->expenses);
-})->group('feature', 'setup', 'expense');
+})->group('feature', 'master-data', 'expense');
 
 test('expenses created by the current user that hit the action', function () {
     $user = User::factory()
@@ -64,4 +64,4 @@ test('expenses created by the current user that hit the action', function () {
         ->assertHasNoActionErrors();
 
     expect($user->expenses()->count())->toBeGreaterThan(1);
-})->group('feature', 'setup', 'expense');
+})->group('feature', 'master-data', 'expense');

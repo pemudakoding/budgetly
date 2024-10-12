@@ -13,7 +13,7 @@ test('able to render the page', function () {
     filamentActingAs();
 
     get(AccountResource::getUrl())->assertOk();
-})->group('feature', 'setup', 'account');
+})->group('feature', 'master-data', 'account');
 
 test('able to get user accounts', function () {
     $user = User::factory()
@@ -26,7 +26,7 @@ test('able to get user accounts', function () {
 
     livewire(AccountResource\Pages\ManageAccounts::class)
         ->assertCanSeeTableRecords($user->accounts);
-})->group('feature', 'setup', 'account');
+})->group('feature', 'master-data', 'account');
 
 test('cannot see other user\'s accounts', function () {
     $user = User::factory()
@@ -39,7 +39,7 @@ test('cannot see other user\'s accounts', function () {
 
     livewire(AccountResource\Pages\ManageAccounts::class)
         ->assertCanNotSeeTableRecords($user->accounts);
-})->group('feature', 'setup', 'account');
+})->group('feature', 'master-data', 'account');
 
 test('account create with current user that hit the action', function () {
     $user = User::factory()
@@ -63,4 +63,4 @@ test('account create with current user that hit the action', function () {
         ->assertHasNoActionErrors();
 
     expect($user->accounts()->count())->toBeGreaterThan(1);
-})->group('feature', 'setup', 'account');
+})->group('feature', 'master-data', 'account');
