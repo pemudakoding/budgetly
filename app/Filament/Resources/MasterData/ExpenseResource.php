@@ -65,7 +65,7 @@ class ExpenseResource extends Resource
                 ]),
             ])
             ->groups([
-                Tables\Grouping\Group::make('category')
+                Tables\Grouping\Group::make('category.name')
                     ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
             ]);
     }
