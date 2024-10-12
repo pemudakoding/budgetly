@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\MasterData;
+namespace App\Filament\Clusters\MasterData\Resources;
 
 use App\Enums\NavigationGroup;
+use App\Filament\Clusters\MasterData;
 use App\Filament\Resources\MasterData\AccountResource\Pages;
 use App\Models\Account;
 use App\Models\Builders\AccountBuilder;
@@ -18,7 +19,7 @@ class AccountResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
-    protected static ?string $navigationGroup = NavigationGroup::MasterData->value;
+    protected static ?string $cluster = MasterData::class;
 
     public static function form(Form $form): Form
     {
@@ -61,7 +62,7 @@ class AccountResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageAccounts::route('/'),
+            'index' => \App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::route('/'),
         ];
     }
 }

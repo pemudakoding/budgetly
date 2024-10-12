@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\MasterData\ExpenseResource\Actions;
+namespace App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions;
 
 use App\Enums\ExpenseCategory;
 use App\Models\Account;

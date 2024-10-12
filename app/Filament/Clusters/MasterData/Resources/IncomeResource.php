@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\MasterData;
+namespace App\Filament\Clusters\MasterData\Resources;
 
 use App\Enums\NavigationGroup;
+use App\Filament\Clusters\MasterData;
 use App\Filament\Resources\MasterData\IncomeResource\Pages;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
@@ -19,7 +20,7 @@ class IncomeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationGroup = NavigationGroup::MasterData->value;
+    protected static ?string $cluster = MasterData::class;
 
     public static function form(Form $form): Form
     {
@@ -54,7 +55,7 @@ class IncomeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageIncomes::route('/'),
+            'index' => \App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::route('/'),
         ];
     }
 }

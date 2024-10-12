@@ -1,10 +1,9 @@
 <?php
 
-use App\Filament\Resources\MasterData\AccountResource;
+use App\Filament\Clusters\MasterData\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
 use Filament\Actions\CreateAction;
-
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 use function Tests\filamentActingAs;
@@ -24,7 +23,7 @@ test('able to get user accounts', function () {
 
     filamentActingAs($user);
 
-    livewire(AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
         ->assertCanSeeTableRecords($user->accounts);
 })->group('feature', 'master-data', 'account');
 
@@ -37,7 +36,7 @@ test('cannot see other user\'s accounts', function () {
 
     filamentActingAs();
 
-    livewire(AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
         ->assertCanNotSeeTableRecords($user->accounts);
 })->group('feature', 'master-data', 'account');
 
@@ -52,7 +51,7 @@ test('account create with current user that hit the action', function () {
 
     expect($user->accounts->count())->toBe(1);
 
-    livewire(AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [

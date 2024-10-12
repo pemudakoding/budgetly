@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\MasterData;
+namespace App\Filament\Clusters\MasterData\Resources;
 
 use App\Enums\NavigationGroup;
+use App\Filament\Clusters\MasterData;
 use App\Filament\Resources\MasterData\ExpenseResource\Pages;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
@@ -20,7 +21,7 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = NavigationGroup::MasterData->value;
+    protected static ?string $cluster = MasterData::class;
 
     public static function form(Form $form): Form
     {
@@ -73,7 +74,7 @@ class ExpenseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageExpenses::route('/'),
+            'index' => \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::route('/'),
         ];
     }
 }

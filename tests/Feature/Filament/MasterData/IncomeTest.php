@@ -1,10 +1,9 @@
 <?php
 
-use App\Filament\Resources\MasterData\IncomeResource;
+use App\Filament\Clusters\MasterData\Resources\IncomeResource;
 use App\Models\Income;
 use App\Models\User;
 use Filament\Actions\CreateAction;
-
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 use function Tests\filamentActingAs;
@@ -24,7 +23,7 @@ test('able to get user incomes', function () {
 
     filamentActingAs($user);
 
-    livewire(IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->assertCanSeeTableRecords($user->incomes);
 })->group('feature', 'master-data', 'income');
 
@@ -37,7 +36,7 @@ test('cannot see other user\'s incomes', function () {
 
     filamentActingAs();
 
-    livewire(IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->assertCanNotSeeTableRecords($user->incomes);
 })->group('feature', 'master-data', 'income');
 
@@ -52,7 +51,7 @@ test('incomes created by the current user that hit the action', function () {
 
     expect($user->incomes->count())->toBe(1);
 
-    livewire(IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [

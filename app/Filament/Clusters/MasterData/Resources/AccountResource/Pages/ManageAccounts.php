@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\MasterData\AccountResource\Pages;
+namespace App\Filament\Clusters\MasterData\Resources\AccountResource\Pages;
 
-use App\Filament\Resources\MasterData\AccountResource;
+use App\Filament\Clusters\MasterData\Resources\AccountResource;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Pages\ManageRecords;

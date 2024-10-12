@@ -1,13 +1,12 @@
 <?php
 
-use App\Filament\Resources\MasterData\ExpenseResource;
+use App\Filament\Clusters\MasterData\Resources\ExpenseResource;
 use App\Models\Account;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\ExpenseCategoryAccount;
 use App\Models\User;
 use Filament\Actions\CreateAction;
-
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 use function Tests\filamentActingAs;
@@ -27,7 +26,7 @@ test('able to get user expenses', function () {
 
     filamentActingAs($user);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->assertCanSeeTableRecords($user->expenses);
 })->group('feature', 'master-data', 'expense');
 
@@ -40,7 +39,7 @@ test('cannot see other user\'s expenses', function () {
 
     filamentActingAs();
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->assertCanNotSeeTableRecords($user->expenses);
 })->group('feature', 'master-data', 'expense');
 
@@ -55,7 +54,7 @@ test('expenses created by the current user that hit the action', function () {
 
     expect($user->expenses->count())->toBe(1);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [
@@ -79,9 +78,9 @@ test('able to set account for expense categories', function () {
 
     filamentActingAs($user);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->callAction(
-            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
             [
                 ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
             ],
@@ -102,9 +101,9 @@ test('able to update account for expense categories if already settled previousl
 
     filamentActingAs($user);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->callAction(
-            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
             [
                 ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
             ],
@@ -113,9 +112,9 @@ test('able to update account for expense categories if already settled previousl
 
     expect(ExpenseCategoryAccount::where('user_id', $user->id)->count())->toBe(1);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->callAction(
-            ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
+            \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
             [
                 ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
             ],
