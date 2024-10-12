@@ -21,10 +21,10 @@ class ManageExpenses extends ManageRecords
         return [
             'all' => Tab::make(),
             ...array_reduce(
-                ExpenseCategory::toArray(),
-                function ($categories, $category): array {
-                    $categories[lcfirst($category)] = Tab::make()->modifyQueryUsing(
-                        fn (ExpenseBuilder $query): ExpenseBuilder => $query->where('category', $category)
+                ExpenseCategory::cases(),
+                function ($categories, ExpenseCategory $category): array {
+                    $categories[lcfirst($category->value)] = Tab::make()->modifyQueryUsing(
+                        fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory($category)
                     );
 
                     return $categories;

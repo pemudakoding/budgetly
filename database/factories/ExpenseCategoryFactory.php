@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Enums\ExpenseCategory;
-use App\Models\Expense;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Expense>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExpenseCategory>
  */
-class ExpenseFactory extends Factory
+class ExpenseCategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,10 +17,10 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
-        $categories = array_flip(array_values(ExpenseCategory::toArray()));
+        $categories = array_values(ExpenseCategory::toArray());
 
         return [
-            'name' => $this->faker->name(),
+            'name' => current($this->faker->randomElements($categories)),
         ];
     }
 }

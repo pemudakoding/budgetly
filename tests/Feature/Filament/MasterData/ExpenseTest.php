@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\ExpenseCategory;
 use App\Filament\Resources\MasterData\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
@@ -19,7 +18,7 @@ test('able to render the page', function () {
 test('able to get user expenses', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5),
+            Expense::factory(5)->for(\App\Models\ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -32,7 +31,7 @@ test('able to get user expenses', function () {
 test('cannot see other user\'s expenses', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5),
+            Expense::factory(5)->for(\App\Models\ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -45,7 +44,7 @@ test('cannot see other user\'s expenses', function () {
 test('expenses created by the current user that hit the action', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(1),
+            Expense::factory(1)->for(\App\Models\ExpenseCategory::factory(), 'category'),
             'expenses'
         )->create();
 
@@ -58,7 +57,7 @@ test('expenses created by the current user that hit the action', function () {
             CreateAction::getDefaultName(),
             [
                 'name' => fake()->hexColor(),
-                'category' => ExpenseCategory::Wants->value,
+                'expense_category_id' => \App\Models\ExpenseCategory::factory()->create()->id,
             ],
         )
         ->assertHasNoActionErrors();

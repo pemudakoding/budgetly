@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\MasterData;
 
-use App\Enums\ExpenseCategory;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\MasterData\ExpenseResource\Pages;
 use App\Models\Builders\ExpenseBuilder;
@@ -31,10 +30,10 @@ class ExpenseResource extends Resource
                     ->autocomplete(false)
                     ->required()
                     ->string(),
-                Forms\Components\Select::make('category')
-                    ->options(ExpenseCategory::toArray())
+                Forms\Components\Select::make('expense_category_id')
+                    ->relationship('category', 'name')
                     ->required()
-                    ->in(array_keys(ExpenseCategory::toArray())),
+                    ->exists(\App\Models\ExpenseCategory::class, column: 'id'),
             ])
             ->columns(1);
     }
@@ -48,10 +47,10 @@ class ExpenseResource extends Resource
             ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('category')
+                TextColumn::make('category.name')
                     ->badge()
-                    ->color(fn (Expense $record): string => $record->category->resolveColor())
-                    ->icon(fn (Expense $record): string => $record->category->resolveIcon()),
+                    ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
+                    ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
             ])
             ->filters([
                 //
@@ -67,7 +66,7 @@ class ExpenseResource extends Resource
             ])
             ->groups([
                 Tables\Grouping\Group::make('category')
-                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->category->value),
+                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
             ]);
     }
 
