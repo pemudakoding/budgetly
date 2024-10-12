@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\Setup;
+namespace App\Filament\Resources\MasterData;
 
 use App\Enums\ExpenseCategory;
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Setup\ExpenseResource\Pages;
+use App\Filament\Resources\MasterData\ExpenseResource\Pages;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
 use Exception;

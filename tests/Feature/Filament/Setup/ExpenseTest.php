@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\ExpenseCategory;
-use App\Filament\Resources\Setup\ExpenseResource;
+use App\Filament\Resources\MasterData\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
 use Filament\Actions\CreateAction;

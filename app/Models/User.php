@@ -72,6 +72,17 @@ class User extends Authenticatable implements FilamentUser
         );
     }
 
+    /**
+     * @return HasMany<Income>
+     */
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(
+            Income::class,
+            'user_id'
+        );
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return true;

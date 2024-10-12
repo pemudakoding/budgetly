@@ -1,33 +1,32 @@
 <?php
 
-namespace App\Filament\Resources\Setup\AccountResource\Pages;
+namespace App\Filament\Resources\MasterData\IncomeResource\Pages;
 
-use App\Filament\Resources\Setup\AccountResource;
+use App\Filament\Resources\MasterData\IncomeResource;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Model;
 
-class ManageAccounts extends ManageRecords
+class ManageIncomes extends ManageRecords
 {
-    protected static string $resource = AccountResource::class;
-
-    protected static ?string $navigationGroup = '';
+    protected static string $resource = IncomeResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
+                    $data = [
+                        ...$data,
+                        'user_id' => auth()->user()->id,
+                    ];
 
                     if ($translatableContentDriver = $livewire->makeFilamentTranslatableContentDriver()) {
                         $record = $translatableContentDriver->makeRecord($this->getModel(), $data);
                     } else {
                         $record = new ($this->getModel());
-                        $record->fill([
-                            ...$data,
-                            'user_id' => auth()->user()->id,
-                        ]);
+                        $record->fill($data);
                     }
 
                     if ($relationship = $action->getRelationship()) {

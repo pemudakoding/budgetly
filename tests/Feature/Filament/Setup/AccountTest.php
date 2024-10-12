@@ -1,6 +1,6 @@
 <?php
 
-use App\Filament\Resources\Setup\AccountResource;
+use App\Filament\Resources\MasterData\AccountResource;
 use App\Models\Account;
 use App\Models\User;
 use Filament\Actions\CreateAction;

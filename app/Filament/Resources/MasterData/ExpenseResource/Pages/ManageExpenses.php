@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Setup\ExpenseResource\Pages;
+namespace App\Filament\Resources\MasterData\ExpenseResource\Pages;
 
 use App\Enums\ExpenseCategory;
-use App\Filament\Resources\Setup\ExpenseResource;
+use App\Filament\Resources\MasterData\ExpenseResource;
 use App\Models\Builders\ExpenseBuilder;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
@@ -39,14 +39,16 @@ class ManageExpenses extends ManageRecords
         return [
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
+                    $data = [
+                        ...$data,
+                        'user_id' => auth()->user()->id,
+                    ];
+
                     if ($translatableContentDriver = $livewire->makeFilamentTranslatableContentDriver()) {
                         $record = $translatableContentDriver->makeRecord($this->getModel(), $data);
                     } else {
                         $record = new ($this->getModel());
-                        $record->fill([
-                            ...$data,
-                            'user_id' => auth()->user()->id,
-                        ]);
+                        $record->fill($data);
                     }
 
                     if ($relationship = $action->getRelationship()) {

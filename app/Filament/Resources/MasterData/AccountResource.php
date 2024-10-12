@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Setup;
+namespace App\Filament\Resources\MasterData;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Setup\AccountResource\Pages;
+use App\Filament\Resources\MasterData\AccountResource\Pages;
 use App\Models\Account;
 use App\Models\Builders\AccountBuilder;
 use Filament\Forms;

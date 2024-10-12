@@ -1,8 +1,7 @@
 <?php
 
-use App\Enums\ExpenseCategory;
-use App\Filament\Resources\Setup\ExpenseResource;
-use App\Models\Expense;
+use App\Filament\Resources\MasterData\IncomeResource;
+use App\Models\Income;
 use App\Models\User;
 use Filament\Actions\CreateAction;
 
@@ -13,55 +12,54 @@ use function Tests\filamentActingAs;
 test('able to render the page', function () {
     filamentActingAs();
 
-    get(ExpenseResource::getUrl())->assertOk();
-})->group('feature', 'setup', 'expense');
+    get(IncomeResource::getUrl())->assertOk();
+})->group('feature', 'setup', 'income');
 
-test('able to get user expenses', function () {
+test('able to get user incomes', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5),
-            'expenses'
+            Income::factory(5),
+            'incomes'
         )->create();
 
     filamentActingAs($user);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
-        ->assertCanSeeTableRecords($user->expenses);
-})->group('feature', 'setup', 'expense');
+    livewire(IncomeResource\Pages\ManageIncomes::class)
+        ->assertCanSeeTableRecords($user->incomes);
+})->group('feature', 'setup', 'income');
 
-test('cannot see other user\'s expenses', function () {
+test('cannot see other user\'s incomes', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(5),
-            'expenses'
+            Income::factory(5),
+            'incomes'
         )->create();
 
     filamentActingAs();
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
-        ->assertCanNotSeeTableRecords($user->expenses);
-})->group('feature', 'setup', 'expense');
+    livewire(IncomeResource\Pages\ManageIncomes::class)
+        ->assertCanNotSeeTableRecords($user->incomes);
+})->group('feature', 'setup', 'income');
 
-test('expenses created by the current user that hit the action', function () {
+test('incomes created by the current user that hit the action', function () {
     $user = User::factory()
         ->has(
-            Expense::factory(1),
-            'expenses'
+            Income::factory(1),
+            'incomes'
         )->create();
 
     filamentActingAs($user);
 
-    expect($user->expenses->count())->toBe(1);
+    expect($user->incomes->count())->toBe(1);
 
-    livewire(ExpenseResource\Pages\ManageExpenses::class)
+    livewire(IncomeResource\Pages\ManageIncomes::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [
-                'name' => fake()->hexColor(),
-                'category' => ExpenseCategory::Wants->value,
+                'name' => fake()->firstName(),
             ],
         )
         ->assertHasNoActionErrors();
 
-    expect($user->expenses()->count())->toBeGreaterThan(1);
-})->group('feature', 'setup', 'expense');
+    expect($user->incomes()->count())->toBeGreaterThan(1);
+})->group('feature', 'setup', 'income');
