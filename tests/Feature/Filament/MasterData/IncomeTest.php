@@ -1,9 +1,11 @@
 <?php
 
 use App\Filament\Clusters\MasterData\Resources\IncomeResource;
+use App\Models\Account;
 use App\Models\Income;
 use App\Models\User;
 use Filament\Actions\CreateAction;
+
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 use function Tests\filamentActingAs;
@@ -17,7 +19,8 @@ test('able to render the page', function () {
 test('able to get user incomes', function () {
     $user = User::factory()
         ->has(
-            Income::factory(5),
+            Income::factory(5)
+                ->for(Account::factory()->for(User::factory())),
             'incomes'
         )->create();
 
@@ -30,7 +33,8 @@ test('able to get user incomes', function () {
 test('cannot see other user\'s incomes', function () {
     $user = User::factory()
         ->has(
-            Income::factory(5),
+            Income::factory(5)
+                ->for(Account::factory()->for(User::factory())),
             'incomes'
         )->create();
 
@@ -43,7 +47,8 @@ test('cannot see other user\'s incomes', function () {
 test('incomes created by the current user that hit the action', function () {
     $user = User::factory()
         ->has(
-            Income::factory(1),
+            Income::factory(1)
+                ->for(Account::factory()->for(User::factory())),
             'incomes'
         )->create();
 
@@ -56,6 +61,7 @@ test('incomes created by the current user that hit the action', function () {
             CreateAction::getDefaultName(),
             [
                 'name' => fake()->firstName(),
+                'account_id' => Account::factory()->for($user)->create()->id,
             ],
         )
         ->assertHasNoActionErrors();

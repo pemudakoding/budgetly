@@ -2,14 +2,15 @@
 
 namespace App\Filament\Clusters\MasterData\Resources;
 
-use App\Enums\NavigationGroup;
 use App\Filament\Clusters\MasterData;
-use App\Filament\Resources\MasterData\IncomeResource\Pages;
+use App\Models\Builders\AccountBuilder;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -27,6 +28,14 @@ class IncomeResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name'),
+                Select::make('account_id')
+                    ->required()
+                    ->label('Account')
+                    ->relationship(
+                        'account',
+                        'name',
+                        modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
+                    ),
             ]);
     }
 
@@ -37,6 +46,10 @@ class IncomeResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('account.name')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (Income $record) => Color::hex($record->account->legend)),
             ])
             ->filters([
                 //
