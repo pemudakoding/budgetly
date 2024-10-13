@@ -6,8 +6,14 @@ use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
 use App\Models\Expense;
+use App\Models\ExpenseBudget;
+use App\ValueObjects\Money;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -52,6 +58,23 @@ class ExpenseResource extends Resource
             ])
             ->actions([
                 ViewAction::make(),
+                CreateAction::make()
+                    ->label('New')
+                    ->icon('heroicon-s-plus')
+                    ->form([
+                        TextInput::make('description')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('amount')
+                            ->required()
+                            ->mask(RawJs::make('$money($input, \',\', \'.\')'))
+                            ->prefix('Rp.')
+                            ->dehydrateStateUsing(fn (?string $state) => Money::makeFromFilamentMask($state)->value),
+                        Hidden::make('expense_id')
+                            ->default(fn (Expense $record): int => $record->id),
+                    ])
+                    ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
+                    ->action(fn (array $data): ExpenseBudget => ExpenseBudget::query()->create($data)),
             ])
             ->bulkActions([
 
