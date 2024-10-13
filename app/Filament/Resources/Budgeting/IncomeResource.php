@@ -3,27 +3,27 @@
 namespace App\Filament\Resources\Budgeting;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
-use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
-use App\Models\Builders\ExpenseBuilder;
-use App\Models\Expense;
+use App\Filament\Resources\Budgeting\IncomeResource\Pages;
+use App\Filament\Resources\Budgeting\IncomeResource\RelationManagers\BudgetsRelationManager;
+use App\Models\Builders\IncomeBuilder;
+use App\Models\Income;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
-class ExpenseResource extends Resource
+class IncomeResource extends Resource
 {
-    protected static ?string $model = Expense::class;
+    protected static ?string $model = Income::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $navigationGroup = NavigationGroup::Budgeting->value;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -36,20 +36,21 @@ class ExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
+            ->modifyQueryUsing(fn (IncomeBuilder $query): IncomeBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('account.name')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (Income $record) => Color::hex($record->account->legend)),
                 TextColumn::make('budgets.amount')
-                    ->state(fn (Expense $record): float|int|string => $record->total)
+                    ->state(fn (Income $record): float|int|string => $record->total)
                     ->money('idr', locale: 'id')
                     ->summarize(Sum::make()
                         ->money('idr', locale: 'id')
                         ->label('Total')
                     ),
-                TextColumn::make('category.name')
-                    ->badge()
-                    ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
-                    ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
             ])
             ->filters([
                 //
@@ -59,10 +60,6 @@ class ExpenseResource extends Resource
             ])
             ->bulkActions([
 
-            ])
-            ->groups([
-                Group::make('category.name')
-                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
             ]);
     }
 
@@ -76,8 +73,8 @@ class ExpenseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExpenses::route('/'),
-            'view' => Pages\ViewExpense::route('/{record}'),
+            'index' => Pages\ListIncomes::route('/'),
+            'view' => Pages\ViewIncome::route('/{record}'),
         ];
     }
 
