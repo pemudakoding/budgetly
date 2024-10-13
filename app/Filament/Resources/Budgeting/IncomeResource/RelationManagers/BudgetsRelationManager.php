@@ -115,7 +115,8 @@ class BudgetsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading(fn (IncomeBudget $recrod) => 'Edit Budget for '.$recrod->month),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
