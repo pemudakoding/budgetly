@@ -24,9 +24,6 @@ class BudgetsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Placeholder::make('')
-                    ->content('The income that already settled for a month would be updated instead of creating one')
-                    ->columnSpan(2),
                 MoneyInput::make('amount')
                     ->required(),
                 Select::make('month')
