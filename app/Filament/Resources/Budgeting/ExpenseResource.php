@@ -76,9 +76,4 @@ class ExpenseResource extends Resource
             'view' => Pages\ViewExpense::route('/{record}'),
         ];
     }
-
-    public static function canCreate(): bool
-    {
-        return false;
-    }
 }
