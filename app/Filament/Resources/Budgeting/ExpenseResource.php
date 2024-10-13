@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Budgeting;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
+use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
 use App\Models\ExpenseBudget;
 use App\ValueObjects\Money;
@@ -28,6 +29,8 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationGroup = NavigationGroup::Budgeting->value;
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,6 +42,7 @@ class ExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('budgets.amount')

@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 
-use App\ValueObjects\Money;
+use App\Filament\Forms\MoneyInput;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -21,11 +20,8 @@ class BudgetsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->mask(RawJs::make('$money($input, \',\', \'.\')'))
-                    ->prefix('Rp.')
-                    ->dehydrateStateUsing(fn (?string $state) => Money::makeFromFilamentMask($state)->value),
+                MoneyInput::make('amount')
+                    ->required(),
             ]);
     }
 
@@ -36,7 +32,7 @@ class BudgetsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('amount')
-                    ->money('idr', locale: 'id')
+                    ->money()
                     ->summarize(Tables\Columns\Summarizers\Sum::make()
                         ->label('Total')
                         ->money('idr')
