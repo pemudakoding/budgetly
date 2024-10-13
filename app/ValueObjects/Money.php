@@ -11,22 +11,22 @@ class Money
     /**
      * @throws Exception
      */
-    public function __construct(private int|float|string $amount)
+    public function __construct(int|float|string $amount)
     {
         // will check the string
         // 123,123.345,-1234,-123.456
-        if (is_string($this->amount) && ! preg_match('/^-?[0-9.,]+$/', $this->amount)) {
+        if (is_string($amount) && ! preg_match('/^-?[0-9.,]+$/', $amount)) {
             throw new Exception('Invalid string, string contains alphabet');
         }
-        if (is_string($this->amount)) {
-            $this->value = preg_match('/\.\d+/', $this->amount)
-                ? (float) $this->amount
-                : (int) $this->amount;
+        if (is_string($amount)) {
+            $this->value = preg_match('/\.\d+/', $amount)
+                ? (float) $amount
+                : (int) $amount;
 
             return;
         }
 
-        $this->value = $this->amount;
+        $this->value = $amount;
     }
 
     /**
