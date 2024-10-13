@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property ExpenseCategory $category
  * @property \App\Enums\ExpenseCategory $enumerateCategory
+ * @property float|int|string $total
  */
 class Expense extends Model
 {

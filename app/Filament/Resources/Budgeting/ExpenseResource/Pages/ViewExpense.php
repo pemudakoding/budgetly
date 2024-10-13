@@ -11,6 +11,9 @@ class ViewExpense extends ViewRecord
 
     public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
     {
-        return 'View Expenses of '.' '.$this->getRecord()->name;
+        /** @var \App\Models\Expense $model */
+        $model = $this->getRecord();
+
+        return 'View Expenses of '.' '.$model->name;
     }
 }
