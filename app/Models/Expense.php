@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property ExpenseCategory $category
@@ -54,12 +55,33 @@ class Expense extends Model
     }
 
     /**
+     * @return HasMany<ExpenseBudget>
+     */
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(
+            ExpenseBudget::class,
+            'expense_id'
+        );
+    }
+
+    /**
      * @return Attribute<ExpenseCategory, string>
      */
     public function enumerateCategory(): Attribute
     {
         return Attribute::make(
             get: fn (): \App\Enums\ExpenseCategory => \App\Enums\ExpenseCategory::tryFrom($this->category->name)
+        );
+    }
+
+    /**
+     * @return Attribute<int|float|string, string>
+     */
+    public function total(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int|float|string => $this->budgets()->sum('amount')
         );
     }
 }

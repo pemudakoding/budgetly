@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Filament\Resources\Budgeting\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
 
@@ -28,7 +29,10 @@ class ExpensePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return match (true) {
+            request()->routeIs(ExpenseResource::getRouteBaseName().'.*') => false,
+            default => true,
+        };
     }
 
     /**
@@ -36,7 +40,10 @@ class ExpensePolicy
      */
     public function update(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return match (true) {
+            request()->routeIs(ExpenseResource::getRouteBaseName().'.*') => false,
+            default => $user->id === $expenseCategory->user_id,
+        };
     }
 
     /**
@@ -44,7 +51,10 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return match (true) {
+            request()->routeIs(ExpenseResource::getRouteBaseName().'.*') => false,
+            default => $user->id === $expenseCategory->user_id,
+        };
     }
 
     /**
@@ -52,7 +62,10 @@ class ExpensePolicy
      */
     public function restore(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return match (true) {
+            request()->routeIs(ExpenseResource::getRouteBaseName().'.*') => false,
+            default => $user->id === $expenseCategory->user_id,
+        };
     }
 
     /**
@@ -60,6 +73,9 @@ class ExpensePolicy
      */
     public function forceDelete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return match (true) {
+            request()->routeIs(ExpenseResource::getRouteBaseName().'.*') => false,
+            default => $user->id === $expenseCategory->user_id,
+        };
     }
 }

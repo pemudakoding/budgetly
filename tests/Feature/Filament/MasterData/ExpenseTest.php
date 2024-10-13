@@ -102,11 +102,13 @@ test('able to update account for expense categories if already settled previousl
 
     filamentActingAs($user);
 
+    $expenseCategory = ExpenseCategory::factory()->create()->name;
+
     livewire(\App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::class)
         ->callAction(
             \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
             [
-                ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
+                $expenseCategory => $user->accounts->first()->id,
             ],
         )
         ->assertHasNoActionErrors();
@@ -117,7 +119,7 @@ test('able to update account for expense categories if already settled previousl
         ->callAction(
             \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Actions\ManageAccountAction::getDefaultName(),
             [
-                ExpenseCategory::factory()->create()->name => $user->accounts->first()->id,
+                $expenseCategory => $user->accounts->first()->id,
             ],
         )
         ->assertHasNoActionErrors();
