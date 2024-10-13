@@ -8,4 +8,9 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewExpense extends ViewRecord
 {
     protected static string $resource = ExpenseResource::class;
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return 'View Expenses of '.' '.$this->getRecord()->name;
+    }
 }

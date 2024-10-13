@@ -36,7 +36,15 @@ class BudgetsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('amount')
-                    ->money('idr', locale: 'id'),
+                    ->money('idr', locale: 'id')
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()
+                        ->label('Total')
+                        ->money('idr')
+                    ),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime(),
             ])
             ->filters([
                 //

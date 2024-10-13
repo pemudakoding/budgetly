@@ -9,6 +9,7 @@ use App\Models\Expense;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
@@ -34,8 +35,17 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('total')
-                    ->money('idr', locale: 'id'),
+                TextColumn::make('budgets.amount')
+                    ->state(fn (Expense $record): float|int|string => $record->total)
+                    ->money('idr', locale: 'id')
+                    ->summarize(Sum::make()
+                        ->money('idr', locale: 'id')
+                        ->label('Total')
+                    ),
+                TextColumn::make('category.name')
+                    ->badge()
+                    ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
+                    ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
             ])
             ->filters([
                 //
