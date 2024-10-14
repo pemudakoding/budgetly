@@ -2,11 +2,9 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Actions;
 
+use App\Filament\Forms\MoneyInput;
 use App\Models\Expense;
-use App\ValueObjects\Money;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Support\RawJs;
 use Filament\Tables\Actions\CreateAction;
 
 class QuickExpenseAction extends CreateAction
@@ -22,16 +20,13 @@ class QuickExpenseAction extends CreateAction
                 TextInput::make('description')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('amount')
-                    ->required()
-                    ->mask(RawJs::make('$money($input, \',\', \'.\')'))
-                    ->prefix('Rp.')
-                    ->dehydrateStateUsing(fn (?string $state) => Money::makeFromFilamentMask($state)->value),
-                Hidden::make('expense_id')
-                    ->default(fn (Expense $record): int => $record->id),
+                MoneyInput::make('amount')
+                    ->required(),
             ])
             ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
             ->action(function (array $data, Expense $record): void {
+                $data['expense_id'] = $record->id;
+
                 $record->budgets()->create($data);
 
                 $this->success();
