@@ -33,7 +33,13 @@ class QuickExpenseAction extends CreateAction
             ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
             ->action(function (array $data, Expense $record): void {
                 $record->budgets()->create($data);
+
                 $this->success();
             });
+    }
+
+    public function canCreateAnother(): bool
+    {
+        return true;
     }
 }
