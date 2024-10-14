@@ -24,9 +24,6 @@ class BudgetsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Placeholder::make('')
-                    ->content('The income that already settled for a month would be updated instead of creating one')
-                    ->columnSpan(2),
                 MoneyInput::make('amount')
                     ->required(),
                 Select::make('month')
@@ -68,31 +65,47 @@ class BudgetsRelationManager extends RelationManager
             ->filters([
                 Tables\Filters\Filter::make('created_at')
                     ->form([
-                        Forms\Components\DatePicker::make('from')
+                        Select::make('from')
+                            ->default(Carbon::now()->year)
+                            ->options(function () {
+                                $currentYear = Carbon::now()->year;
+                                $startYear = 2024;
+                                $years = range($currentYear, $startYear);
+
+                                return array_combine($years, $years);
+                            })
                             ->label('Start Date')
-                            ->default(Carbon::now()->startOfYear()),
-                        Forms\Components\DatePicker::make('to')
+                            ->live(),
+                        Select::make('to')
+                            ->default(Carbon::now()->year)
+                            ->options(function (Forms\Get $get) {
+                                $currentYear = Carbon::now()->year;
+                                $startYear = $get('from');
+                                $years = range($currentYear, $startYear);
+
+                                return array_combine($years, $years);
+                            })
                             ->label('End Date')
-                            ->default(Carbon::now()->endOfYear()),
+                            ->rules(fn (Forms\Get $get) => ['min:'.$get('from')]),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $year): Builder => $query->whereYear('created_at', '>=', $year),
                             )
                             ->when(
                                 $data['to'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $year): Builder => $query->whereYear('created_at', '<=', $year),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from'] ?? null) {
-                            $indicators['from'] = 'From '.Carbon::parse($data['from'])->monthName.' '.Carbon::parse($data['to'])->year;
+                            $indicators['from'] = 'From '.Carbon::parse($data['from'])->firstOfYear()->monthName.' '.$data['from'];
                         }
                         if ($data['to'] ?? null) {
-                            $indicators['to'] = 'To '.Carbon::parse($data['to'])->monthName.' '.Carbon::parse($data['to'])->year;
+                            $indicators['to'] = 'To '.Carbon::parse($data['to'])->lastOfYear()->monthName.' '.$data['to'];
                         }
 
                         return $indicators;
@@ -102,7 +115,8 @@ class BudgetsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading(fn (IncomeBudget $recrod) => 'Edit Budget for '.$recrod->month),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -110,6 +124,16 @@ class BudgetsRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public function removeTableFilter(string $filterName, ?string $field = null, bool $isRemovingAllFilters = false): void
+    {
+        //
+    }
+
+    public function removeTableFilters(): void
+    {
+        //
     }
 
     public function isReadOnly(): bool
