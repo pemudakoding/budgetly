@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property ExpenseCategory $category
  * @property \App\Enums\ExpenseCategory $enumerateCategory
- * @property int|float|string $total
+ * @property float|int|string $total
+ * @property int $id
  */
 class Expense extends Model
 {

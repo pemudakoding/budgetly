@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Budgeting;
 
 use App\Enums\NavigationGroup;
+use App\Filament\Resources\Budgeting\ExpenseResource\Actions\QuickExpenseAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
 use App\Models\Builders\ExpenseBuilder;
@@ -56,6 +57,7 @@ class ExpenseResource extends Resource
             ])
             ->actions([
                 ViewAction::make(),
+                QuickExpenseAction::make(),
             ])
             ->bulkActions([
 
@@ -79,10 +81,5 @@ class ExpenseResource extends Resource
             'index' => Pages\ListExpenses::route('/'),
             'view' => Pages\ViewExpense::route('/{record}'),
         ];
-    }
-
-    public static function canCreate(): bool
-    {
-        return false;
     }
 }
