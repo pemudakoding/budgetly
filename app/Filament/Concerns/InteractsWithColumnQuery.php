@@ -46,10 +46,12 @@ trait InteractsWithColumnQuery
                 },
             );
 
-        @[, $period] = array_filter(
+        $filterQueries =  array_filter(
             $baseQuery->wheres,
-            fn ($array) => $array['type'] === 'basic'
+            fn ($array) => $array['type'] === 'Nested'
         );
+
+        $period = current($filterQueries);
 
         if (isset($period['query'])) {
             //Merge filter query where from base query into the budget query
