@@ -5,8 +5,8 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 use App\Filament\Concerns\InteractsWithColumnQuery;
 use App\Models\IncomeBudget;
 use Exception;
-use Filament\Forms\Components\Builder;
 use Filament\Tables\Columns\Summarizers\Summarizer;
+use Illuminate\Database\Eloquent\Builder;
 
 class TotalAllocationMoney extends Summarizer
 {
