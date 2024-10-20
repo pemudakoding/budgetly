@@ -8,7 +8,7 @@ use Filament\Forms\Get;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class YearFilter extends SelectFilter
+class YearRangeFilter extends SelectFilter
 {
     protected function setUp(): void
     {

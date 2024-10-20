@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Budgeting\IncomeResource\RelationManagers;
 
 use App\Enums\Month;
 use App\Filament\Forms\MoneyInput;
-use App\Filament\Tables\Filters\YearFilter;
+use App\Filament\Tables\Filters\YearRangeFilter;
 use App\Models\IncomeBudget;
 use Carbon\Carbon;
 use Exception;
@@ -64,7 +64,7 @@ class BudgetsRelationManager extends RelationManager
                     ->dateTime(),
             ])
             ->filters([
-                YearFilter::make('created_at'),
+                YearRangeFilter::make('created_at'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
