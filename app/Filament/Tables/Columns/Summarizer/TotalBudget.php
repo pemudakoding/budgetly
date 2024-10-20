@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
+namespace App\Filament\Tables\Columns\Summarizer;
 
+use App\Filament\Concerns\InteractsWithColumnQuery;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 
@@ -23,7 +24,9 @@ class TotalBudget extends Summarizer
     {
         [$query] = $this->resolveQuery();
 
-        return $query->sum('amount');
+        $asName = (string) str($this->getColumn()->getName())->afterLast('.');
+
+        return $query->sum($asName);
     }
 
     public function getDefaultLabel(): ?string

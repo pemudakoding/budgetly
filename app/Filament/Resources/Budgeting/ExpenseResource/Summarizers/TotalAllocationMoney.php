@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
+use App\Filament\Concerns\InteractsWithColumnQuery;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;

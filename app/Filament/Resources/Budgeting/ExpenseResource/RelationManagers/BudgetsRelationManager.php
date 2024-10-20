@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 
 use App\Filament\Forms\MoneyInput;
+use App\Filament\Tables\Filters\PeriodFilter;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -25,6 +27,9 @@ class BudgetsRelationManager extends RelationManager
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function table(Table $table): Table
     {
         return $table
@@ -43,7 +48,7 @@ class BudgetsRelationManager extends RelationManager
                     ->dateTime(),
             ])
             ->filters([
-                //
+                PeriodFilter::make('period'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

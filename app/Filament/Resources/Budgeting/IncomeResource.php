@@ -5,13 +5,15 @@ namespace App\Filament\Resources\Budgeting;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\IncomeResource\Pages;
 use App\Filament\Resources\Budgeting\IncomeResource\RelationManagers\BudgetsRelationManager;
+use App\Filament\Tables\Columns\Summarizer\TotalBudget;
+use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
+use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -33,6 +35,9 @@ class IncomeResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -45,15 +50,21 @@ class IncomeResource extends Resource
                     ->badge()
                     ->color(fn (Income $record) => Color::hex($record->account->legend)),
                 TextColumn::make('budgets.amount')
-                    ->state(fn (Income $record): float|int|string => $record->total)
+                    ->state(function (Income $record, Table $table) {
+                        /** @var PeriodFilter $filter */
+                        $filter = $table->getFilter('period');
+
+                        return $record
+                            ->budgets()
+                            ->whereYear('created_at', $filter->getState()['year'])
+                            ->whereMonth('created_at', $filter->getState()['month'])
+                            ->sum('amount');
+                    })
                     ->money('idr', locale: 'id')
-                    ->summarize(Sum::make()
-                        ->money('idr', locale: 'id')
-                        ->label('Total')
-                    ),
+                    ->summarize(TotalBudget::make()),
             ])
             ->filters([
-                //
+                PeriodFilter::make('period'),
             ])
             ->actions([
                 ViewAction::make(),
