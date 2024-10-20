@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 use App\Filament\Concerns\InteractsWithColumnQuery;
 use App\Models\IncomeBudget;
 use Exception;
+use Filament\Forms\Components\Builder;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 
 class TotalAllocationMoney extends Summarizer
@@ -26,7 +27,10 @@ class TotalAllocationMoney extends Summarizer
         $totalExpense = $query->sum('amount');
 
         $totalIncome = IncomeBudget::query()
-            ->mergeWheres($period['query']->wheres, $period['query']->bindings)
+            ->when(
+                ! is_null($period),
+                fn (Builder $query): Builder => $query->mergeWheres($period['query']->wheres, $period['query']->bindings)
+            )
             ->sum('amount');
 
         $percentage = (($totalExpense / $totalIncome) * 100);

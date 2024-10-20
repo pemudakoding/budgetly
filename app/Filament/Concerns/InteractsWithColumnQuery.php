@@ -46,10 +46,15 @@ trait InteractsWithColumnQuery
                 },
             );
 
-        [, $period] = $baseQuery->wheres;
+        @[, $period] = array_filter(
+            $baseQuery->wheres,
+            fn ($array) => $array['type'] === 'basic'
+        );
 
-        //Merge filter query where from base query into the budget query
-        $query = $query->mergeWheres($period['query']->wheres, $period['query']->bindings);
+        if (isset($period['query'])) {
+            //Merge filter query where from base query into the budget query
+            $query = $query->mergeWheres($period['query']->wheres, $period['query']->bindings);
+        }
 
         $asName = (string) str($query->getModel()->getTable())->afterLast('.');
 
