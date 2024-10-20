@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tables\Filters;
 
+use App\Filament\Forms\YearSelect;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Get;
@@ -15,17 +16,8 @@ class YearRangeFilter extends SelectFilter
         parent::setUp();
 
         $this->form(schema: [
-            Select::make('from')
-                ->default(Carbon::now()->year)
-                ->options(function () {
-                    $currentYear = Carbon::now()->year;
-                    $startYear = 2024;
-                    $years = range($currentYear, $startYear);
-
-                    return array_combine($years, $years);
-                })
-                ->label('Start Date')
-                ->live(),
+            YearSelect::make('from')
+                ->label('Start Date'),
             Select::make('to')
                 ->default(Carbon::now()->year)
                 ->options(function (Get $get) {
