@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Budgeting\IncomeResource\RelationManagers;
 
 use App\Enums\Month;
 use App\Filament\Forms\MoneyInput;
+use App\Filament\Tables\Filters\YearFilter;
 use App\Models\IncomeBudget;
 use Carbon\Carbon;
 use Exception;
@@ -63,53 +64,7 @@ class BudgetsRelationManager extends RelationManager
                     ->dateTime(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Select::make('from')
-                            ->default(Carbon::now()->year)
-                            ->options(function () {
-                                $currentYear = Carbon::now()->year;
-                                $startYear = 2024;
-                                $years = range($currentYear, $startYear);
-
-                                return array_combine($years, $years);
-                            })
-                            ->label('Start Date')
-                            ->live(),
-                        Select::make('to')
-                            ->default(Carbon::now()->year)
-                            ->options(function (Forms\Get $get) {
-                                $currentYear = Carbon::now()->year;
-                                $startYear = $get('from');
-                                $years = range($currentYear, $startYear);
-
-                                return array_combine($years, $years);
-                            })
-                            ->label('End Date')
-                            ->rules(fn (Forms\Get $get) => ['min:'.$get('from')]),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['from'],
-                                fn (Builder $query, $year): Builder => $query->whereYear('created_at', '>=', $year),
-                            )
-                            ->when(
-                                $data['to'],
-                                fn (Builder $query, $year): Builder => $query->whereYear('created_at', '<=', $year),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-                        if ($data['from'] ?? null) {
-                            $indicators['from'] = 'From '.Carbon::parse($data['from'])->firstOfYear()->monthName.' '.$data['from'];
-                        }
-                        if ($data['to'] ?? null) {
-                            $indicators['to'] = 'To '.Carbon::parse($data['to'])->lastOfYear()->monthName.' '.$data['to'];
-                        }
-
-                        return $indicators;
-                    }),
+                YearFilter::make('created_at'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
