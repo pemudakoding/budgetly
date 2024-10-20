@@ -31,9 +31,7 @@ class TotalAllocationMoney extends Summarizer
         $percentage = (($totalExpense / $totalIncome) * 100);
 
         return (float) number_format(
-            $totalExpense > $totalIncome
-                ? -abs($percentage / 100)
-                : $percentage,
+            $percentage,
             2
         );
     }
