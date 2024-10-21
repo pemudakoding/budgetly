@@ -26,16 +26,17 @@ class TotalAllocationMoney extends Summarizer
         /** @var PeriodFilter $filter */
         $filter = $this->getColumn()->getTable()->getFilter('period');
 
-        $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(
+        $period = [
             $filter->getState()['year'],
-            Month::fromNumeric($filter->getState()['month'])
-        ));
+            Month::fromNumeric($filter->getState()['month']),
+        ];
+
+        $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(...$period));
 
         $totalExpense = $query->sum('amount');
 
         $totalIncome = IncomeBudget::query()
-            ->whereYear('created_at', $filter->getState()['year'])
-            ->where('month', Month::fromNumeric($filter->getState()['month']))
+            ->wherePeriod(...$period)
             ->sum('amount');
 
         $percentage = $totalIncome === 0

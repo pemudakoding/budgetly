@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Builders\IncomeBudgetBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static IncomeBudgetBuilder query()
+ */
 class IncomeBudget extends Model
 {
     /** @use HasFactory<\Database\Factories\IncomeBudgetFactory> */
@@ -16,6 +20,11 @@ class IncomeBudget extends Model
         'amount',
         'month',
     ];
+
+    public function newEloquentBuilder($query)
+    {
+        return new IncomeBudgetBuilder($query);
+    }
 
     /**
      * @return BelongsTo<Income, IncomeBudget>
