@@ -26,6 +26,8 @@ class AccountResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\ColorPicker::make('legend')
+                    ->required()
+                    ->default(sprintf('#%06x', mt_rand(0, 0xFFFFFF)))
                     ->regex('/^#([a-f0-9]{6}|[a-f0-9]{3})\b$/'),
             ]);
     }
