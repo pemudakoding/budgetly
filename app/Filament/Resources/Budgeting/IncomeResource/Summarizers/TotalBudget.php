@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
+namespace App\Filament\Resources\Budgeting\IncomeResource\Summarizers;
 
 use App\Enums\Month;
 use App\Filament\Tables\Filters\PeriodFilter;
-use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 
-class TotalNonAllocatedMoney extends Summarizer
+class TotalBudget extends Summarizer
 {
     protected function setUp(): void
     {
@@ -26,21 +25,17 @@ class TotalNonAllocatedMoney extends Summarizer
         /** @var PeriodFilter $filter */
         $filter = $this->getColumn()->getTable()->getFilter('period');
 
-        $totalExpense = ExpenseBudget::query()
+        $query = IncomeBudget::query()
             ->whereYear('created_at', $filter->getState()['year'])
-            ->whereMonth('created_at', $filter->getState()['month'])
-            ->sum('amount');
+            ->where('month', Month::fromNumeric($filter->getState()['month']));
 
-        $totalIncome = IncomeBudget::query()
-            ->whereYear('created_at', $filter->getState()['year'])
-            ->where('month', Month::fromNumeric($filter->getState()['month']))
-            ->sum('amount');
+        $asName = (string) str($this->getColumn()->getName())->afterLast('.');
 
-        return $totalIncome - $totalExpense;
+        return (float) $query->sum($asName);
     }
 
     public function getDefaultLabel(): ?string
     {
-        return 'Non-allocated';
+        return 'Total';
     }
 }

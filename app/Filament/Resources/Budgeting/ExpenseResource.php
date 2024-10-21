@@ -7,8 +7,8 @@ use App\Filament\Resources\Budgeting\ExpenseResource\Actions\QuickExpenseAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalAllocationMoney;
+use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalBudget;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalNonAllocatedMoney;
-use App\Filament\Tables\Columns\Summarizer\TotalBudget;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
@@ -70,7 +70,8 @@ class ExpenseResource extends Resource
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
             ])
             ->filters([
-                PeriodFilter::make('period'),
+                PeriodFilter::make('period')
+                    ->ignoreFilterForRecords(['year', 'month']),
             ])
             ->actions([
                 ViewAction::make(),

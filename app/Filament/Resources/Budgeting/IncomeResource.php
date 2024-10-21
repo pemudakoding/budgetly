@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\Budgeting;
 
+use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\IncomeResource\Pages;
 use App\Filament\Resources\Budgeting\IncomeResource\RelationManagers\BudgetsRelationManager;
-use App\Filament\Tables\Columns\Summarizer\TotalBudget;
+use App\Filament\Resources\Budgeting\IncomeResource\Summarizers\TotalBudget;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
@@ -57,14 +58,15 @@ class IncomeResource extends Resource
                         return $record
                             ->budgets()
                             ->whereYear('created_at', $filter->getState()['year'])
-                            ->whereMonth('created_at', $filter->getState()['month'])
+                            ->where('month', Month::fromNumeric($filter->getState()['month']))
                             ->sum('amount');
                     })
                     ->money('idr', locale: 'id')
                     ->summarize(TotalBudget::make()),
             ])
             ->filters([
-                PeriodFilter::make('period'),
+                PeriodFilter::make('period')
+                    ->ignoreFilterForRecords(['year', 'month']),
             ])
             ->actions([
                 ViewAction::make(),

@@ -7,9 +7,48 @@ use App\Filament\Forms\MonthSelect;
 use App\Filament\Forms\YearSelect;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class PeriodFilter extends SelectFilter
 {
+    /**
+     * @var list<string>
+     */
+    private array $ignoreFilterForRecords = [];
+
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
+    public function apply(Builder $query, array $data = []): Builder
+    {
+        if ($this->isHidden()) {
+            return $query;
+        }
+
+        if (! $this->hasQueryModificationCallback()) {
+            return $query;
+        }
+
+        if (! ($data['isActive'] ?? true)) {
+            return $query;
+        }
+
+        $data = array_filter(
+            $data,
+            fn (string $key) => ! in_array($key, $this->ignoreFilterForRecords),
+            ARRAY_FILTER_USE_KEY
+        );
+
+        $this->evaluate($this->modifyQueryUsing, [
+            'data' => $data,
+            'query' => $query,
+            'state' => $data,
+        ]);
+
+        return $query;
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,5 +77,16 @@ class PeriodFilter extends SelectFilter
 
                 return $indicators;
             });
+    }
+
+    /**
+     * @param  list<string>  $keys
+     * @return $this
+     */
+    public function ignoreFilterForRecords(array $keys): self
+    {
+        $this->ignoreFilterForRecords = $keys;
+
+        return $this;
     }
 }

@@ -34,7 +34,6 @@ class TotalAllocationMoney extends Summarizer
             ->where('month', Month::fromNumeric($filter->getState()['month']))
             ->sum('amount');
 
-
         $percentage = $totalIncome === 0
             ? 0
             : (($totalExpense / $totalIncome) * 100);
