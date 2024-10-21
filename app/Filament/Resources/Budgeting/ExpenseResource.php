@@ -49,6 +49,7 @@ class ExpenseResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('budgets.amount')
+                    ->label('Realization')
                     ->state(function (Expense $record, Table $table) {
                         /** @var array{year: string, month: string} $period */
                         $period = $table->getFilter('period')->getState();
