@@ -4,12 +4,15 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Tables\Filters\PeriodFilter;
+use App\Models\ExpenseBudget;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class BudgetsRelationManager extends RelationManager
 {
@@ -34,8 +37,16 @@ class BudgetsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('description')
+            ->recordClasses(fn (ExpenseBudget $record) => $record->is_completed
+                ? 'bg-neutral-100 hover:!bg-neutral-200 dark:bg-gray-950 hover:dark:!bg-black'
+                : null,
+            )
             ->columns([
-                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('description')
+                    ->formatStateUsing(fn (?string $state, ExpenseBudget $record) => $record->is_completed
+                        ? new HtmlString("<s>$state</s>")
+                        : $state
+                    ),
                 Tables\Columns\TextColumn::make('amount')
                     ->money()
                     ->summarize(Tables\Columns\Summarizers\Sum::make()
@@ -43,9 +54,15 @@ class BudgetsRelationManager extends RelationManager
                         ->money('idr')
                     ),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->date()
+                    ->dateTimeTooltip(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                    ->date()
+                    ->dateTimeTooltip(),
+                Tables\Columns\CheckboxColumn::make('is_completed')
+                    ->alignment(Alignment::Center)
+                    ->label('Completed')
+                    ->width('0'),
             ])
             ->filters([
                 PeriodFilter::make('period'),

@@ -8,7 +8,10 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Table;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -17,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -62,5 +66,10 @@ class AdminPanelProvider extends PanelProvider
     {
         Table::$defaultCurrency = 'idr';
         Table::$defaultNumberLocale = 'id';
+
+        FilamentAsset::register([
+            Css::make('app', Vite::asset('resources/css/app.css')),
+            Js::make('app-js', Vite::asset('resources/js/app.js'))->module(! app()->isProduction()),
+        ]);
     }
 }
