@@ -48,6 +48,7 @@ class ExpenseResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('budgets.amount')
+                    ->label('Realization')
                     ->state(function (Expense $record, Table $table) {
                         /** @var PeriodFilter $filter */
                         $filter = $table->getFilter('period');
