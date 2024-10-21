@@ -18,7 +18,7 @@ trait InteractsWithColumnQuery
      *
      * @throws \Exception
      */
-    public function resolveQuery(): array
+    protected function resolveQuery(): array
     {
         $column = $this->getColumn();
         $query = $this->getQuery()->clone();
@@ -46,7 +46,7 @@ trait InteractsWithColumnQuery
                 },
             );
 
-        $filterQueries =  array_filter(
+        $filterQueries = array_filter(
             $baseQuery->wheres,
             fn ($array) => $array['type'] === 'Nested'
         );
