@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
+namespace App\Filament\Concerns;
 
 use App\Models\Builders\ExpenseBudgetBuilder;
 use Closure;

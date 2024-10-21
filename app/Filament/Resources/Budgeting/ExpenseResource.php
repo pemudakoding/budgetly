@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting;
 
+use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\ExpenseResource\Actions\QuickExpenseAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
@@ -49,13 +50,15 @@ class ExpenseResource extends Resource
                 TextColumn::make('name'),
                 TextColumn::make('budgets.amount')
                     ->state(function (Expense $record, Table $table) {
-                        /** @var PeriodFilter $filter */
-                        $filter = $table->getFilter('period');
+                        /** @var array{year: string, month: string} $period */
+                        $period = $table->getFilter('period')->getState();
 
                         return $record
                             ->budgets()
-                            ->whereYear('created_at', $filter->getState()['year'])
-                            ->whereMonth('created_at', $filter->getState()['month'])
+                            ->wherePeriod(
+                                $period['year'],
+                                Month::fromNumeric($period['month'])
+                            )
                             ->sum('amount');
                     })
                     ->money('idr', locale: 'id')

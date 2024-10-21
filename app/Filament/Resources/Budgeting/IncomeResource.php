@@ -52,13 +52,15 @@ class IncomeResource extends Resource
                     ->color(fn (Income $record) => Color::hex($record->account->legend)),
                 TextColumn::make('budgets.amount')
                     ->state(function (Income $record, Table $table) {
-                        /** @var PeriodFilter $filter */
-                        $filter = $table->getFilter('period');
+                        /** @var array{year: string, month: string} $period */
+                        $period = $table->getFilter('period')->getState();
 
                         return $record
                             ->budgets()
-                            ->whereYear('created_at', $filter->getState()['year'])
-                            ->where('month', Month::fromNumeric($filter->getState()['month']))
+                            ->wherePeriod(
+                                $period['year'],
+                                Month::fromNumeric($period['month'])
+                            )
                             ->sum('amount');
                     })
                     ->money('idr', locale: 'id')

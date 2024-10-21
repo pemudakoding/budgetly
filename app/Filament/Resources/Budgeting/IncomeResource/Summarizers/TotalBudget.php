@@ -3,13 +3,16 @@
 namespace App\Filament\Resources\Budgeting\IncomeResource\Summarizers;
 
 use App\Enums\Month;
+use App\Filament\Concerns\ModifyRelationshipQuery;
 use App\Filament\Tables\Filters\PeriodFilter;
-use App\Models\IncomeBudget;
+use App\Models\Builders\IncomeBudgetBuilder;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 
 class TotalBudget extends Summarizer
 {
+    use ModifyRelationshipQuery;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -25,9 +28,10 @@ class TotalBudget extends Summarizer
         /** @var PeriodFilter $filter */
         $filter = $this->getColumn()->getTable()->getFilter('period');
 
-        $query = IncomeBudget::query()
-            ->whereYear('created_at', $filter->getState()['year'])
-            ->where('month', Month::fromNumeric($filter->getState()['month']));
+        $query = $this->resolveQuery(fn (IncomeBudgetBuilder $query) => $query->wherePeriod(
+            $filter->getState()['year'],
+            Month::fromNumeric($filter->getState()['month'])
+        ));
 
         $asName = (string) str($this->getColumn()->getName())->afterLast('.');
 
