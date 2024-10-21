@@ -27,8 +27,10 @@ class TotalNonAllocatedMoney extends Summarizer
         $filter = $this->getColumn()->getTable()->getFilter('period');
 
         $totalExpense = ExpenseBudget::query()
-            ->whereYear('created_at', $filter->getState()['year'])
-            ->whereMonth('created_at', $filter->getState()['month'])
+            ->wherePeriod(
+                $filter->getState()['year'],
+                Month::fromNumeric($filter->getState()['month'])
+            )
             ->sum('amount');
 
         $totalIncome = IncomeBudget::query()

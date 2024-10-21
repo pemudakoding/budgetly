@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
-use App\Filament\Tables\Filters\PeriodFilter;
-use App\Models\ExpenseBudget;
+use App\Enums\Month;
+use App\Models\Builders\ExpenseBudgetBuilder;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 
 class TotalBudget extends Summarizer
 {
+    use ModifyRelationshipQuery;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,12 +23,12 @@ class TotalBudget extends Summarizer
      */
     public function getState(): int|float|null
     {
-        /** @var PeriodFilter $filter */
         $filter = $this->getColumn()->getTable()->getFilter('period');
 
-        $query = ExpenseBudget::query()
-            ->whereYear('created_at', $filter->getState()['year'])
-            ->whereMonth('created_at', $filter->getState()['month']);
+        $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(
+            $filter->getState()['year'],
+            Month::fromNumeric($filter->getState()['month'])
+        ));
 
         $asName = (string) str($this->getColumn()->getName())->afterLast('.');
 

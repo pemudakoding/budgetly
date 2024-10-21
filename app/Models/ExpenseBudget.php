@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Builders\ExpenseBudgetBuilder;
+use Database\Factories\ExpenseBudgetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static ExpenseBudgetBuilder query()
+ */
 class ExpenseBudget extends Model
 {
-    /** @use HasFactory<\Database\Factories\ExpenseBudgetFactory> */
+    /** @use HasFactory<ExpenseBudgetFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -16,6 +21,11 @@ class ExpenseBudget extends Model
         'description',
         'amount',
     ];
+
+    public function newEloquentBuilder($query)
+    {
+        return new ExpenseBudgetBuilder($query);
+    }
 
     /**
      * @return BelongsTo<Expense, ExpenseBudget>
