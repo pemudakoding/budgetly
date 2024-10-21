@@ -2,16 +2,15 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
-use App\Filament\Concerns\InteractsWithColumnQuery;
+use App\Enums\Month;
+use App\Filament\Tables\Filters\PeriodFilter;
+use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
-use Illuminate\Database\Eloquent\Builder;
 
 class TotalAllocationMoney extends Summarizer
 {
-    use InteractsWithColumnQuery;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -22,18 +21,23 @@ class TotalAllocationMoney extends Summarizer
      */
     public function getState(): int|float|null
     {
-        [$query, [$period]] = $this->resolveQuery();
+        /** @var PeriodFilter $filter */
+        $filter = $this->getColumn()->getTable()->getFilter('period');
 
-        $totalExpense = $query->sum('amount');
-
-        $totalIncome = IncomeBudget::query()
-            ->when(
-                ! is_null($period),
-                fn (Builder $query): Builder => $query->mergeWheres($period['query']->wheres, $period['query']->bindings)
-            )
+        $totalExpense = ExpenseBudget::query()
+            ->whereYear('created_at', $filter->getState()['year'])
+            ->whereMonth('created_at', $filter->getState()['month'])
             ->sum('amount');
 
-        $percentage = (($totalExpense / $totalIncome) * 100);
+        $totalIncome = IncomeBudget::query()
+            ->whereYear('created_at', $filter->getState()['year'])
+            ->where('month', Month::fromNumeric($filter->getState()['month']))
+            ->sum('amount');
+
+
+        $percentage = $totalIncome === 0
+            ? 0
+            : (($totalExpense / $totalIncome) * 100);
 
         return (float) number_format(
             $percentage,
