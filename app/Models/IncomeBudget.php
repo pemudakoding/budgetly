@@ -21,7 +21,7 @@ class IncomeBudget extends Model
         'month',
     ];
 
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): IncomeBudgetBuilder
     {
         return new IncomeBudgetBuilder($query);
     }

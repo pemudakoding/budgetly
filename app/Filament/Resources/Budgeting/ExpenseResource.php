@@ -6,6 +6,7 @@ use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\ExpenseResource\Actions\QuickExpenseAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
+use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\AllocationsRelationManager;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRelationManager;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalAllocationMoney;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalBudget;
@@ -48,6 +49,20 @@ class ExpenseResource extends Resource
             ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('name'),
+                TextColumn::make('allocations.amount')
+                    ->state(function (Expense $record, Table $table) {
+                        /** @var array{year: string, month: string} $period */
+                        $period = $table->getFilter('period')->getState();
+
+                        return $record
+                            ->allocations()
+                            ->wherePeriod(
+                                $period['year'],
+                                Month::fromNumeric($period['month'])
+                            )
+                            ->sum('amount');
+                    })
+                    ->money('idr', locale: 'id'),
                 TextColumn::make('budgets.amount')
                     ->label('Realization')
                     ->state(function (Expense $record, Table $table) {
@@ -94,6 +109,7 @@ class ExpenseResource extends Resource
     {
         return [
             BudgetsRelationManager::class,
+            AllocationsRelationManager::class,
         ];
     }
 

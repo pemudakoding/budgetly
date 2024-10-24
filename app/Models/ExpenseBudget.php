@@ -22,7 +22,7 @@ class ExpenseBudget extends Model
         'amount',
     ];
 
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): ExpenseBudgetBuilder
     {
         return new ExpenseBudgetBuilder($query);
     }

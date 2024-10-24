@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Budgeting\IncomeResource\RelationManagers;
+namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 
 use App\Enums\Month;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Tables\Filters\YearRangeFilter;
-use App\Models\IncomeBudget;
+use App\Models\ExpenseAllocation;
 use Carbon\Carbon;
-use Exception;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -15,9 +14,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rules\Unique;
 
-class BudgetsRelationManager extends RelationManager
+class AllocationsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'budgets';
+    protected static string $relationship = 'allocations';
 
     public function form(Form $form): Form
     {
@@ -29,23 +28,23 @@ class BudgetsRelationManager extends RelationManager
                     ->options(Month::toArray())
                     ->required()
                     ->unique(
-                        IncomeBudget::class,
+                        ExpenseAllocation::class,
                         'month',
-                        ignorable: fn (?IncomeBudget $record): ?IncomeBudget => $record?->created_at->year === Carbon::now()->year
+                        ignorable: fn (?ExpenseAllocation $record): ?ExpenseAllocation => $record?->created_at->year === Carbon::now()->year
                             ? $record
                             : null,
                         ignoreRecord: true,
                         modifyRuleUsing: fn (Unique $rule): Unique => $rule->where(
                             fn (\Illuminate\Database\Query\Builder $query) => $query
                                 ->whereYear('created_at', Carbon::now()->year)
-                                ->whereIn('income_id', auth()->user()->incomes->pluck('id'))
+                                ->whereIn('expense_id', auth()->user()->expenses->pluck('id'))
                         )
                     ),
             ]);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function table(Table $table): Table
     {
@@ -53,13 +52,18 @@ class BudgetsRelationManager extends RelationManager
             ->recordTitleAttribute('amount')
             ->columns([
                 Tables\Columns\TextColumn::make('amount')
-                    ->money(),
+                    ->money()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()
+                        ->label('Total')
+                        ->money('idr')
+                    ),
                 Tables\Columns\TextColumn::make('month'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->sortable()
-                    ->dateTime(),
+                    ->date()
+                    ->dateTimeTooltip(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                    ->date()
+                    ->dateTimeTooltip(),
             ])
             ->filters([
                 YearRangeFilter::make('created_at'),
@@ -69,7 +73,7 @@ class BudgetsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->modalHeading(fn (IncomeBudget $record) => 'Edit Budget for '.$record->month),
+                    ->modalHeading(fn (ExpenseAllocation $record) => 'Edit Budget for '.$record->month),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
