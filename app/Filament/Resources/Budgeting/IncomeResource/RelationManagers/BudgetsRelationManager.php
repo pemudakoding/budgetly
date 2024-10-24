@@ -69,7 +69,7 @@ class BudgetsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->modalHeading(fn (IncomeBudget $recrod) => 'Edit Budget for '.$recrod->month),
+                    ->modalHeading(fn (IncomeBudget $record) => 'Edit Budget for '.$record->month),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
