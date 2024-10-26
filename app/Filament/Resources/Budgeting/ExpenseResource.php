@@ -11,6 +11,8 @@ use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRel
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalAllocationMoney;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalBudget;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalNonAllocatedMoney;
+use App\Filament\Tables\Columns\ExpenseProgressBar;
+use App\Filament\Tables\Columns\ExpenseProgressPercentage;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
@@ -48,6 +50,10 @@ class ExpenseResource extends Resource
         return $table
             ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
+                TextColumn::make('category.name')
+                    ->badge()
+                    ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
+                    ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
                 TextColumn::make('name'),
                 TextColumn::make('allocations.amount')
                     ->state(function (Expense $record, Table $table) {
@@ -83,10 +89,10 @@ class ExpenseResource extends Resource
                         TotalAllocationMoney::make(),
                         TotalNonAllocatedMoney::make(),
                     ]),
-                TextColumn::make('category.name')
-                    ->badge()
-                    ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
-                    ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
+                ExpenseProgressBar::make('budgets-bar')
+                    ->label('Usage Progress'),
+                ExpenseProgressPercentage::make('budgets-percentage')
+                    ->label('% Usage'),
             ])
             ->filters([
                 PeriodFilter::make('period')
