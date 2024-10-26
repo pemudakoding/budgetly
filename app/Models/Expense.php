@@ -68,6 +68,17 @@ class Expense extends Model
     }
 
     /**
+     * @return HasMany<ExpenseAllocation>
+     */
+    public function allocations(): HasMany
+    {
+        return $this->hasMany(
+            ExpenseAllocation::class,
+            'expense_id'
+        );
+    }
+
+    /**
      * @return Attribute<ExpenseCategory, string>
      */
     public function enumerateCategory(): Attribute
