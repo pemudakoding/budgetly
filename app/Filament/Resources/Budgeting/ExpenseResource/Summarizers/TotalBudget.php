@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
 use App\Filament\Concerns\ModifyRelationshipQuery;
+use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
 use App\Models\Builders\ExpenseBudgetBuilder;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
@@ -24,7 +25,10 @@ class TotalBudget extends Summarizer
      */
     public function getState(): int|float|null
     {
-        $filter = $this->viewData;
+        /** @var ListExpenses $livewire */
+        $livewire = $this->getLivewire();
+
+        $filter = $livewire->data;
 
         $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(
             $filter['year'],
