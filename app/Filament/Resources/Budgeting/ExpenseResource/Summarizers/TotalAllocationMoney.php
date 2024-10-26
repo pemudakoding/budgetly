@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
 use App\Filament\Concerns\ModifyRelationshipQuery;
-use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\ExpenseBudgetBuilder;
 use App\Models\IncomeBudget;
 use Exception;
@@ -24,12 +23,11 @@ class TotalAllocationMoney extends Summarizer
      */
     public function getState(): int|float|null
     {
-        /** @var PeriodFilter $filter */
-        $filter = $this->getColumn()->getTable()->getFilter('period');
+        $filter = $this->viewData;
 
         $period = [
-            $filter->getState()['year'],
-            Month::fromNumeric($filter->getState()['month']),
+            $filter['year'],
+            Month::fromNumeric($filter['month']),
         ];
 
         $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(...$period));
