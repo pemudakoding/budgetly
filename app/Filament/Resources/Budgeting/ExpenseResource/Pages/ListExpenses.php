@@ -19,6 +19,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -30,7 +31,7 @@ use Filament\Tables\Table;
  */
 class ListExpenses extends ListRecords implements HasForms
 {
-    use InteractsWithForms;
+    use HasTabs, InteractsWithForms;
 
     protected static string $resource = ExpenseResource::class;
 
