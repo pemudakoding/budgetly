@@ -108,8 +108,8 @@ class ExpenseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            BudgetsRelationManager::class,
             AllocationsRelationManager::class,
+            BudgetsRelationManager::class,
         ];
     }
 
