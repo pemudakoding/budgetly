@@ -14,7 +14,7 @@ class QuickExpenseAction extends CreateAction
         parent::setUp();
 
         $this
-            ->label('New')
+            ->label('New Expense')
             ->icon('heroicon-s-plus')
             ->form([
                 TextInput::make('description')
