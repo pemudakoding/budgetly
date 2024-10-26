@@ -3,7 +3,7 @@
 
     <x-filament::section collapsible="true">
         <x-slot name="heading">
-            Filter Expense
+            Filter
         </x-slot>
 
         {{ $this->form  }}
