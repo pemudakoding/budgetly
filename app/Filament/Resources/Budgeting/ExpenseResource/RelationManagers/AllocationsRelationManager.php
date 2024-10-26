@@ -20,6 +20,8 @@ class AllocationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'allocations';
 
+    protected static ?string $icon = 'heroicon-o-chart-pie';
+
     public function form(Form $form): Form
     {
         return $form

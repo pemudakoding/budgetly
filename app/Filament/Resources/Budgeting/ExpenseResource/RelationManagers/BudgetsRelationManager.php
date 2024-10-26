@@ -18,6 +18,10 @@ class BudgetsRelationManager extends RelationManager
 {
     protected static string $relationship = 'budgets';
 
+    protected static ?string $title = 'Realization';
+
+    protected static ?string $icon = 'heroicon-o-light-bulb';
+
     public function form(Form $form): Form
     {
         return $form
