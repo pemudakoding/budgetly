@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
-use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
 use Exception;
@@ -23,12 +22,11 @@ class TotalNonAllocatedMoney extends Summarizer
      */
     public function getState(): int|float|null
     {
-        /** @var PeriodFilter $filter */
-        $filter = $this->getColumn()->getTable()->getFilter('period');
+        $filter = $this->viewData;
 
         $period = [
-            $filter->getState()['year'],
-            Month::fromNumeric($filter->getState()['month']),
+            $filter['year'],
+            Month::fromNumeric($filter['month']),
         ];
 
         $totalExpense = ExpenseBudget::query()

@@ -24,11 +24,11 @@ class TotalBudget extends Summarizer
      */
     public function getState(): int|float|null
     {
-        $filter = $this->getColumn()->getTable()->getFilter('period');
+        $filter = $this->viewData;
 
         $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(
-            $filter->getState()['year'],
-            Month::fromNumeric($filter->getState()['month'])
+            $filter['year'],
+            Month::fromNumeric($filter['month'])
         ));
 
         $asName = (string) str($this->getColumn()->getName())->afterLast('.');
