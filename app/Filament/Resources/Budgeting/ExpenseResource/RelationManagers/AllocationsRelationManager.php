@@ -7,11 +7,13 @@ use App\Filament\Forms\MoneyInput;
 use App\Filament\Tables\Filters\YearRangeFilter;
 use App\Models\ExpenseAllocation;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Unique;
 
 class AllocationsRelationManager extends RelationManager
@@ -35,16 +37,16 @@ class AllocationsRelationManager extends RelationManager
                             : null,
                         ignoreRecord: true,
                         modifyRuleUsing: fn (Unique $rule): Unique => $rule->where(
-                            fn (\Illuminate\Database\Query\Builder $query) => $query
+                            fn (Builder $query) => $query
                                 ->whereYear('created_at', Carbon::now()->year)
-                                ->whereIn('expense_id', auth()->user()->expenses->pluck('id'))
+                                ->where('expense_id', $this->getOwnerRecord()->getKey())
                         )
                     ),
             ]);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function table(Table $table): Table
     {

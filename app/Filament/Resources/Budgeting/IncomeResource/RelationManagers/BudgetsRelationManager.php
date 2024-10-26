@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Unique;
 
 class BudgetsRelationManager extends RelationManager
@@ -36,9 +37,9 @@ class BudgetsRelationManager extends RelationManager
                             : null,
                         ignoreRecord: true,
                         modifyRuleUsing: fn (Unique $rule): Unique => $rule->where(
-                            fn (\Illuminate\Database\Query\Builder $query) => $query
+                            fn (Builder $query) => $query
                                 ->whereYear('created_at', Carbon::now()->year)
-                                ->whereIn('income_id', auth()->user()->incomes->pluck('id'))
+                                ->where('income_id', $this->getOwnerRecord()->getKey())
                         )
                     ),
             ]);
