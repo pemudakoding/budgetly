@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
+use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
 use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
 use Exception;
@@ -22,7 +23,10 @@ class TotalNonAllocatedMoney extends Summarizer
      */
     public function getState(): int|float|null
     {
-        $filter = $this->viewData;
+        /** @var ListExpenses $livewire */
+        $livewire = $this->getLivewire();
+
+        $filter = $livewire->data;
 
         $period = [
             $filter['year'],

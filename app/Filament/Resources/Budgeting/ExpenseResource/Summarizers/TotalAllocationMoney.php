@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
 use App\Filament\Concerns\ModifyRelationshipQuery;
+use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
 use App\Models\Builders\ExpenseBudgetBuilder;
 use App\Models\IncomeBudget;
 use Exception;
@@ -23,7 +24,10 @@ class TotalAllocationMoney extends Summarizer
      */
     public function getState(): int|float|null
     {
-        $filter = $this->viewData;
+        /** @var ListExpenses $livewire */
+        $livewire = $this->getLivewire();
+
+        $filter = $livewire->data;
 
         $period = [
             $filter['year'],
