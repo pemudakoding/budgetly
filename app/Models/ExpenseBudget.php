@@ -20,6 +20,7 @@ class ExpenseBudget extends Model
         'expense_id',
         'description',
         'amount',
+        'realized_at',
     ];
 
     public function newEloquentBuilder($query): ExpenseBudgetBuilder

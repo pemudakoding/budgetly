@@ -15,8 +15,8 @@ class ExpenseBudgetBuilder extends Builder
     public function wherePeriod(string $year, Month $month): ExpenseBudgetBuilder
     {
         $this
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month->toNumeric());
+            ->whereYear('realized_at', $year)
+            ->whereMonth('realized_at', $month->toNumeric());
 
         return $this;
     }
