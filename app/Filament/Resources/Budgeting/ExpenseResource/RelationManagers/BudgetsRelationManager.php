@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\ExpenseBudget;
+use Carbon\Carbon;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -31,6 +32,10 @@ class BudgetsRelationManager extends RelationManager
                     ->maxLength(255),
                 MoneyInput::make('amount')
                     ->required(),
+                Forms\Components\DatePicker::make('created_at')
+                    ->label('Realized at')
+                    ->columnSpan(2)
+                    ->default(Carbon::now()),
             ]);
     }
 
@@ -57,6 +62,8 @@ class BudgetsRelationManager extends RelationManager
                         ->label('Total')
                         ->money('idr')
                     ),
+                Tables\Columns\TextColumn::make('realized_at')
+                    ->date(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->dateTimeTooltip(),
