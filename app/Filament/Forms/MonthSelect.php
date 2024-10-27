@@ -24,6 +24,10 @@ class MonthSelect extends Select
             return $options;
         });
 
+        $this->rules(fn (MonthSelect $component): array => [
+            'in:'.implode(',', array_keys($component->getOptions())),
+        ]);
+
         $this->default($formatMonth(Carbon::now()->month));
     }
 }
