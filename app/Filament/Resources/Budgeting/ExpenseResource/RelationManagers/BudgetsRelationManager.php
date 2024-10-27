@@ -32,7 +32,7 @@ class BudgetsRelationManager extends RelationManager
                     ->maxLength(255),
                 MoneyInput::make('amount')
                     ->required(),
-                Forms\Components\DatePicker::make('created_at')
+                Forms\Components\DatePicker::make('realized_at')
                     ->label('Realized at')
                     ->columnSpan(2)
                     ->default(Carbon::now()),
