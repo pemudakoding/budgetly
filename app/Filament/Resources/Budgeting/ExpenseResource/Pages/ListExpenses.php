@@ -49,7 +49,7 @@ class ListExpenses extends ListRecords implements HasForms
             $this->month = str_pad((string) Carbon::now()->month, 2, '0', STR_PAD_LEFT);
         }
 
-        if($this->month > 12) {
+        if ($this->month > 12) {
             abort(Response::HTTP_NOT_ACCEPTABLE);
         }
 

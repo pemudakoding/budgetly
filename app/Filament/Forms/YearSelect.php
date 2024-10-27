@@ -22,7 +22,7 @@ class YearSelect extends Select
         $this->live();
 
         $this->rules(fn (YearSelect $component): array => [
-            'in:'.implode(',', array_keys($component->getOptions()))
+            'in:'.implode(',', array_keys($component->getOptions())),
         ]);
 
         $this->default(Carbon::now()->year);
