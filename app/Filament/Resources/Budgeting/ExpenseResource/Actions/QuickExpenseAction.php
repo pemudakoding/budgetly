@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Actions;
 
 use App\Filament\Forms\MoneyInput;
 use App\Models\Expense;
+use Carbon\Carbon;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\CreateAction;
 
@@ -22,6 +24,10 @@ class QuickExpenseAction extends CreateAction
                     ->maxLength(255),
                 MoneyInput::make('amount')
                     ->required(),
+                DatePicker::make('realized_at')
+                    ->label('Realized at')
+                    ->columnSpan(2)
+                    ->default(Carbon::now()),
             ])
             ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
             ->action(function (array $data, Expense $record): void {
