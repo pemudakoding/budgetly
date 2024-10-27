@@ -8,7 +8,7 @@
     }
 @endphp
 <div class="w-full px-4">
-    <div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+    <div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700 overflow-hidden">
         <div class="h-4 rounded-full {{ $backgroundColor }}" style="width: {{ min($totalProgress, 100) }}%"></div>
     </div>
 </div>

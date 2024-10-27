@@ -73,7 +73,6 @@ class ExpenseResource extends Resource
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
                 TextColumn::make('name'),
                 TextColumn::make('allocations.amount')
-                    ->sortable()
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
                             ->allocations()
@@ -90,7 +89,6 @@ class ExpenseResource extends Resource
                         TotalNonAllocatedMoney::make(),
                     ]),
                 TextColumn::make('budgets.amount')
-                    ->sortable()
                     ->label('Realization')
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
@@ -108,8 +106,7 @@ class ExpenseResource extends Resource
                 ExpenseProgressBar::make('budgets-bar')
                     ->label('Usage Progress'),
                 ExpenseProgressPercentage::make('budgets-percentage')
-                    ->label('% Usage')
-                    ->sortable(),
+                    ->label('% Usage'),
             ])
             ->actions([
                 ViewAction::make(),
