@@ -76,7 +76,10 @@ class ExpenseResource extends Resource
                             )
                             ->sum('amount');
                     })
-                    ->money('idr', locale: 'id'),
+                    ->money('idr', locale: 'id')
+                    ->summarize([
+                        TotalBudget::make(),
+                    ]),
                 TextColumn::make('budgets.amount')
                     ->sortable()
                     ->label('Realization')

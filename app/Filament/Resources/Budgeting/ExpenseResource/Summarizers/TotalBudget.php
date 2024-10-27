@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 use App\Enums\Month;
 use App\Filament\Concerns\ModifyRelationshipQuery;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
+use App\Models\Builders\ExpenseAllocationBuilder;
 use App\Models\Builders\ExpenseBudgetBuilder;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
@@ -30,7 +31,7 @@ class TotalBudget extends Summarizer
 
         $filter = $livewire->data;
 
-        $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(
+        $query = $this->resolveQuery(fn (ExpenseAllocationBuilder|ExpenseBudgetBuilder $query) => $query->wherePeriod(
             $filter['year'],
             Month::fromNumeric($filter['month'])
         ));
