@@ -5,12 +5,14 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Enums\ExpenseCategory;
 use App\Filament\Resources\Budgeting\ExpenseResource;
 use App\Models\Builders\ExpenseBuilder;
+use Carbon\Carbon;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\ListRecords;
+use Livewire\Attributes\Url;
 
 /**
  * @property Form $form
@@ -23,6 +25,12 @@ class ListExpenses extends ListRecords implements HasForms
 
     protected static string $view = 'filament.resources.budgeting.expense.list-record';
 
+    #[Url(keep: true)]
+    public string|int $year = '';
+
+    #[Url(keep: true)]
+    public string $month = '';
+
     /**
      * @var array<string>
      */
@@ -32,7 +40,18 @@ class ListExpenses extends ListRecords implements HasForms
     {
         parent::mount();
 
-        $this->form->fill();
+        if ($this->year === '') {
+            $this->year = Carbon::now()->year;
+        }
+
+        if ($this->month === '') {
+            $this->month = str_pad((string) Carbon::now()->month, 2, '0', STR_PAD_LEFT);
+        }
+
+        $this->form->fill([
+            'year' => $this->year,
+            'month' => $this->month,
+        ]);
     }
 
     public function form(Form $form): Form

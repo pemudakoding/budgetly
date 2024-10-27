@@ -39,8 +39,12 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-                YearSelect::make('year'),
-                MonthSelect::make('month'),
+                YearSelect::make('year')
+                    ->live()
+                    ->afterStateUpdated(fn (string $state, Pages\ListExpenses $livewire) => $livewire->year = $state),
+                MonthSelect::make('month')
+                    ->live()
+                    ->afterStateUpdated(fn (string $state, Pages\ListExpenses $livewire) => $livewire->month = $state),
             ])
             ->columns()
             ->statePath('data')
