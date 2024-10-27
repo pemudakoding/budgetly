@@ -60,11 +60,13 @@ class ExpenseResource extends Resource
             ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('category.name')
+                    ->sortable()
                     ->badge()
                     ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
                 TextColumn::make('name'),
                 TextColumn::make('allocations.amount')
+                    ->sortable()
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
                             ->allocations()
@@ -76,6 +78,7 @@ class ExpenseResource extends Resource
                     })
                     ->money('idr', locale: 'id'),
                 TextColumn::make('budgets.amount')
+                    ->sortable()
                     ->label('Realization')
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
@@ -95,7 +98,8 @@ class ExpenseResource extends Resource
                 ExpenseProgressBar::make('budgets-bar')
                     ->label('Usage Progress'),
                 ExpenseProgressPercentage::make('budgets-percentage')
-                    ->label('% Usage'),
+                    ->label('% Usage')
+                    ->sortable(),
             ])
             ->actions([
                 ViewAction::make(),
