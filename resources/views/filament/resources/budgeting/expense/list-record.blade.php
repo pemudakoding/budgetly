@@ -6,8 +6,10 @@
             Filter
         </x-slot>
 
-        {{ $this->form  }}
+        {{ $this->form }}
     </x-filament::section>
+
+    @livewire(\App\Filament\Resources\Budgeting\ExpenseResource\Widgets\ExpenseWidget::class)
 
     {{ $this->table }}
 </x-filament-panels::page>
