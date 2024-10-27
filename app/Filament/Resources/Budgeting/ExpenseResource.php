@@ -79,6 +79,8 @@ class ExpenseResource extends Resource
                     ->money('idr', locale: 'id')
                     ->summarize([
                         TotalBudget::make(),
+                        TotalAllocationMoney::make(),
+                        TotalNonAllocatedMoney::make(),
                     ]),
                 TextColumn::make('budgets.amount')
                     ->sortable()
@@ -95,8 +97,6 @@ class ExpenseResource extends Resource
                     ->money('idr', locale: 'id')
                     ->summarize([
                         TotalBudget::make(),
-                        TotalAllocationMoney::make(),
-                        TotalNonAllocatedMoney::make(),
                     ]),
                 ExpenseProgressBar::make('budgets-bar')
                     ->label('Usage Progress'),

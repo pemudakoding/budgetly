@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 use App\Enums\Month;
 use App\Filament\Concerns\ModifyRelationshipQuery;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
-use App\Models\Builders\ExpenseBudgetBuilder;
+use App\Models\Builders\ExpenseAllocationBuilder;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
@@ -35,7 +35,7 @@ class TotalAllocationMoney extends Summarizer
             Month::fromNumeric($filter['month']),
         ];
 
-        $query = $this->resolveQuery(fn (ExpenseBudgetBuilder $query) => $query->wherePeriod(...$period));
+        $query = $this->resolveQuery(fn (ExpenseAllocationBuilder $query) => $query->wherePeriod(...$period));
 
         $totalExpense = $query->sum('amount');
 

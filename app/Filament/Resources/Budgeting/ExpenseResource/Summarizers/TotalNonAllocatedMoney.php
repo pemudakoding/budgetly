@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Budgeting\ExpenseResource\Summarizers;
 
 use App\Enums\Month;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages\ListExpenses;
-use App\Models\ExpenseBudget;
+use App\Models\ExpenseAllocation;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
@@ -34,7 +34,7 @@ class TotalNonAllocatedMoney extends Summarizer
             Month::fromNumeric($filter['month']),
         ];
 
-        $totalExpense = ExpenseBudget::query()
+        $totalExpense = ExpenseAllocation::query()
             ->whereBelongsToUser(Auth::user())
             ->wherePeriod(...$period)
             ->sum('amount');
