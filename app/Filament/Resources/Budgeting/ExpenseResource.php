@@ -13,6 +13,7 @@ use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\BudgetsRel
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalAllocationMoney;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalBudget;
 use App\Filament\Resources\Budgeting\ExpenseResource\Summarizers\TotalNonAllocatedMoney;
+use App\Filament\Resources\Budgeting\ExpenseResource\Widgets\ExpenseWidget;
 use App\Filament\Tables\Columns\ExpenseProgressBar;
 use App\Filament\Tables\Columns\ExpenseProgressPercentage;
 use App\Models\Builders\ExpenseBuilder;
@@ -41,10 +42,16 @@ class ExpenseResource extends Resource
             ->schema([
                 YearSelect::make('year')
                     ->live()
-                    ->afterStateUpdated(fn (string $state, Pages\ListExpenses $livewire) => $livewire->year = $state),
+                    ->afterStateUpdated(function (string $state, Pages\ListExpenses $livewire) {
+                        $livewire->year = $state;
+                        $livewire->dispatch('refreshWidget');
+                    }),
                 MonthSelect::make('month')
                     ->live()
-                    ->afterStateUpdated(fn (string $state, Pages\ListExpenses $livewire) => $livewire->month = $state),
+                    ->afterStateUpdated(function (string $state, Pages\ListExpenses $livewire) {
+                        $livewire->month = $state;
+                        $livewire->dispatch('refreshWidget');
+                    }),
             ])
             ->columns()
             ->statePath('data')
@@ -119,6 +126,13 @@ class ExpenseResource extends Resource
         return [
             AllocationsRelationManager::class,
             BudgetsRelationManager::class,
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            ExpenseWidget::class,
         ];
     }
 

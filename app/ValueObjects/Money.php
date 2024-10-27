@@ -3,6 +3,7 @@
 namespace App\ValueObjects;
 
 use Exception;
+use Illuminate\Support\Number;
 
 class Money
 {
@@ -52,5 +53,13 @@ class Money
         }
 
         return new self($amount);
+    }
+
+    public static function format(int|float $amount): string
+    {
+        /** @var string $amount */
+        $amount = Number::currency($amount, 'IDR', 'ID');
+
+        return $amount;
     }
 }

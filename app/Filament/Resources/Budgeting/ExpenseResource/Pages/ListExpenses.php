@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\ListRecords;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ListExpenses extends ListRecords implements HasForms
 {
-    use HasTabs, InteractsWithForms;
+    use ExposesTableToWidgets, HasTabs, InteractsWithForms;
 
     protected static string $resource = ExpenseResource::class;
 
