@@ -13,6 +13,7 @@ use Filament\Resources\Components\Tab;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\ListRecords;
 use Livewire\Attributes\Url;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property Form $form
@@ -46,6 +47,10 @@ class ListExpenses extends ListRecords implements HasForms
 
         if ($this->month === '') {
             $this->month = str_pad((string) Carbon::now()->month, 2, '0', STR_PAD_LEFT);
+        }
+
+        if($this->month > 12) {
+            abort(Response::HTTP_NOT_ACCEPTABLE);
         }
 
         $this->form->fill([
