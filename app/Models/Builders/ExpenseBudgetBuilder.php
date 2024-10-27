@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use App\Enums\Month;
 use App\Models\ExpenseBudget;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -16,6 +17,19 @@ class ExpenseBudgetBuilder extends Builder
         $this
             ->whereYear('created_at', $year)
             ->whereMonth('created_at', $month->toNumeric());
+
+        return $this;
+    }
+
+    public function whereBelongsToUser(User|int $user): ExpenseBudgetBuilder
+    {
+        $this->whereRelation(
+            'expense', 'user_id',
+            '=',
+            $user instanceof User
+                ? $user->id
+                : $user
+        );
 
         return $this;
     }

@@ -8,6 +8,7 @@ use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
 use Exception;
 use Filament\Tables\Columns\Summarizers\Summarizer;
+use Illuminate\Support\Facades\Auth;
 
 class TotalNonAllocatedMoney extends Summarizer
 {
@@ -34,10 +35,12 @@ class TotalNonAllocatedMoney extends Summarizer
         ];
 
         $totalExpense = ExpenseBudget::query()
+            ->whereBelongsToUser(Auth::user())
             ->wherePeriod(...$period)
             ->sum('amount');
 
         $totalIncome = IncomeBudget::query()
+            ->whereBelongsToUser(Auth::user())
             ->wherePeriod(...$period)
             ->sum('amount');
 
