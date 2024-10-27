@@ -26,7 +26,6 @@ class QuickExpenseAction extends CreateAction
                     ->required(),
                 DatePicker::make('realized_at')
                     ->label('Realized at')
-                    ->columnSpan(2)
                     ->default(Carbon::now()),
             ])
             ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
