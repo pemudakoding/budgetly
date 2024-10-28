@@ -14,6 +14,7 @@ use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -73,8 +74,14 @@ class IncomeResource extends Resource
             ->actions([
                 ViewAction::make(),
             ])
-            ->bulkActions([
-
+            ->emptyStateHeading('No Income created')
+            ->emptyStateDescription('Please compelete your financial setup first.')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Setup Financial')
+                    ->url(route('filament.user.financial-setup'))
+                    ->icon('heroicon-m-squares-plus')
+                    ->button(),
             ]);
     }
 
