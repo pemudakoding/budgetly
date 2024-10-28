@@ -27,6 +27,7 @@ class Dashboard extends Page implements HasInfolists
                     ->warning()
                     ->border()
                     ->columnSpanFull()
+                    ->visible(! auth()->user()->hasSetupFinancial())
                     ->actions([
                         Action::make('setup')
                             ->color('warning')

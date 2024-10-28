@@ -91,4 +91,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     {
         return true;
     }
+
+    public function hasSetupFinancial(): bool
+    {
+        return $this->accounts()->exists() && $this->expenses()->exists() && $this->incomes()->exists();
+    }
 }
