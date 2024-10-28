@@ -15,6 +15,7 @@ enum Permissions: string
     case BudgetingExpense = 'budgeting.expense';
     case BudgetingExpenseAllocation = 'budgeting.expense.allocation';
     case BudgetingExpenseRealization = 'budgeting.expense.realization';
+    case UserManagement = 'user-management';
 
     public function suffix(PermissionAction $action): string
     {
@@ -35,13 +36,15 @@ enum Permissions: string
         $moduleActions = [
             // Financial Setup
             Permissions::FinancialSetup->value => [PermissionAction::All],
-            Permissions::FinancialSetupExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Edit, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
-            Permissions::FinancialSetupIncome->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Edit, PermissionAction::Delete],
-            //Budgeting
+            Permissions::FinancialSetupExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
+            Permissions::FinancialSetupIncome->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
+            // Budgeting
             Permissions::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
-            Permissions::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Edit, PermissionAction::Delete],
-            Permissions::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Edit, PermissionAction::Delete],
-            Permissions::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Edit, PermissionAction::Delete],
+            Permissions::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permissions::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permissions::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            // Settings
+            Permissions::UserManagement->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
         ];
 
         return array_map(
