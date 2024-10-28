@@ -22,7 +22,6 @@ enum Permissions: string
     }
 
     /**
-     * @param string $guard
      * @return array<int, array<int, array{
      *       name: string,
      *       guard_name: string,
