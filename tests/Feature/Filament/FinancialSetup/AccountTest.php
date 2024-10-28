@@ -1,6 +1,6 @@
 <?php
 
-use App\Filament\Clusters\MasterData\Resources\AccountResource;
+use App\Filament\Clusters\FinancialSetup\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
 use Filament\Actions\CreateAction;
@@ -24,7 +24,7 @@ test('able to get user accounts', function () {
 
     filamentActingAs($user);
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\AccountResource\Pages\ManageAccounts::class)
         ->assertCanSeeTableRecords($user->accounts);
 })->group('feature', 'master-data', 'account');
 
@@ -37,7 +37,7 @@ test('cannot see other user\'s accounts', function () {
 
     filamentActingAs();
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\AccountResource\Pages\ManageAccounts::class)
         ->assertCanNotSeeTableRecords($user->accounts);
 })->group('feature', 'master-data', 'account');
 
@@ -52,7 +52,7 @@ test('account create with current user that hit the action', function () {
 
     expect($user->accounts->count())->toBe(1);
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\AccountResource\Pages\ManageAccounts::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [

@@ -1,22 +1,43 @@
 <?php
 
-namespace App\Filament\Clusters\MasterData\Resources\AccountResource\Pages;
+namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Pages;
 
-use App\Filament\Clusters\MasterData\Resources\AccountResource;
+use App\Enums\ExpenseCategory;
+use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource;
+use App\Models\Builders\ExpenseBuilder;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Model;
 
-class ManageAccounts extends ManageRecords
+class ManageExpenses extends ManageRecords
 {
-    protected static string $resource = AccountResource::class;
+    protected static string $resource = ExpenseResource::class;
 
-    protected static ?string $navigationGroup = '';
+    public function getTabs(): array
+    {
+
+        return [
+            'all' => Tab::make(),
+            ...array_reduce(
+                ExpenseCategory::cases(),
+                function ($categories, ExpenseCategory $category): array {
+                    $categories[lcfirst($category->value)] = Tab::make()->modifyQueryUsing(
+                        fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory($category)
+                    );
+
+                    return $categories;
+                },
+                []
+            ),
+        ];
+    }
 
     protected function getHeaderActions(): array
     {
         return [
+            \App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions\ManageAccountAction::make(),
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
                     $data = [
@@ -42,6 +63,7 @@ class ManageAccounts extends ManageRecords
 
                     return $record;
                 }),
+
         ];
     }
 }

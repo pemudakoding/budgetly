@@ -1,6 +1,6 @@
 <?php
 
-use App\Filament\Clusters\MasterData\Resources\IncomeResource;
+use App\Filament\Clusters\FinancialSetup\Resources\IncomeResource;
 use App\Models\Account;
 use App\Models\Income;
 use App\Models\User;
@@ -26,7 +26,7 @@ test('able to get user incomes', function () {
 
     filamentActingAs($user);
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->assertCanSeeTableRecords($user->incomes);
 })->group('feature', 'master-data', 'income');
 
@@ -40,7 +40,7 @@ test('cannot see other user\'s incomes', function () {
 
     filamentActingAs();
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->assertCanNotSeeTableRecords($user->incomes);
 })->group('feature', 'master-data', 'income');
 
@@ -56,7 +56,7 @@ test('incomes created by the current user that hit the action', function () {
 
     expect($user->incomes->count())->toBe(1);
 
-    livewire(\App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::class)
+    livewire(\App\Filament\Clusters\FinancialSetup\Resources\IncomeResource\Pages\ManageIncomes::class)
         ->callAction(
             CreateAction::getDefaultName(),
             [
