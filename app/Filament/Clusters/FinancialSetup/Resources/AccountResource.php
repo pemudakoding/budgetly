@@ -19,6 +19,8 @@ class AccountResource extends Resource
 
     protected static ?string $cluster = FinancialSetup::class;
 
+    protected static ?int $navigationSort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
