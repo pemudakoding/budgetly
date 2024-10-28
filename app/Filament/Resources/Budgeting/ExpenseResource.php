@@ -21,6 +21,7 @@ use App\Models\Expense;
 use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
@@ -115,6 +116,15 @@ class ExpenseResource extends Resource
             ->groups([
                 Group::make('category.name')
                     ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
+            ])
+            ->emptyStateHeading('No Expense created')
+            ->emptyStateDescription('Please compelete your financial setup first.')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Setup Financial')
+                    ->url(route('filament.user.financial-setup'))
+                    ->icon('heroicon-m-squares-plus')
+                    ->button(),
             ]);
     }
 

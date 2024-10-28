@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\MasterData\Resources;
+namespace App\Filament\Clusters\FinancialSetup\Resources;
 
-use App\Filament\Clusters\MasterData;
+use App\Filament\Clusters\FinancialSetup;
 use App\Models\Account;
 use App\Models\Builders\AccountBuilder;
 use Filament\Forms;
@@ -17,7 +17,7 @@ class AccountResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
-    protected static ?string $cluster = MasterData::class;
+    protected static ?string $cluster = FinancialSetup::class;
 
     public static function form(Form $form): Form
     {
@@ -62,7 +62,7 @@ class AccountResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Clusters\MasterData\Resources\AccountResource\Pages\ManageAccounts::route('/'),
+            'index' => \App\Filament\Clusters\FinancialSetup\Resources\AccountResource\Pages\ManageAccounts::route('/'),
         ];
     }
 }

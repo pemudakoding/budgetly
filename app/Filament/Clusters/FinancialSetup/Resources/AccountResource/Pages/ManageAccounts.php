@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages;
+namespace App\Filament\Clusters\FinancialSetup\Resources\AccountResource\Pages;
 
-use App\Filament\Clusters\MasterData\Resources\IncomeResource;
+use App\Filament\Clusters\FinancialSetup\Resources\AccountResource;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Model;
 
-class ManageIncomes extends ManageRecords
+class ManageAccounts extends ManageRecords
 {
-    protected static string $resource = IncomeResource::class;
+    protected static string $resource = AccountResource::class;
+
+    protected static ?string $navigationGroup = '';
 
     protected function getHeaderActions(): array
     {

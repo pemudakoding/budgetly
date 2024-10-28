@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\MasterData\Resources;
+namespace App\Filament\Clusters\FinancialSetup\Resources;
 
-use App\Filament\Clusters\MasterData;
+use App\Filament\Clusters\FinancialSetup;
 use App\Models\Builders\AccountBuilder;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
@@ -21,7 +21,7 @@ class IncomeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $cluster = MasterData::class;
+    protected static ?string $cluster = FinancialSetup::class;
 
     public static function form(Form $form): Form
     {
@@ -68,7 +68,7 @@ class IncomeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Clusters\MasterData\Resources\IncomeResource\Pages\ManageIncomes::route('/'),
+            'index' => \App\Filament\Clusters\FinancialSetup\Resources\IncomeResource\Pages\ManageIncomes::route('/'),
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\MasterData\Resources;
+namespace App\Filament\Clusters\FinancialSetup\Resources;
 
-use App\Filament\Clusters\MasterData;
+use App\Filament\Clusters\FinancialSetup;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
 use Exception;
@@ -19,7 +19,7 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $cluster = MasterData::class;
+    protected static ?string $cluster = FinancialSetup::class;
 
     public static function form(Form $form): Form
     {
@@ -72,7 +72,7 @@ class ExpenseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Clusters\MasterData\Resources\ExpenseResource\Pages\ManageExpenses::route('/'),
+            'index' => \App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Pages\ManageExpenses::route('/'),
         ];
     }
 }
