@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Permissions;
+use App\Handlers\EligibleTo;
 use App\Models\Expense;
 use App\Models\User;
 
@@ -12,7 +14,7 @@ class ExpensePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return EligibleTo::view(Permissions::BudgetingExpense, $user);
     }
 
     /**
@@ -20,7 +22,7 @@ class ExpensePolicy
      */
     public function view(User $user, Expense $expenseCategory): bool
     {
-        return true;
+        return EligibleTo::view(Permissions::BudgetingExpense, $user);
     }
 
     /**
@@ -28,7 +30,7 @@ class ExpensePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return EligibleTo::create(Permissions::BudgetingExpense, $user);
     }
 
     /**
@@ -36,7 +38,7 @@ class ExpensePolicy
      */
     public function update(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return EligibleTo::update(Permissions::BudgetingExpense, $user) && $user->id === $expenseCategory->user_id;
     }
 
     /**
@@ -44,7 +46,7 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return EligibleTo::delete(Permissions::BudgetingExpense, $user) && $user->id === $expenseCategory->user_id;
     }
 
     /**
@@ -52,7 +54,7 @@ class ExpensePolicy
      */
     public function restore(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return false;
     }
 
     /**
@@ -60,6 +62,6 @@ class ExpensePolicy
      */
     public function forceDelete(User $user, Expense $expenseCategory): bool
     {
-        return $user->id === $expenseCategory->user_id;
+        return false;
     }
 }

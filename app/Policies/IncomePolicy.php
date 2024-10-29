@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Permissions;
+use App\Handlers\EligibleTo;
 use App\Models\Income;
 use App\Models\User;
 
@@ -12,7 +14,7 @@ class IncomePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return EligibleTo::view(Permissions::BudgetingIncome, $user);
     }
 
     /**
@@ -20,7 +22,7 @@ class IncomePolicy
      */
     public function view(User $user, Income $income): bool
     {
-        return $user->id === $income->user_id;
+        return EligibleTo::view(Permissions::BudgetingIncome, $user) && $user->id === $income->user_id;
     }
 
     /**
@@ -28,7 +30,7 @@ class IncomePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return EligibleTo::create(Permissions::BudgetingIncome, $user);
     }
 
     /**
@@ -36,7 +38,7 @@ class IncomePolicy
      */
     public function update(User $user, Income $income): bool
     {
-        return $user->id === $income->user_id;
+        return EligibleTo::update(Permissions::BudgetingIncome, $user) && $user->id === $income->user_id;
     }
 
     /**
@@ -44,7 +46,7 @@ class IncomePolicy
      */
     public function delete(User $user, Income $income): bool
     {
-        return $user->id === $income->user_id;
+        return EligibleTo::delete(Permissions::BudgetingIncome, $user) && $user->id === $income->user_id;
     }
 
     /**
@@ -52,7 +54,7 @@ class IncomePolicy
      */
     public function restore(User $user, Income $income): bool
     {
-        return $user->id === $income->user_id;
+        return false;
     }
 
     /**
@@ -60,6 +62,6 @@ class IncomePolicy
      */
     public function forceDelete(User $user, Income $income): bool
     {
-        return $user->id === $income->user_id;
+        return false;
     }
 }

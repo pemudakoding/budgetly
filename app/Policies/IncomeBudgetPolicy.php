@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Permissions;
+use App\Handlers\EligibleTo;
 use App\Models\IncomeBudget;
 use App\Models\User;
 
@@ -12,7 +14,7 @@ class IncomeBudgetPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return EligibleTo::view(Permissions::BudgetingIncomeBudget, $user);
     }
 
     /**
@@ -20,7 +22,7 @@ class IncomeBudgetPolicy
      */
     public function view(User $user, IncomeBudget $incomeBudget): bool
     {
-        return $user->id === $incomeBudget->income->user_id;
+        return EligibleTo::view(Permissions::BudgetingIncomeBudget, $user) && $user->id === $incomeBudget->income->user_id;
     }
 
     /**
@@ -28,7 +30,7 @@ class IncomeBudgetPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return EligibleTo::create(Permissions::BudgetingIncomeBudget, $user);
     }
 
     /**
@@ -36,7 +38,7 @@ class IncomeBudgetPolicy
      */
     public function update(User $user, IncomeBudget $incomeBudget): bool
     {
-        return $user->id === $incomeBudget->income->user_id;
+        return EligibleTo::update(Permissions::BudgetingIncomeBudget, $user) && $user->id === $incomeBudget->income->user_id;
     }
 
     /**
@@ -44,7 +46,7 @@ class IncomeBudgetPolicy
      */
     public function delete(User $user, IncomeBudget $incomeBudget): bool
     {
-        return $user->id === $incomeBudget->income->user_id;
+        return EligibleTo::delete(Permissions::BudgetingIncomeBudget, $user) && $user->id === $incomeBudget->income->user_id;
     }
 
     /**
@@ -52,7 +54,7 @@ class IncomeBudgetPolicy
      */
     public function restore(User $user, IncomeBudget $incomeBudget): bool
     {
-        return $user->id === $incomeBudget->income->user_id;
+        return false;
     }
 
     /**
@@ -60,6 +62,6 @@ class IncomeBudgetPolicy
      */
     public function forceDelete(User $user, IncomeBudget $incomeBudget): bool
     {
-        return $user->id === $incomeBudget->income->user_id;
+        return false;
     }
 }

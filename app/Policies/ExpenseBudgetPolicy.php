@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Permissions;
+use App\Handlers\EligibleTo;
 use App\Models\ExpenseBudget;
 use App\Models\User;
 
@@ -12,7 +14,7 @@ class ExpenseBudgetPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return EligibleTo::view(Permissions::BudgetingExpenseRealization, $user);
     }
 
     /**
@@ -20,7 +22,7 @@ class ExpenseBudgetPolicy
      */
     public function view(User $user, ExpenseBudget $expenseBudget): bool
     {
-        return $user->id === $expenseBudget->expense->user_id;
+        return EligibleTo::view(Permissions::BudgetingExpenseRealization, $user) && $user->id === $expenseBudget->expense->user_id;
     }
 
     /**
@@ -28,7 +30,7 @@ class ExpenseBudgetPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return EligibleTo::create(Permissions::BudgetingExpenseRealization, $user);
     }
 
     /**
@@ -36,7 +38,7 @@ class ExpenseBudgetPolicy
      */
     public function update(User $user, ExpenseBudget $expenseBudget): bool
     {
-        return $user->id === $expenseBudget->expense->user_id;
+        return EligibleTo::update(Permissions::BudgetingExpenseRealization, $user) && $user->id === $expenseBudget->expense->user_id;
     }
 
     /**
@@ -44,7 +46,7 @@ class ExpenseBudgetPolicy
      */
     public function delete(User $user, ExpenseBudget $expenseBudget): bool
     {
-        return $user->id === $expenseBudget->expense->user_id;
+        return EligibleTo::delete(Permissions::BudgetingExpenseRealization, $user) && $user->id === $expenseBudget->expense->user_id;
     }
 
     /**
@@ -52,7 +54,7 @@ class ExpenseBudgetPolicy
      */
     public function restore(User $user, ExpenseBudget $expenseBudget): bool
     {
-        return $user->id === $expenseBudget->expense->user_id;
+        return false;
     }
 
     /**
@@ -60,6 +62,6 @@ class ExpenseBudgetPolicy
      */
     public function forceDelete(User $user, ExpenseBudget $expenseBudget): bool
     {
-        return $user->id === $expenseBudget->expense->user_id;
+        return false;
     }
 }
