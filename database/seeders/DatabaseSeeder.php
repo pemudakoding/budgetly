@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ExpenseCategorySeeder::class,
             PermissionsSeeder::class,
             RoleSeeder::class,
+            AssignPermissionToRoleSeeder::class,
         ]);
 
         if (User::doesntExist()) {
