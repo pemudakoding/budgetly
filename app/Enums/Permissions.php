@@ -8,8 +8,6 @@ enum Permissions: string
 {
     case FinancialSetup = 'financial-setup';
     case FinancialSetupAccount = 'financial-setup.account';
-    case FinancialSetupExpense = 'financial-setup.expense';
-    case FinancialSetupIncome = 'financial-setup.income';
     case BudgetingIncome = 'budgeting.income';
     case BudgetingIncomeBudget = 'budgeting.income.budget';
     case BudgetingExpense = 'budgeting.expense';
@@ -36,11 +34,11 @@ enum Permissions: string
         $moduleActions = [
             // Financial Setup
             Permissions::FinancialSetup->value => [PermissionAction::All],
-            Permissions::FinancialSetupExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
-            Permissions::FinancialSetupIncome->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
+            Permissions::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
             // Budgeting
             Permissions::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
             Permissions::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permissions::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             Permissions::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             Permissions::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             // Settings
