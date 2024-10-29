@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Livewire\Auth\Register;
 use Exception;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -34,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('user')
             ->login()
-            ->registration()
+            ->registration(Register::class)
             ->emailVerification()
             ->profile(isSimple: false)
             ->passwordReset()
