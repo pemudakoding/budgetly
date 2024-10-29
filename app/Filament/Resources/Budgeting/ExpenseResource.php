@@ -83,7 +83,7 @@ class ExpenseResource extends Resource
                             )
                             ->sum('amount');
                     })
-                    ->money('idr', locale: 'id')
+                    ->money()
                     ->summarize([
                         TotalBudget::make(),
                         TotalAllocationMoney::make(),
@@ -100,10 +100,13 @@ class ExpenseResource extends Resource
                             )
                             ->sum('amount');
                     })
-                    ->money('idr', locale: 'id')
+                    ->money()
                     ->summarize([
                         TotalBudget::make(),
                     ]),
+                TextColumn::make('unrealized_amount')
+                    ->state(fn (TextColumn $component) => $component->getTable()->getColumn('allocations.amount')->getState() - $component->getTable()->getColumn('budgets.amount')->getState())
+                    ->money(),
                 ExpenseProgressBar::make('budgets-bar')
                     ->label('Usage Progress'),
                 ExpenseProgressPercentage::make('budgets-percentage')
