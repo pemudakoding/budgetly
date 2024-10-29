@@ -34,11 +34,11 @@ enum Permissions: string
         $moduleActions = [
             // Financial Setup
             Permissions::FinancialSetup->value => [PermissionAction::All],
-            Permissions::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
+            Permissions::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
             // Budgeting
             Permissions::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
             Permissions::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
-            Permissions::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permissions::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
             Permissions::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             Permissions::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             // Settings
