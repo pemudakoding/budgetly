@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use DateTime;
 
-enum Permissions: string
+enum Permission: string
 {
     case FinancialSetup = 'financial-setup';
     case FinancialSetupAccount = 'financial-setup.account';
@@ -33,16 +33,16 @@ enum Permissions: string
         /** @var array<string, list<PermissionAction>> $moduleActions */
         $moduleActions = [
             // Financial Setup
-            Permissions::FinancialSetup->value => [PermissionAction::All],
-            Permissions::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
+            Permission::FinancialSetup->value => [PermissionAction::All],
+            Permission::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
             // Budgeting
-            Permissions::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
-            Permissions::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
-            Permissions::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
-            Permissions::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
-            Permissions::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permission::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
+            Permission::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permission::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
+            Permission::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permission::BudgetingExpenseRealization->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             // Settings
-            Permissions::UserManagement->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
+            Permission::UserManagement->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
         ];
 
         return array_map(
@@ -50,7 +50,7 @@ enum Permissions: string
                 return array_filter(
                     array_map(
                         fn (PermissionAction $action) => [
-                            'name' => Permissions::tryFrom($module)->suffix($action),
+                            'name' => Permission::tryFrom($module)->suffix($action),
                             'guard_name' => $guard,
                             'created_at' => now(),
                             'updated_at' => now(),

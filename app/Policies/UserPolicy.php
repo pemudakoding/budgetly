@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Permissions;
+use App\Enums\Permission;
 use App\Handlers\EligibleTo;
 use App\Models\User;
 
@@ -13,7 +13,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return EligibleTo::view(Permissions::UserManagement, $user);
+        return EligibleTo::view(Permission::UserManagement, $user);
     }
 
     /**
@@ -21,7 +21,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return EligibleTo::view(Permissions::UserManagement, $user);
+        return EligibleTo::view(Permission::UserManagement, $user);
     }
 
     /**
@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return EligibleTo::create(Permissions::UserManagement, $user);
+        return EligibleTo::create(Permission::UserManagement, $user);
     }
 
     /**
@@ -37,7 +37,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return EligibleTo::update(Permissions::UserManagement, $user);
+        return EligibleTo::update(Permission::UserManagement, $user);
     }
 
     /**
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return EligibleTo::delete(Permissions::UserManagement, $user);
+        return EligibleTo::delete(Permission::UserManagement, $user);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Permissions;
+use App\Enums\Permission;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -19,7 +19,7 @@ class PermissionsSeeder extends Seeder
     {
         app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $permissions = Permissions::mapPermissions();
+        $permissions = Permission::mapPermissions();
 
         Permission::query()->upsert(
             array_merge(...array_values($permissions)),

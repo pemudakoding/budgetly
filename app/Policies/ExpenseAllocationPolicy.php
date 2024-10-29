@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Permissions;
+use App\Enums\Permission;
 use App\Handlers\EligibleTo;
 use App\Models\ExpenseAllocation;
 use App\Models\User;
@@ -15,7 +15,7 @@ class ExpenseAllocationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return EligibleTo::view(Permissions::BudgetingExpenseAllocation, $user);
+        return EligibleTo::view(Permission::BudgetingExpenseAllocation, $user);
     }
 
     /**
@@ -23,7 +23,7 @@ class ExpenseAllocationPolicy
      */
     public function view(User $user, ExpenseAllocation $expenseAllocation): bool
     {
-        return EligibleTo::view(Permissions::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
+        return EligibleTo::view(Permission::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class ExpenseAllocationPolicy
      */
     public function create(User $user): bool
     {
-        return EligibleTo::create(Permissions::BudgetingExpenseAllocation, $user);
+        return EligibleTo::create(Permission::BudgetingExpenseAllocation, $user);
     }
 
     /**
@@ -39,7 +39,7 @@ class ExpenseAllocationPolicy
      */
     public function update(User $user, ExpenseAllocation $expenseAllocation): bool
     {
-        return EligibleTo::update(Permissions::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
+        return EligibleTo::update(Permission::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
     }
 
     /**
@@ -47,7 +47,7 @@ class ExpenseAllocationPolicy
      */
     public function delete(User $user, ExpenseAllocation $expenseAllocation): bool
     {
-        return EligibleTo::delete(Permissions::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
+        return EligibleTo::delete(Permission::BudgetingExpenseAllocation, $user) && $user->id === $expenseAllocation->expense->user_id;
     }
 
     /**

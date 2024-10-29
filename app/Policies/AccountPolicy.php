@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Permissions;
+use App\Enums\Permission;
 use App\Handlers\EligibleTo;
 use App\Models\Account;
 use App\Models\User;
@@ -14,7 +14,7 @@ class AccountPolicy
      */
     public function viewAny(User $user): bool
     {
-        return EligibleTo::view(Permissions::FinancialSetupAccount, $user);
+        return EligibleTo::view(Permission::FinancialSetupAccount, $user);
     }
 
     /**
@@ -22,7 +22,7 @@ class AccountPolicy
      */
     public function view(User $user, Account $account): bool
     {
-        return EligibleTo::view(Permissions::FinancialSetupAccount, $user) && $user->id === $account->user_id;
+        return EligibleTo::view(Permission::FinancialSetupAccount, $user) && $user->id === $account->user_id;
     }
 
     /**
@@ -30,7 +30,7 @@ class AccountPolicy
      */
     public function create(User $user): bool
     {
-        return EligibleTo::create(Permissions::FinancialSetupAccount, $user);
+        return EligibleTo::create(Permission::FinancialSetupAccount, $user);
     }
 
     /**
@@ -38,7 +38,7 @@ class AccountPolicy
      */
     public function update(User $user, Account $account): bool
     {
-        return EligibleTo::update(Permissions::FinancialSetupAccount, $user) && $user->id === $account->user_id;
+        return EligibleTo::update(Permission::FinancialSetupAccount, $user) && $user->id === $account->user_id;
     }
 
     /**
@@ -46,7 +46,7 @@ class AccountPolicy
      */
     public function delete(User $user, Account $account): bool
     {
-        return EligibleTo::delete(Permissions::FinancialSetupAccount, $user) && $user->id === $account->user_id;
+        return EligibleTo::delete(Permission::FinancialSetupAccount, $user) && $user->id === $account->user_id;
     }
 
     /**

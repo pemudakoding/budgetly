@@ -4,7 +4,7 @@ namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions
 
 use App\Enums\ExpenseCategory;
 use App\Enums\PermissionAction;
-use App\Enums\Permissions;
+use App\Enums\Permission;
 use App\Handlers\EligibleTo;
 use App\Models\Account;
 use App\Models\ExpenseCategoryAccount;
@@ -46,7 +46,7 @@ class ManageAccountAction extends Action
 
         $this->record(null);
 
-        $this->visible(condition: EligibleTo::do(Permissions::BudgetingExpense, PermissionAction::ManageExpenseAccount));
+        $this->visible(condition: EligibleTo::do(Permission::BudgetingExpense, PermissionAction::ManageExpenseAccount));
 
         $this
             ->form(function () {
