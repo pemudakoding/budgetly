@@ -4,6 +4,7 @@ namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Pages;
 
 use App\Enums\ExpenseCategory;
 use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource;
+use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions\ManageAccountAction;
 use App\Models\Builders\ExpenseBuilder;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
@@ -37,7 +38,7 @@ class ManageExpenses extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            \App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions\ManageAccountAction::make(),
+            ManageAccountAction::make(),
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
                     $data = [

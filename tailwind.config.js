@@ -8,5 +8,6 @@ export default {
         './resources/views/livewire/**/*.blade.php',
         './resources/views/vendor/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './vendor/codewithdennis/filament-simple-alert/resources/**/*.blade.php',
     ],
 }

@@ -6,9 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "codewithdennis/filament-simple-alert": "^3.0",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "spatie/laravel-permission": "^6.9",
         "symfony/http-client": "^7.1",
         "symfony/postmark-mailer": "^7.1"
     },

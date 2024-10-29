@@ -3,6 +3,9 @@
 namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions;
 
 use App\Enums\ExpenseCategory;
+use App\Enums\PermissionAction;
+use App\Enums\Permission;
+use App\Handlers\EligibleTo;
 use App\Models\Account;
 use App\Models\ExpenseCategoryAccount;
 use Closure;
@@ -42,6 +45,8 @@ class ManageAccountAction extends Action
         $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? 'heroicon-m-plus');
 
         $this->record(null);
+
+        $this->visible(condition: EligibleTo::do(Permission::BudgetingExpense, PermissionAction::ManageExpenseAccount));
 
         $this
             ->form(function () {
