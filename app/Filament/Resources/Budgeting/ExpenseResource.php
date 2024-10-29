@@ -105,6 +105,7 @@ class ExpenseResource extends Resource
                         TotalBudget::make(),
                     ]),
                 TextColumn::make('unrealized_amount')
+                    ->label('Unrealized Amount')
                     ->state(fn (TextColumn $component) => $component->getTable()->getColumn('allocations.amount')->getState() - $component->getTable()->getColumn('budgets.amount')->getState())
                     ->money(),
                 ExpenseProgressBar::make('budgets-bar')
