@@ -27,15 +27,18 @@ class BudgetsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
-                MoneyInput::make('amount')
-                    ->required(),
+                Forms\Components\Grid::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('description')
+                            ->required()
+                            ->maxLength(255),
+                        MoneyInput::make('amount')
+                            ->required(),
+                    ]),
                 Forms\Components\DatePicker::make('realized_at')
                     ->label('Realized at')
-                    ->columnSpan(2)
-                    ->default(Carbon::now()),
+                    ->default(Carbon::now())
+                    ->columnSpan(2),
             ]);
     }
 
