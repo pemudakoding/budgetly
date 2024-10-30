@@ -34,6 +34,9 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('user')
+            ->brandLogo(asset('images/logo-light.svg'))
+            ->darkModeBrandLogo(asset('images/logo-dark.svg'))
+            ->brandLogoHeight('2.5rem')
             ->login()
             ->registration(Register::class)
             ->emailVerification()
