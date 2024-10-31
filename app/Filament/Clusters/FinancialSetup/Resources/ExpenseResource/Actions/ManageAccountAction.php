@@ -3,8 +3,8 @@
 namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions;
 
 use App\Enums\ExpenseCategory;
-use App\Enums\PermissionAction;
 use App\Enums\Permission;
+use App\Enums\PermissionAction;
 use App\Handlers\EligibleTo;
 use App\Models\Account;
 use App\Models\ExpenseCategoryAccount;
