@@ -26,6 +26,8 @@ class AccountResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->helperText('For example BCA, BNI, etc.')
+                    ->maxLength(255)
                     ->required(),
                 Forms\Components\ColorPicker::make('legend')
                     ->required()
