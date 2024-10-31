@@ -9,13 +9,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Onboard\Concerns\GetsOnboarded;
+use Spatie\Onboard\Concerns\Onboardable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Onboardable
 {
+    use GetsOnboarded;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
-
     use HasRoles;
     use Notifiable;
 

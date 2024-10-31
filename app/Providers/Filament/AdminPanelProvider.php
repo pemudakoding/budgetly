@@ -3,11 +3,10 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Http\Middleware\RedirectToUnfinishedOnboardingStep;
 use App\Livewire\Auth\Register;
 use Exception;
 use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Assets\Css;
@@ -15,15 +14,8 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Table;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Vite;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -60,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->middleware(Config::array('filament.middleware.common'))
             ->authMiddleware([
                 Authenticate::class,
+                RedirectToUnfinishedOnboardingStep::class,
             ]);
     }
 
