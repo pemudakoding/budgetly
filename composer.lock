@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b82044beea3184356077a0111e120238",
+    "content-hash": "bcfbd1473c01d173a424ecda9ff790ce",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4901,6 +4901,78 @@
                 }
             ],
             "time": "2024-05-17T09:06:10+00:00"
+        },
+        {
+            "name": "spatie/laravel-onboard",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-onboard.git",
+                "reference": "e351e9cb5aa27f892529ce0cfe6c8924b783dbdb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-onboard/zipball/e351e9cb5aa27f892529ce0cfe6c8924b783dbdb",
+                "reference": "e351e9cb5aa27f892529ce0cfe6c8924b783dbdb",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.0|^10.0|^11.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.9.2",
+                "spatie/once": "^3.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.21|^2.0",
+                "pestphp/pest-plugin-laravel": "^1.1|^2.0",
+                "phpstan/extension-installer": "^1.1|^2.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Onboard\\OnboardServiceProvider"
+                    ],
+                    "aliases": {
+                        "Onboard": "Spatie\\Onboard\\OnboardFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Onboard\\": "src",
+                    "Spatie\\Onboard\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rias Van der Veken",
+                    "email": "rias@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel package to help track user onboarding steps",
+            "homepage": "https://github.com/spatie/laravel-onboard",
+            "keywords": [
+                "laravel",
+                "laravel-onboard",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-onboard/issues",
+                "source": "https://github.com/spatie/laravel-onboard/tree/2.6.0"
+            },
+            "time": "2024-02-14T13:09:56+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
