@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectToUnfinishedOnboardingStep
 {
+    /** @var string[] */
+    private array $ignoredPath = [
+        'logout',
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -15,7 +20,7 @@ class RedirectToUnfinishedOnboardingStep
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->onboarding()->inProgress()) {
+        if (auth()->user()->onboarding()->inProgress() && ! in_array($request->path(), $this->ignoredPath)) {
             return redirect()->to(
                 auth()->user()->onboarding()->nextUnfinishedStep()->attribute('link')
             );
