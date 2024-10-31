@@ -31,9 +31,9 @@ final readonly class EligibleTo
     }
 
     public static function do(
-        Permission       $permission,
+        Permission $permission,
         PermissionAction $action,
-        ?User            $user = null
+        ?User $user = null
     ): bool {
         if ($user ? $user->hasRole(Role::Admin->value) : auth()->user()->hasRole(Role::Admin->value)) {
             return true;

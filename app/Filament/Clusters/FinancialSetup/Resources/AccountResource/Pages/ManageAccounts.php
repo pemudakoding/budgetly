@@ -6,13 +6,22 @@ use App\Filament\Clusters\FinancialSetup\Resources\AccountResource;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 
 class ManageAccounts extends ManageRecords
 {
     protected static string $resource = AccountResource::class;
 
     protected static ?string $navigationGroup = '';
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return new HtmlString(
+            '<span class="text-base"> List of your banks to start tracking your finances in one place. </span>'
+        );
+    }
 
     protected function getHeaderActions(): array
     {

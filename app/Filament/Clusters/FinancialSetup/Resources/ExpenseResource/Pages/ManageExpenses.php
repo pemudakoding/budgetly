@@ -10,11 +10,20 @@ use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 
 class ManageExpenses extends ManageRecords
 {
     protected static string $resource = ExpenseResource::class;
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return new HtmlString(
+            '<span class="text-base"> List of your expenses to start tracking and managing your spending—take control of your finances! </span>'
+        );
+    }
 
     public function getTabs(): array
     {
