@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Filament\Clusters\FinancialSetup\Resources\AccountResource;
+use App\Filament\Pages\Dashboard;
 use App\Models\ExpenseCategory;
 use CodeWithDennis\SimpleAlert\Components\Infolists\SimpleAlert;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +17,7 @@ use Filament\Forms\Get;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
@@ -36,9 +39,16 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
 
     protected ?string $heading = '';
 
+    protected static ?string $title = 'Onboard';
+
     public function mount(): void
     {
         $this->form->fill();
+    }
+
+    public static function canAccess(): bool
+    {
+        return ! Auth::user()->hasSetupFinancial();
     }
 
     public function form(Form $form): Form
@@ -65,7 +75,7 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
                                 ->schema([
                                     TextInput::make('name')
                                         ->helperText('Example: Monthly Salary or Freelance earnings'),
-                                    Select::make('accounts')
+                                    Select::make('account')
                                         ->hintIcon('heroicon-o-question-mark-circle')
                                         ->hintIconTooltip('Where does the income come from?')
                                         ->required()
@@ -100,10 +110,63 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
                                         ->exists(ExpenseCategory::class, column: 'id'),
                                 ]),
                         ]),
-                ]),
+                ])
+                    ->submitAction(
+                        Action::make('submit')
+                            ->label('Submit')
+                            ->submit('submit')
+                    ),
             ])
             ->model(Auth::user())
             ->statePath('data');
+    }
+
+    public function submit(): void
+    {
+        $user = Auth::user();
+        [
+            'accounts' => $accounts,
+            'incomes' => $incomes,
+            'expenses' => $expenses,
+        ] = $this->form->getState();
+
+        $addDateTime = function (array $item) use ($user): array {
+            $item['created_at'] = now();
+            $item['updated_at'] = now();
+            $item['user_id'] = $user->id;
+
+            return $item;
+        };
+
+        $accounts = array_map($addDateTime, $accounts);
+        $expenses = array_map($addDateTime, $expenses);
+        $incomes = array_map($addDateTime, $incomes);
+
+        $user->accounts()->upsert($accounts, ['name', 'user_id']);
+        $user->expenses()->upsert($expenses, ['name', 'user_id']);
+
+        $accounts = $user->refresh()->accounts->pluck('id', 'name');
+
+        $incomes = array_map(
+            function (array $income) use ($accounts) {
+                $income['account_id'] = $accounts[$income['account']];
+
+                unset($income['account']);
+
+                return $income;
+            },
+            $incomes
+        );
+
+        $user->incomes()->upsert($incomes, ['name', 'user_id']);
+
+        Notification::make()
+            ->title('Success')
+            ->body('Great! Your financial setup is complete. You\'re all set to explore the features!')
+            ->success()
+            ->send();
+
+        $this->redirect(Dashboard::getUrl());
     }
 
     protected function makeInfolist(): Infolist
