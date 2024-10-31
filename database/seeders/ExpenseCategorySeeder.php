@@ -12,16 +12,10 @@ class ExpenseCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [];
-
         foreach (ExpenseCategory::toArray() as $category) {
-            $data[] = [
+            \App\Models\ExpenseCategory::query()->firstOrCreate([
                 'name' => $category,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            ]);
         }
-
-        \App\Models\ExpenseCategory::query()->upsert($data, ['name']);
     }
 }
