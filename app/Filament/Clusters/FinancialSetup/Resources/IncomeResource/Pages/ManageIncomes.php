@@ -6,11 +6,20 @@ use App\Filament\Clusters\FinancialSetup\Resources\IncomeResource;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 
 class ManageIncomes extends ManageRecords
 {
     protected static string $resource = IncomeResource::class;
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return new HtmlString(
+            '<span class="text-base"> List of your income sources to start track and manage your earnings—optimize your financial growth! </span>'
+        );
+    }
 
     protected function getHeaderActions(): array
     {
