@@ -75,7 +75,7 @@ class IncomeResource extends Resource
                 ViewAction::make(),
             ])
             ->emptyStateHeading('No Income created')
-            ->emptyStateDescription('Please compelete your financial setup first.')
+            ->emptyStateDescription('Please complete your financial setup first.')
             ->emptyStateActions([
                 Action::make('create')
                     ->label('Setup Financial')
