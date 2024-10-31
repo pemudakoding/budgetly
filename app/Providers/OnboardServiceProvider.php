@@ -26,9 +26,6 @@ class OnboardServiceProvider extends ServiceProvider
         Onboard::addStep('Financial Setup')
             ->link(route(Route::Onboard, absolute: false))
             ->excludeIf(fn (User $user): bool => $user->hasRole(Role::Admin))
-            ->completeIf(fn (User $model): bool => $model->accounts()->exists()
-                && $model->incomes()->exists()
-                && $model->expenses()->exists()
-            );
+            ->completeIf(fn (User $model): bool => $model->hasSetupFinancial());
     }
 }
