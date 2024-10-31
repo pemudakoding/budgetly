@@ -34,9 +34,9 @@ enum Permission: string
         $moduleActions = [
             // Financial Setup
             Permission::FinancialSetup->value => [PermissionAction::All],
-            Permission::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
+            Permission::FinancialSetupAccount->value => [PermissionAction::All, PermissionAction::Create, PermissionAction::View, PermissionAction::Update, PermissionAction::Delete],
             // Budgeting
-            Permission::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View],
+            Permission::BudgetingIncome->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             Permission::BudgetingIncomeBudget->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
             Permission::BudgetingExpense->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete, PermissionAction::ManageExpenseAccount],
             Permission::BudgetingExpenseAllocation->value => [PermissionAction::All, PermissionAction::View, PermissionAction::Create, PermissionAction::Update, PermissionAction::Delete],
