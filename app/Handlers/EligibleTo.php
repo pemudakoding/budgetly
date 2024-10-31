@@ -2,8 +2,8 @@
 
 namespace App\Handlers;
 
-use App\Enums\PermissionAction;
 use App\Enums\Permission;
+use App\Enums\PermissionAction;
 use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;

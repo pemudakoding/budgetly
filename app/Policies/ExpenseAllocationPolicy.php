@@ -6,7 +6,6 @@ use App\Enums\Permission;
 use App\Handlers\EligibleTo;
 use App\Models\ExpenseAllocation;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ExpenseAllocationPolicy
 {

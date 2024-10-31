@@ -122,7 +122,7 @@ class ExpenseResource extends Resource
                     ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
             ])
             ->emptyStateHeading('No Expense created')
-            ->emptyStateDescription('Please compelete your financial setup first.')
+            ->emptyStateDescription('Please complete your financial setup first.')
             ->emptyStateActions([
                 Action::make('create')
                     ->label('Setup Financial')
