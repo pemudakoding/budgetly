@@ -19,6 +19,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Onb
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
+
     use HasRoles;
     use Notifiable;
 

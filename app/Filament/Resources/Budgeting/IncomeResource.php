@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Budgeting;
 
 use App\Enums\Month;
 use App\Enums\NavigationGroup;
+use App\Filament\Resources\Budgeting\IncomeResource\Actions\QuickBudgetAction;
 use App\Filament\Resources\Budgeting\IncomeResource\Pages;
 use App\Filament\Resources\Budgeting\IncomeResource\RelationManagers\BudgetsRelationManager;
 use App\Filament\Resources\Budgeting\IncomeResource\Summarizers\TotalBudget;
@@ -73,6 +74,7 @@ class IncomeResource extends Resource
             ])
             ->actions([
                 ViewAction::make(),
+                QuickBudgetAction::make(),
             ])
             ->emptyStateHeading('No Income created')
             ->emptyStateDescription('Please complete your financial setup first.')
@@ -98,10 +100,5 @@ class IncomeResource extends Resource
             'index' => Pages\ListIncomes::route('/'),
             'view' => Pages\ViewIncome::route('/{record}'),
         ];
-    }
-
-    public static function canCreate(): bool
-    {
-        return false;
     }
 }

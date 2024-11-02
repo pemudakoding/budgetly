@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Budgeting\IncomeResource\Pages;
 
 use App\Filament\Resources\Budgeting\IncomeResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListIncomes extends ListRecords
@@ -13,7 +12,7 @@ class ListIncomes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+
         ];
     }
 }
