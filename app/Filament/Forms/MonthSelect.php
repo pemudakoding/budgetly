@@ -4,6 +4,8 @@ namespace App\Filament\Forms;
 
 use App\Enums\Month;
 use Filament\Forms\Components\Select;
+use Filament\Resources\Pages\Page;
+use Filament\Resources\RelationManagers\RelationManager;
 use Illuminate\Support\Carbon;
 
 class MonthSelect extends Select
@@ -28,6 +30,6 @@ class MonthSelect extends Select
             'in:'.implode(',', array_keys($component->getOptions())),
         ]);
 
-        $this->default($formatMonth(Carbon::now()->month));
+        $this->default(fn (RelationManager|Page $livewire) => $livewire->month ?? $formatMonth(Carbon::now()->month));
     }
 }

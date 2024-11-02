@@ -114,7 +114,15 @@ class ExpenseResource extends Resource
                     ->label('% Usage'),
             ])
             ->actions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->url(fn (Expense $record, Pages\ListExpenses $livewire) => ExpenseResource::getUrl(
+                        'view',
+                        [
+                            'record' => $record,
+                            'month' => $livewire->data['month'],
+                            'year' => $livewire->data['year'],
+                        ]
+                    )),
                 QuickExpenseAction::make(),
             ])
             ->groups([

@@ -4,6 +4,8 @@ namespace App\Filament\Forms;
 
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
+use Filament\Resources\Pages\Page;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class YearSelect extends Select
 {
@@ -25,6 +27,6 @@ class YearSelect extends Select
             'in:'.implode(',', array_keys($component->getOptions())),
         ]);
 
-        $this->default(Carbon::now()->year);
+        $this->default(fn (RelationManager|Page $livewire) => $livewire->year ?? Carbon::now()->year);
     }
 }
