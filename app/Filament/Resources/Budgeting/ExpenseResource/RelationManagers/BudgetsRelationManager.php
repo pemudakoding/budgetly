@@ -14,6 +14,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
+use Livewire\Attributes\Url;
 
 class BudgetsRelationManager extends RelationManager
 {
@@ -22,6 +23,12 @@ class BudgetsRelationManager extends RelationManager
     protected static ?string $title = 'Realization';
 
     protected static ?string $icon = 'heroicon-o-light-bulb';
+
+    #[Url]
+    public ?string $year = null;
+
+    #[Url]
+    public ?string $month = null;
 
     public function form(Form $form): Form
     {
