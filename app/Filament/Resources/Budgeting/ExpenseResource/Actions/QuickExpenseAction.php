@@ -7,6 +7,7 @@ use App\Models\Expense;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Tables\Actions\CreateAction;
 
 class QuickExpenseAction extends CreateAction
@@ -28,11 +29,22 @@ class QuickExpenseAction extends CreateAction
                     ->label('Realized at')
                     ->default(Carbon::now()),
             ])
-            ->modalHeading(fn (Expense $record): string => 'Create expense: '.$record->name)
-            ->action(function (array $data, Expense $record): void {
+            ->modalHeading(fn (?Expense $record): string => 'Create expense: '.$record?->name)
+            ->action(function (array $data, Expense $record, QuickExpenseAction $action, Form $form, array $arguments): void {
                 $data['expense_id'] = $record->id;
 
                 $record->budgets()->create($data);
+
+                if ($arguments['another'] ?? false) {
+                    $this->callAfter();
+                    $this->sendSuccessNotification();
+
+                    $form->fill();
+
+                    $this->halt();
+
+                    return;
+                }
 
                 $this->success();
             });
