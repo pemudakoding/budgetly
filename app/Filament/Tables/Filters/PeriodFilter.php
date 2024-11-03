@@ -5,6 +5,7 @@ namespace App\Filament\Tables\Filters;
 use App\Enums\Month;
 use App\Filament\Forms\MonthSelect;
 use App\Filament\Forms\YearSelect;
+use Exception;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,25 @@ class PeriodFilter extends SelectFilter
      * @var list<string>
      */
     private array $ignoreFilterForRecords = [];
+
+    protected ?string $column = 'created_at';
+
+    public static function make(?string $name = null, string $column = 'created_at'): static
+    {
+        $filterClass = static::class;
+
+        $name ??= static::getDefaultName();
+
+        if (blank($name)) {
+            throw new Exception("Filter of class [$filterClass] must have a unique name, passed to the [make()] method.");
+        }
+
+        $static = app($filterClass, ['name' => $name]);
+        $static->column = $column;
+        $static->configure();
+
+        return $static;
+    }
 
     /**
      * @param  Builder<Model>  $query
@@ -60,11 +80,11 @@ class PeriodFilter extends SelectFilter
             ->query(fn (Builder $query, array $data): Builder => $query
                 ->when(
                     isset($data['year']),
-                    fn (Builder $query, $year): Builder => $query->whereYear('created_at', '=', $data['year']),
+                    fn (Builder $query, $year): Builder => $query->whereYear($this->column, '=', $data['year']),
                 )
                 ->when(
                     isset($data['month']),
-                    fn (Builder $query, $month): Builder => $query->whereMonth('created_at', '=', $data['month']),
+                    fn (Builder $query, $month): Builder => $query->whereMonth($this->column, '=', $data['month']),
                 ))
             ->indicateUsing(function (array $data): array {
                 $indicators = [];

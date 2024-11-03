@@ -86,7 +86,7 @@ class BudgetsRelationManager extends RelationManager
                     ->width('0'),
             ])
             ->filters([
-                PeriodFilter::make('period'),
+                PeriodFilter::make('period', 'realized_at'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
