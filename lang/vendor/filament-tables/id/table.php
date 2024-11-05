@@ -11,6 +11,20 @@ return [
     'columns' => [
 
         'text' => [
+            'account' => [
+                'name' => 'Nama',
+                'legend' => 'Keterangan',
+                'created_at' => 'Dibuat pada',
+                'updated_at' => 'Diperbarui pada',
+            ],
+            'income' => [
+                'name' => 'Nama',
+                'account' => 'Rekening',
+            ],
+            'expense' => [
+                'name' => 'Nama',
+                'category' => 'Kategori',
+            ],
 
             'actions' => [
                 'collapse_list' => 'Sembunyikan :count lainnya',
@@ -159,6 +173,9 @@ return [
     ],
 
     'grouping' => [
+        'label' => [
+            'category' => 'Kategori',
+        ],
 
         'fields' => [
 

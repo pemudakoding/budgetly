@@ -420,6 +420,21 @@ return [
     ],
 
     'text_input' => [
+        'label' => [
+            'account' => [
+                'name' => 'Nama',
+                'legend' => 'Keterangan',
+                'name_hint_text' => 'Contoh: BCA, BNI dan lain-lain',
+            ],
+            'income' => [
+                'name' => 'Nama',
+                'account' => 'Rekening',
+            ],
+            'expense' => [
+                'name' => 'Nama',
+                'category' => 'Kategori',
+            ],
+        ],
 
         'actions' => [
 

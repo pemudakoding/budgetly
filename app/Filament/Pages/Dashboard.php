@@ -23,6 +23,11 @@ class Dashboard extends Page implements HasInfolists
         return __('filament-panels::pages/dashboard.title');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-panels::pages/dashboard.title');
+    }
+
     protected function makeInfolist(): Infolist
     {
         return Infolist::make()

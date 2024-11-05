@@ -32,15 +32,15 @@ class ManageAccountAction extends Action
     {
         parent::setUp();
 
-        $this->label(fn (): string => 'Manage Expense Account');
+        $this->label(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->icon('heroicon-o-credit-card');
 
-        $this->modalHeading(fn (): string => 'Manage Expense Account');
+        $this->modalHeading(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->modalSubmitActionLabel('Submit');
 
-        $this->successNotificationTitle('Success manage account for your expenses');
+        $this->successNotificationTitle(__('filament-notifications::financial-setup.manage-expense-account.success'));
 
         $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? 'heroicon-m-plus');
 
@@ -55,7 +55,7 @@ class ManageAccountAction extends Action
 
                 foreach ($categories as $category) {
                     $forms[] = Select::make($category)
-                        ->label($category)
+                        ->label(ExpenseCategory::tryFrom($category)->render())
                         ->options(Account::query()
                             ->whereUserId(auth()->id())
                             ->pluck('name', 'id')

@@ -19,7 +19,7 @@ class ManageAccounts extends ManageRecords
     public function getSubheading(): string|Htmlable|null
     {
         return new HtmlString(
-            '<span class="text-base"> List of your banks to start tracking your finances in one place. </span>'
+            '<span class="text-base"> '.__('filament-panels::pages/financial-setup.account.description').' </span>'
         );
     }
 

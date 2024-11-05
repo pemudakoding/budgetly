@@ -11,6 +11,20 @@ return [
     'columns' => [
 
         'text' => [
+            'account' => [
+                'name' => 'Name',
+                'legend' => 'Legend',
+                'created_at' => 'Created at',
+                'updated_at' => 'Updated at',
+            ],
+            'income' => [
+                'name' => 'Name',
+                'account' => 'Account',
+            ],
+            'expense' => [
+                'name' => 'Name',
+                'category' => 'Category',
+            ],
 
             'actions' => [
                 'collapse_list' => 'Show :count less',
@@ -159,6 +173,9 @@ return [
     ],
 
     'grouping' => [
+        'label' => [
+            'category' => 'Category',
+        ],
 
         'fields' => [
 

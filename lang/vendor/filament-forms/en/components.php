@@ -472,6 +472,21 @@ return [
     ],
 
     'text_input' => [
+        'label' => [
+            'account' => [
+                'name' => 'Name',
+                'legend' => 'Legend',
+                'name_hint_text' => 'Example: BCA, BNI, and etc.',
+            ],
+            'income' => [
+                'name' => 'Name',
+                'account' => 'Account',
+            ],
+            'expense' => [
+                'name' => 'Name',
+                'category' => 'Category',
+            ],
+        ],
 
         'actions' => [
 

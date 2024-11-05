@@ -17,7 +17,7 @@ class ManageIncomes extends ManageRecords
     public function getSubheading(): string|Htmlable|null
     {
         return new HtmlString(
-            '<span class="text-base"> List of your income sources to start track and manage your earnings—optimize your financial growth! </span>'
+            '<span class="text-base"> '.__('filament-panels::pages/financial-setup.income.description').' </span>'
         );
     }
 
