@@ -10,6 +10,7 @@ use Filament\FilamentManager;
 use Filament\Panel;
 use Filament\Support\Components\Component;
 use Filament\Support\Facades\FilamentView;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -322,9 +323,14 @@ class LanguageSwitch extends Component
     {
         /** @var string|null $locale */
         $locale = request()->cookie('switch_locale');
-        $localeFromCookie = is_null($locale)
-            ? null
-            : Str::of(Crypt::decryptString($locale))->after('|');
+
+        try {
+            $localeFromCookie = is_null($locale)
+                ? null
+                : Str::of(Crypt::decryptString($locale))->after('|');
+        } catch (DecryptException) {
+            $localeFromCookie = null;
+        }
 
         $locale = session()->get('locale') ??
             request()->get('locale') ??

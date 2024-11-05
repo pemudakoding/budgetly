@@ -8,6 +8,7 @@ use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Infolists\Infolist;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 
 class Dashboard extends Page implements HasInfolists
 {
@@ -17,19 +18,25 @@ class Dashboard extends Page implements HasInfolists
 
     protected static string $view = 'filament.pages.dashboard';
 
+    public function getTitle(): string|Htmlable
+    {
+        return __('filament-panels::pages/dashboard.title');
+    }
+
     protected function makeInfolist(): Infolist
     {
         return Infolist::make()
             ->schema([
                 SimpleAlert::make('example')
-                    ->title('Just One Step to Unlock!')
-                    ->description('Complete your financial setup by adding your accounts, expenses, and income!')
+                    ->title(__('filament-panels::pages/dashboard.alert.onboard-simple.title'))
+                    ->description(__('filament-panels::pages/dashboard.alert.onboard-simple.description'))
                     ->warning()
                     ->border()
                     ->columnSpanFull()
                     ->visible(! auth()->user()->hasSetupFinancial())
                     ->actions([
                         Action::make('setup')
+                            ->label(__('filament-panels::pages/dashboard.alert.onboard-simple.button'))
                             ->color('warning')
                             ->link()
                             ->button()
