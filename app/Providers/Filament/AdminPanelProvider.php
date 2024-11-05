@@ -76,6 +76,7 @@ class AdminPanelProvider extends PanelProvider
         Filament::serving(function () {
             LanguageSwitch::boot();
         });
+
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
             $switch
                 ->visible(outsidePanels: true)
