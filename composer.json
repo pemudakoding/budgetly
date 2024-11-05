@@ -13,7 +13,8 @@
         "spatie/laravel-onboard": "^2.6",
         "spatie/laravel-permission": "^6.9",
         "symfony/http-client": "^7.1",
-        "symfony/postmark-mailer": "^7.1"
+        "symfony/postmark-mailer": "^7.1",
+        "ext-intl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

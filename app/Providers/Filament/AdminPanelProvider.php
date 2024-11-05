@@ -3,9 +3,11 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Handlers\LanguageSwitch;
 use App\Http\Middleware\RedirectToUnfinishedOnboardingStep;
 use App\Livewire\Auth\Register;
 use Exception;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -65,5 +67,19 @@ class AdminPanelProvider extends PanelProvider
             Css::make('app', Vite::asset('resources/css/app.css')),
             Js::make('app-js', Vite::asset('resources/js/app.js'))->module(! app()->isProduction()),
         ]);
+
+        $this->configureFilamentLanguageSwitcher();
+    }
+
+    public function configureFilamentLanguageSwitcher(): void
+    {
+        Filament::serving(function () {
+            LanguageSwitch::boot();
+        });
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->visible(outsidePanels: true)
+                ->locales(['en', 'id']);
+        });
     }
 }
