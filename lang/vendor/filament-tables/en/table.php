@@ -32,6 +32,11 @@ return [
             'expense' => [
                 'name' => 'Name',
                 'category' => 'Category',
+                'allocations' => 'Allocations',
+                'realization' => 'Realization',
+                'unrealized_amount' => 'Unrealized Amount',
+                'usage_progress' => 'Usage Progress',
+                'usage_percentage' => '% Percentage',
             ],
 
             'actions' => [
@@ -91,6 +96,17 @@ return [
                 'label' => 'Sum',
             ],
 
+            'total' => [
+                'label' => 'Total',
+            ],
+
+            'allocated' => [
+                'label' => 'Allocated',
+            ],
+
+            'non_allocated' => [
+                'label' => 'Non-allocated',
+            ],
         ],
 
     ],

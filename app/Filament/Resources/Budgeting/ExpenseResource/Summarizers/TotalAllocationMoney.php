@@ -61,6 +61,6 @@ class TotalAllocationMoney extends Summarizer
 
     public function getDefaultLabel(): ?string
     {
-        return 'Allocated';
+        return __('filament-tables::table.summary.summarizers.allocated.label');
     }
 }

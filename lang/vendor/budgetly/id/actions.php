@@ -12,4 +12,10 @@ return [
             'create' => 'Buat Pemasukan',
         ],
     ],
+    'expense' => [
+        'new_expense' => [
+            'title' => 'Pengeluaran Baru',
+            'modal_heading' => 'Buat Pengeluaran untuk',
+        ],
+    ],
 ];

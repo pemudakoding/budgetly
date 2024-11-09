@@ -492,6 +492,15 @@ return [
             'month' => [
                 'name' => 'Month',
             ],
+            'year' => [
+                'name' => 'Year',
+            ],
+            'description' => [
+                'name' => 'Description',
+            ],
+            'realized_at' => [
+                'name' => 'Realized at',
+            ],
         ],
 
         'actions' => [

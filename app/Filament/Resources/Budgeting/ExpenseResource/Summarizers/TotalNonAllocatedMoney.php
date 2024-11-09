@@ -49,6 +49,6 @@ class TotalNonAllocatedMoney extends Summarizer
 
     public function getDefaultLabel(): ?string
     {
-        return 'Non-allocated';
+        return __('filament-tables::table.summary.summarizers.non_allocated.label');
     }
 }

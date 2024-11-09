@@ -440,6 +440,15 @@ return [
             'month' => [
                 'name' => 'Bulan',
             ],
+            'year' => [
+                'name' => 'Tahun',
+            ],
+            'description' => [
+                'name' => 'Deskripsi',
+            ],
+            'realized_at' => [
+                'name' => 'Direalisasikan pada',
+            ],
         ],
 
         'actions' => [

@@ -32,6 +32,11 @@ return [
             'expense' => [
                 'name' => 'Nama',
                 'category' => 'Kategori',
+                'allocations' => 'Alokasi',
+                'realization' => 'Realisasi',
+                'unrealized_amount' => 'Jumlah Belum Terealisasi',
+                'usage_progress' => 'Kemajuan Penggunaan',
+                'usage_percentage' => '% Penggunaan',
             ],
 
             'actions' => [
@@ -91,6 +96,17 @@ return [
                 'label' => 'Total',
             ],
 
+            'total' => [
+                'label' => 'Total',
+            ],
+
+            'allocated' => [
+                'label' => 'Dialokasikan',
+            ],
+
+            'non_allocated' => [
+                'label' => 'Belum dialokasikan',
+            ],
         ],
 
     ],
