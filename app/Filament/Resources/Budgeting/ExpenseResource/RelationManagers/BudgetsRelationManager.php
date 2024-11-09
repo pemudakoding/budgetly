@@ -13,6 +13,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Livewire\Attributes\Url;
 
@@ -30,6 +31,11 @@ class BudgetsRelationManager extends RelationManager
     #[Url]
     public ?string $month = null;
 
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('budgetly::relation-manager.expense.realizations.title');
+    }
+
     public function form(Form $form): Form
     {
         return $form
@@ -37,12 +43,15 @@ class BudgetsRelationManager extends RelationManager
                 Forms\Components\Grid::make()
                     ->schema([
                         Forms\Components\TextInput::make('description')
+                            ->label(__('filament-forms::components.text_input.label.description.name'))
                             ->required()
                             ->maxLength(255),
                         MoneyInput::make('amount')
+                            ->label(__('filament-forms::components.text_input.label.money.name'))
                             ->required(),
                     ]),
                 Forms\Components\DatePicker::make('realized_at')
+                    ->label(__('filament-forms::components.text_input.label.realized_at.name'))
                     ->label('Realized at')
                     ->default(Carbon::now())
                     ->columnSpan(2),
@@ -62,34 +71,40 @@ class BudgetsRelationManager extends RelationManager
             )
             ->columns([
                 Tables\Columns\TextColumn::make('description')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.description'))
                     ->formatStateUsing(fn (?string $state, ExpenseBudget $record) => $record->is_completed
                         ? new HtmlString("<s>$state</s>")
                         : $state
                     ),
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.amount'))
                     ->money()
                     ->summarize(Tables\Columns\Summarizers\Sum::make()
                         ->label('Total')
                         ->money('idr')
                     ),
                 Tables\Columns\TextColumn::make('realized_at')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.realized_at'))
                     ->date(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.created_at'))
                     ->date()
                     ->dateTimeTooltip(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.updated_at'))
                     ->date()
                     ->dateTimeTooltip(),
                 Tables\Columns\CheckboxColumn::make('is_completed')
                     ->alignment(Alignment::Center)
-                    ->label('Completed')
+                    ->label(__('filament-tables::table.columns.text.expense_realization.completed'))
                     ->width('0'),
             ])
             ->filters([
                 PeriodFilter::make('period', 'realized_at'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->modalHeading(__('budgetly::actions.expense.create_realization.title')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

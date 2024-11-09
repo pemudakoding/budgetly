@@ -17,5 +17,14 @@ return [
             'title' => 'Pengeluaran Baru',
             'modal_heading' => 'Buat Pengeluaran untuk',
         ],
+        'edit_allocations' => [
+            'modal_heading' => 'Ubah alokasi dana untuk',
+        ],
+        'create_allocations' => [
+            'title' => 'Buat alokasi pengeluaran',
+        ],
+        'create_realization' => [
+            'title' => 'Buat realisasi dana pengeluaran',
+        ],
     ],
 ];

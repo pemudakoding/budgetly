@@ -38,6 +38,20 @@ return [
                 'usage_progress' => 'Usage Progress',
                 'usage_percentage' => '% Percentage',
             ],
+            'expense_allocations' => [
+                'month' => 'Month',
+                'amount' => 'Amount',
+                'created_at' => 'Created at',
+                'updated_at' => 'Updated at',
+            ],
+            'expense_realization' => [
+                'description' => 'Description',
+                'amount' => 'Amount',
+                'realized_at' => 'Realized at',
+                'completed' => 'Completed',
+                'created_at' => 'Created at',
+                'updated_at' => 'Updated at',
+            ],
 
             'actions' => [
                 'collapse_list' => 'Show :count less',

@@ -38,6 +38,20 @@ return [
                 'usage_progress' => 'Kemajuan Penggunaan',
                 'usage_percentage' => '% Penggunaan',
             ],
+            'expense_allocations' => [
+                'month' => 'Bulan',
+                'amount' => 'Jumlah',
+                'created_at' => 'Dibuat pada',
+                'updated_at' => 'Diperbarui pada',
+            ],
+            'expense_realization' => [
+                'description' => 'Deskripsi ',
+                'amount' => 'Jumlah',
+                'realized_at' => 'Realisasi pada',
+                'completed' => 'Selesai',
+                'created_at' => 'Dibuat pada',
+                'updated_at' => 'Diperbarui pada',
+            ],
 
             'actions' => [
                 'collapse_list' => 'Sembunyikan :count lainnya',

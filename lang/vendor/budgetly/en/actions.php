@@ -17,5 +17,14 @@ return [
             'title' => 'New expense',
             'modal_heading' => 'Create expense for',
         ],
+        'edit_allocations' => [
+            'modal_heading' => 'Edit allocations for',
+        ],
+        'create_allocations' => [
+            'title' => 'Create expense allocation',
+        ],
+        'create_realization' => [
+            'title' => 'Create realization of expense',
+        ],
     ],
 ];
