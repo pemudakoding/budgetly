@@ -56,57 +56,62 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
         return $form
             ->schema([
                 Wizard::make([
-                    Wizard\Step::make('Preparing your account')
+                    Wizard\Step::make(__('budgetly::pages/onboard.wizard.preparing_your_account.title'))
                         ->icon('heroicon-o-credit-card')
                         ->schema([
                             \CodeWithDennis\SimpleAlert\Components\Forms\SimpleAlert::make('alert')
-                                ->description('Add your bank to start tracking your finances in one place.'),
+                                ->description(__('budgetly::pages/onboard.wizard.preparing_your_account.description')),
                             Repeater::make('accounts')
                                 ->schema(AccountResource::form($form)->getComponents())
                                 ->columns()
-                                ->live(),
+                                ->live()
+                                ->label(__('budgetly::pages/onboard.wizard.preparing_your_account.accounts')),
                         ]),
-                    Wizard\Step::make('Income')
+                    Wizard\Step::make(__('budgetly::pages/onboard.wizard.income.title'))
                         ->icon('heroicon-o-banknotes')
                         ->schema([
                             \CodeWithDennis\SimpleAlert\Components\Forms\SimpleAlert::make('alert')
-                                ->description('Add an income source to easily track your earnings and expenses! This helps you manage spending based on your current financial state.'),
+                                ->description(__('budgetly::pages/onboard.wizard.income.description')),
                             Repeater::make('incomes')
+                                ->label(__('budgetly::pages/onboard.wizard.income.incomes'))
                                 ->schema([
                                     TextInput::make('name')
-                                        ->helperText('Example: Monthly Salary or Freelance earnings'),
+                                        ->label(__('filament-forms::components.text_input.label.income.name'))
+                                        ->helperText(__('budgetly::pages/onboard.wizard.income.helper.name')),
                                     Select::make('account')
+                                        ->label(__('filament-forms::components.text_input.label.income.account'))
                                         ->hintIcon('heroicon-o-question-mark-circle')
-                                        ->hintIconTooltip('Where does the income come from?')
+                                        ->hintIconTooltip(__('budgetly::pages/onboard.wizard.income.hint.account'))
                                         ->required()
                                         ->options(function (Get $get) {
                                             $accountsState = array_filter($get('../../accounts'), fn (array $accountState) => $accountState['name'] !== null);
 
                                             return array_column($accountsState, 'name', 'name');
-                                        })
-                                        ->label('Account'),
+                                        }),
                                 ])
                                 ->columns(),
                         ]),
-                    Wizard\Step::make('Expense')
+                    Wizard\Step::make(__('budgetly::pages/onboard.wizard.expense.title'))
                         ->icon('heroicon-o-clipboard-document-list')
                         ->schema([
                             \CodeWithDennis\SimpleAlert\Components\Forms\SimpleAlert::make('alert')
-                                ->description('Add your expenses to start tracking and managing your spending—take control of your finances!'),
+                                ->description(__('budgetly::pages/onboard.wizard.expense.description')),
                             Repeater::make('expenses')
+                                ->label(__('budgetly::pages/onboard.wizard.expense.expenses'))
                                 ->columns()
                                 ->schema([
                                     TextInput::make('name')
-                                        ->helperText('Example: Home Rent or Transportation')
+                                        ->label(__('filament-forms::components.text_input.label.expense.name'))
+                                        ->helperText(__('budgetly::pages/onboard.wizard.expense.helper.name'))
                                         ->autocomplete(false)
                                         ->required()
                                         ->string(),
                                     Select::make('expense_category_id')
                                         ->required()
-                                        ->label('Expense Category')
+                                        ->label(__('filament-forms::components.text_input.label.expense.category'))
                                         ->hintIcon('heroicon-o-question-mark-circle')
-                                        ->hintIconTooltip('What category does this expense belong to?')
-                                        ->options(ExpenseCategory::pluck('name', 'id'))
+                                        ->hintIconTooltip(__('budgetly::pages/onboard.wizard.expense.hint.category'))
+                                        ->options(array_map(fn (string $expense) => __('budgetly::expense-category.'.str($expense)->lower()), ExpenseCategory::pluck('name', 'id')->toArray()))
                                         ->exists(ExpenseCategory::class, column: 'id'),
                                 ]),
                         ]),
@@ -161,8 +166,8 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
         $user->incomes()->upsert($incomes, ['name', 'user_id']);
 
         Notification::make()
-            ->title('Success')
-            ->body('Great! Your financial setup is complete. You\'re all set to explore the features!')
+            ->title(__('filament-notifications::common.success'))
+            ->body(__('filament-notifications::financial-setup.success_onboarding_financial_setup'))
             ->success()
             ->send();
 
@@ -174,8 +179,8 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
         return Infolist::make()
             ->schema([
                 SimpleAlert::make('example')
-                    ->title('Just One Step to Unlock!')
-                    ->description('Complete your financial setup by adding your accounts, expenses, and income to get ready to explore our features!')
+                    ->title(__('filament-panels::pages/dashboard.alert.onboard-simple.title'))
+                    ->description(__('filament-panels::pages/dashboard.alert.onboard-simple.description'))
                     ->info()
                     ->border()
                     ->columnSpanFull()
