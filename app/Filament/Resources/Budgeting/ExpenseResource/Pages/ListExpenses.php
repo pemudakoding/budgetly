@@ -72,7 +72,7 @@ class ListExpenses extends ListRecords implements HasForms
             ...array_reduce(
                 ExpenseCategory::cases(),
                 function ($categories, ExpenseCategory $category): array {
-                    $categories[lcfirst($category->value)] = Tab::make()->modifyQueryUsing(
+                    $categories[$category->render()] = Tab::make()->modifyQueryUsing(
                         fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory($category)
                     );
 

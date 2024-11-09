@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 
 use App\Filament\Resources\Budgeting\ExpenseResource;
-use App\Models\Expense;
+use App\Models\Income;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -13,10 +13,10 @@ class ViewExpense extends ViewRecord
 
     public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
     {
-        /** @var Expense $record */
+        /** @var Income $record */
         $record = $this->getRecord();
 
-        return 'View Expenses of '.$record->name;
+        return __('filament-panels::pages/list.expense.view', ['name' => $record->name]);
     }
 
     /**

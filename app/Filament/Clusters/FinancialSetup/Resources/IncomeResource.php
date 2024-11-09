@@ -25,14 +25,26 @@ class IncomeResource extends Resource
 
     protected static ?string $cluster = FinancialSetup::class;
 
+    public static function getLabel(): ?string
+    {
+        return __('filament-panels::pages/financial-setup.income.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-panels::pages/financial-setup.income.title');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name')
+                    ->label(__('filament-forms::components.text_input.label.income.name'))
+                    ->required(),
                 Select::make('account_id')
                     ->required()
-                    ->label('Account')
+                    ->label(__('filament-forms::components.text_input.label.income.account'))
                     ->relationship(
                         'account',
                         'name',
@@ -47,8 +59,10 @@ class IncomeResource extends Resource
             ->modifyQueryUsing(fn (IncomeBuilder $query): IncomeBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('filament-tables::table.columns.text.income.name')),
                 TextColumn::make('account.name')
+                    ->label(__('filament-tables::table.columns.text.income.account'))
                     ->searchable()
                     ->badge()
                     ->color(fn (Income $record) => Color::hex($record->account->legend)),

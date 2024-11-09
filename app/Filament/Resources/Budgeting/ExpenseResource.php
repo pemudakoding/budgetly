@@ -33,21 +33,36 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = NavigationGroup::Budgeting->value;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Budgeting->render();
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('filament-panels::pages/financial-setup.expense.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-panels::pages/financial-setup.expense.title');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 YearSelect::make('year')
+                    ->label(__('filament-forms::components.text_input.label.year.name'))
                     ->live()
                     ->afterStateUpdated(function (string $state, Pages\ListExpenses $livewire) {
                         $livewire->year = $state;
                         $livewire->dispatch('refreshWidget');
                     }),
                 MonthSelect::make('month')
+                    ->label(__('filament-forms::components.text_input.label.month.name'))
                     ->live()
                     ->afterStateUpdated(function (string $state, Pages\ListExpenses $livewire) {
                         $livewire->month = $state;
@@ -68,12 +83,16 @@ class ExpenseResource extends Resource
             ->modifyQueryUsing(fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('category.name')
+                    ->label(__('filament-tables::table.columns.text.expense.category'))
                     ->sortable()
                     ->badge()
+                    ->state(fn (Expense $record): string => $record->enumerateCategory->render())
                     ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->label(__('filament-tables::table.columns.text.expense.name')),
                 TextColumn::make('allocations.amount')
+                    ->label(__('filament-tables::table.columns.text.expense.allocations'))
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
                             ->allocations()
@@ -90,7 +109,7 @@ class ExpenseResource extends Resource
                         TotalNonAllocatedMoney::make(),
                     ]),
                 TextColumn::make('budgets.amount')
-                    ->label('Realization')
+                    ->label(__('filament-tables::table.columns.text.expense.realization'))
                     ->state(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
                             ->budgets()
@@ -105,13 +124,13 @@ class ExpenseResource extends Resource
                         TotalBudget::make(),
                     ]),
                 TextColumn::make('unrealized_amount')
-                    ->label('Unrealized Amount')
+                    ->label(__('filament-tables::table.columns.text.expense.unrealized_amount'))
                     ->state(fn (TextColumn $component) => $component->getTable()->getColumn('allocations.amount')->getState() - $component->getTable()->getColumn('budgets.amount')->getState())
                     ->money(),
                 ExpenseProgressBar::make('budgets-bar')
-                    ->label('Usage Progress'),
+                    ->label(__('filament-tables::table.columns.text.expense.usage_progress')),
                 ExpenseProgressPercentage::make('budgets-percentage')
-                    ->label('% Usage'),
+                    ->label(__('filament-tables::table.columns.text.expense.usage_percentage')),
             ])
             ->actions([
                 ViewAction::make()
