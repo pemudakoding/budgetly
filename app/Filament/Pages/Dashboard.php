@@ -3,13 +3,15 @@
 namespace App\Filament\Pages;
 
 use App\Enums\Period;
-use App\Filament\Tables\Filters\PeriodFilter;
+use App\Filament\Widgets\Dashboard\AccountSummary;
+use App\Filament\Widgets\Dashboard\AmountOverview;
 use CodeWithDennis\SimpleAlert\Components\Infolists\SimpleAlert;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
@@ -19,7 +21,7 @@ use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 
 class Dashboard extends BaseDashboard implements HasInfolists
 {
-    use InteractsWithInfolists, HasFiltersForm;
+    use HasFiltersForm, InteractsWithInfolists;
 
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
@@ -33,7 +35,13 @@ class Dashboard extends BaseDashboard implements HasInfolists
                     ->schema([
                         Select::make('period')
                             ->options(Period::toArray())
-                            ->live(),
+                            ->default(Period::Today)
+                            ->afterStateUpdated(function (string $state, Set $set) {
+                                if ($state !== Period::Custom->value) {
+                                    $set('startDate', null);
+                                    $set('endDate', null);
+                                }
+                            }),
                         DatePicker::make('startDate')
                             ->visible(fn (Get $get): bool => $get('period') == Period::Custom->value),
                         DatePicker::make('endDate')
@@ -42,6 +50,14 @@ class Dashboard extends BaseDashboard implements HasInfolists
                     ->columns(3),
             ])
             ->live();
+    }
+
+    public function getWidgets(): array
+    {
+        return [
+            AmountOverview::class,
+            AccountSummary::class,
+        ];
     }
 
     protected function makeInfolist(): Infolist

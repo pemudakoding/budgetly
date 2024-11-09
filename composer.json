@@ -8,6 +8,7 @@
         "php": "^8.2",
         "codewithdennis/filament-simple-alert": "^3.0",
         "filament/filament": "^3.2",
+        "flowframe/laravel-trend": "^0.3.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "leandrocfe/filament-apex-charts": "^3.1",

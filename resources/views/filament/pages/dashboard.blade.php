@@ -1,8 +1,18 @@
-<x-filament-panels::page>
+<x-filament-panels::page class="fi-dashboard-page">
     {{ $this->makeInfolist() }}
 
-    {{ $this->filtersForm }}
+    @if (method_exists($this, 'filtersForm'))
+        {{ $this->filtersForm }}
+    @endif
 
-    @livewire(\App\Filament\Widgets\Dashboard\AmountOverview::class)
-    @livewire(\App\Filament\Widgets\Dashboard\AccountSummary::class)
+    <x-filament-widgets::widgets
+        :columns="$this->getColumns()"
+        :data="
+            [
+                ...(property_exists($this, 'filters') ? ['filters' => $this->filters] : []),
+                ...$this->getWidgetData(),
+            ]
+        "
+        :widgets="$this->getVisibleWidgets()"
+    />
 </x-filament-panels::page>
