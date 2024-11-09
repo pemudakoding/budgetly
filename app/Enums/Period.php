@@ -25,11 +25,17 @@ enum Period: string
     public function getDate(): string|array
     {
         return match ($this) {
-            self::Today => Carbon::today(),
-            self::Yesterday => Carbon::yesterday(),
+            self::Today => [
+                Carbon::now()->startOfDay(),
+                Carbon::now()->endOfDay(),
+            ],
+            self::Yesterday => [
+                Carbon::now()->subDay()->startOfDay(),
+                Carbon::now()->subDay()->endOfDay(),
+            ],
             self::LastSevenDays => [
-                Carbon::now()->subdays(7),
-                self::Today->getDate(),
+                Carbon::now()->subDays(7),
+                Carbon::today(),
             ],
             self::LastMonth => [
                 Carbon::now()->subMonth()->startOf('month'),
@@ -41,11 +47,11 @@ enum Period: string
             ],
             self::MonthToDate => [
                 Carbon::now()->startOf('month'),
-                self::Today->getDate(),
+                Carbon::today(),
             ],
             self::YearToDate => [
                 Carbon::now()->startOf('year'),
-                self::Today->getDate(),
+                Carbon::today(),
             ],
             self::Custom => throw new ValueError('Custom period requires specific start and end dates.')
         };

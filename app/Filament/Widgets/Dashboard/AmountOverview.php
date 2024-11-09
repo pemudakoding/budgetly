@@ -2,8 +2,8 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
+use App\Concerns\HasFilterPeriod;
 use App\Enums\ExpenseCategory;
-use App\Enums\Period;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\ExpenseBudget;
 use App\Models\IncomeBudget;
@@ -14,19 +14,14 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AmountOverview extends BaseWidget
 {
-    use InteractsWithPageFilters;
+    use HasFilterPeriod, InteractsWithPageFilters;
 
     protected function getStats(): array
     {
-        if ($this->filters['period'] === Period::Custom->value) {
-            $startDate = $this->filters['startDate'] ?? now();
-            $endDate = $this->filters['endDate'] ?? now();
-        } else {
-            /** @var array<int, mixed> $period */
-            $period = Period::getDateFrom(Period::tryFrom($this->filters['period']));
+        /** @var array<int, mixed> $period */
+        $period = $this->getFilterPeriod();
 
-            [$startDate, $endDate] = $period;
-        }
+        [$startDate, $endDate] = $period;
 
         /** @var int|float $income */
         $income = IncomeBudget::query()->whereBelongsToUser(auth()->user())

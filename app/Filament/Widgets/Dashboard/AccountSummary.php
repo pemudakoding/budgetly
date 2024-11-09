@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
-use App\Enums\Period;
+use App\Concerns\HasFilterPeriod;
 use App\Models\Account;
 use App\Models\IncomeBudget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -10,7 +10,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class AccountSummary extends ApexChartWidget
 {
-    use InteractsWithPageFilters;
+    use HasFilterPeriod, InteractsWithPageFilters;
 
     protected static ?string $chartId = 'AccountSummary';
 
@@ -23,15 +23,10 @@ class AccountSummary extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-        if ($this->filters['period'] === Period::Custom->value) {
-            $startDate = $this->filters['startDate'] ?? now();
-            $endDate = $this->filters['endDate'] ?? now();
-        } else {
-            /** @var array<int, mixed> $period */
-            $period = Period::getDateFrom(Period::tryFrom($this->filters['period']));
+        /** @var array<int, mixed> $period */
+        $period = $this->getFilterPeriod();
 
-            [$startDate, $endDate] = $period;
-        }
+        [$startDate, $endDate] = $period;
 
         $accounts = Account::query()->where('user_id', auth()->id())->get();
         $balances = IncomeBudget::query()->whereBelongsToUser(auth()->user())
