@@ -32,4 +32,9 @@ enum ExpenseCategory: string
             self::Liabilities => 'heroicon-m-credit-card',
         };
     }
+
+    public function render(): string
+    {
+        return __('budgetly::expense-category.'.str($this->name)->lower());
+    }
 }

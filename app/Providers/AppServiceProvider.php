@@ -19,6 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->loadTranslationsFrom(lang_path('budgetly'), 'budgetly');
     }
 }

@@ -62,9 +62,9 @@ class ExpenseWidget extends BaseWidget
             ->sum('amount');
 
         return [
-            Stat::make('Total Income', Money::format($totalIncome))
+            Stat::make(__('budgetly::widgets.budgeting.expense.total_income'), Money::format($totalIncome))
                 ->icon('heroicon-o-banknotes'),
-            Stat::make('Monthly Saving', Money::format($monthlySaving))
+            Stat::make(__('budgetly::widgets.budgeting.expense.monthly_saving'), Money::format($monthlySaving))
                 ->icon('heroicon-o-receipt-percent'),
         ];
     }

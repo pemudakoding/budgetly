@@ -17,19 +17,21 @@ class QuickExpenseAction extends CreateAction
         parent::setUp();
 
         $this
-            ->label('New Expense')
+            ->label(__('budgetly::actions.expense.new_expense.title'))
             ->icon('heroicon-s-plus')
             ->form([
                 TextInput::make('description')
+                    ->label(__('filament-forms::components.text_input.label.description.name'))
                     ->required()
                     ->maxLength(255),
                 MoneyInput::make('amount')
+                    ->label(__('filament-forms::components.text_input.label.money.name'))
                     ->required(),
                 DatePicker::make('realized_at')
-                    ->label('Realized at')
+                    ->label(__('filament-forms::components.text_input.label.realized_at.name'))
                     ->default(Carbon::now()),
             ])
-            ->modalHeading(fn (?Expense $record): string => 'Create expense: '.$record?->name)
+            ->modalHeading(fn (?Expense $record): string => __('budgetly::actions.expense.new_expense.modal_heading').' '.$record?->name)
             ->action(function (array $data, Expense $record, QuickExpenseAction $action, Form $form, array $arguments): void {
                 $data['expense_id'] = $record->id;
 

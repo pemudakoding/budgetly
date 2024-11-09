@@ -25,8 +25,10 @@ class BudgetsRelationManager extends RelationManager
         return $form
             ->schema([
                 MoneyInput::make('amount')
+                    ->label(__('filament-forms::components.text_input.label.money.name'))
                     ->required(),
                 Select::make('month')
+                    ->label(__('filament-forms::components.text_input.label.month.name'))
                     ->options(Month::toArray())
                     ->required()
                     ->unique(
@@ -51,15 +53,20 @@ class BudgetsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->heading(__('filament-tables::table.columns.text.income_budget.heading'))
             ->recordTitleAttribute('amount')
             ->columns([
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('filament-tables::table.columns.text.income.amount'))
                     ->money(),
-                Tables\Columns\TextColumn::make('month'),
+                Tables\Columns\TextColumn::make('month')
+                    ->label(__('filament-tables::table.columns.text.income.month')),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('filament-tables::table.columns.text.income.created_at'))
                     ->sortable()
                     ->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('filament-tables::table.columns.text.income.updated_at'))
                     ->dateTime(),
             ])
             ->filters([
@@ -70,7 +77,7 @@ class BudgetsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->modalHeading(fn (IncomeBudget $record) => 'Edit Budget for '.$record->month),
+                    ->modalHeading(fn (IncomeBudget $record) => __('budgetly::actions.income.edit_budget.title').': '.$record->month),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

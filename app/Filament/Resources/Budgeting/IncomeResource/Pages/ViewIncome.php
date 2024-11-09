@@ -15,6 +15,6 @@ class ViewIncome extends ViewRecord
         /** @var Income $record */
         $record = $this->getRecord();
 
-        return 'View Income of '.$record->name;
+        return __('filament-panels::pages/list.income.view_budgeting').' '.$record->name;
     }
 }

@@ -43,6 +43,6 @@ class TotalBudget extends Summarizer
 
     public function getDefaultLabel(): ?string
     {
-        return 'Total';
+        return __('filament-tables::table.summary.summarizers.total.label');
     }
 }

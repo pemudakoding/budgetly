@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .flags-only {
+        max-width: 3rem !important;
+    }
+
+    .fls-dropdown-width {
+        max-width: fit-content !important;
+    }
+}
