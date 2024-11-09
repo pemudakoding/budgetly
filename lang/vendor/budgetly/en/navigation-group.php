@@ -2,4 +2,5 @@
 
 return [
     'budgeting' => 'Budgeting',
+    'reports' => 'Reports',
 ];

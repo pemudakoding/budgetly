@@ -2,6 +2,7 @@
 
 namespace App\Models\Builders;
 
+use App\Enums\ExpenseCategory;
 use App\Enums\Month;
 use App\Models\ExpenseBudget;
 use App\Models\User;
@@ -29,6 +30,16 @@ class ExpenseBudgetBuilder extends Builder
             $user instanceof User
                 ? $user->id
                 : $user
+        );
+
+        return $this;
+    }
+
+    public function whereCategory(ExpenseCategory $category): ExpenseBudgetBuilder
+    {
+        $this->whereHas(
+            'expense',
+            fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory($category)
         );
 
         return $this;

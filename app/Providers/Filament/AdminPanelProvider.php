@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->favicon(asset('images/favicon.ico'))
             ->id('user')
             ->brandLogo(asset('images/logo-light.svg'))
             ->darkModeBrandLogo(asset('images/logo-dark.svg'))
