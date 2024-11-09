@@ -20,6 +20,14 @@ return [
             'income' => [
                 'name' => 'Nama',
                 'account' => 'Rekening',
+                'budgets' => 'Jumlah',
+                'month' => 'Bulan',
+                'amount' => 'Jumlah',
+                'created_at' => 'Dibuat pada',
+                'updated_at' => 'Diperbarui pada',
+            ],
+            'income_budget' => [
+                'heading' => 'Pendapatan',
             ],
             'expense' => [
                 'name' => 'Nama',

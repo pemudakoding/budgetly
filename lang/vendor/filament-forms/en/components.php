@@ -486,6 +486,12 @@ return [
                 'name' => 'Name',
                 'category' => 'Category',
             ],
+            'money' => [
+                'name' => 'Amount',
+            ],
+            'month' => [
+                'name' => 'Month',
+            ],
         ],
 
         'actions' => [

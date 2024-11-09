@@ -25,12 +25,14 @@ class QuickBudgetAction extends CreateAction
         parent::setUp();
 
         $this
-            ->label('Add Budget')
+            ->label(__('budgetly::actions.income.add_budget.title'))
             ->icon('heroicon-s-plus')
             ->form([
                 MoneyInput::make('amount')
+                    ->label(__('filament-forms::components.text_input.label.money.name'))
                     ->required(),
                 Select::make('month')
+                    ->label(__('filament-forms::components.text_input.label.month.name'))
                     ->options(Month::toArray())
                     ->required()
                     ->unique(
@@ -43,7 +45,7 @@ class QuickBudgetAction extends CreateAction
                         )
                     ),
             ])
-            ->modalHeading(fn (?Income $record): string => 'Create Income: '.$record?->name)
+            ->modalHeading(fn (?Income $record): string => __('budgetly::actions.income.modal_heading.create').': '.$record?->name)
             ->action(function (array $data, Income $record, QuickBudgetAction $action, Form $form, array $arguments): void {
                 $data['income_id'] = $record->id;
 

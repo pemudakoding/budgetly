@@ -434,6 +434,12 @@ return [
                 'name' => 'Nama',
                 'category' => 'Kategori',
             ],
+            'money' => [
+                'name' => 'Jumlah',
+            ],
+            'month' => [
+                'name' => 'Bulan',
+            ],
         ],
 
         'actions' => [

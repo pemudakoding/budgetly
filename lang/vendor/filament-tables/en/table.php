@@ -20,6 +20,14 @@ return [
             'income' => [
                 'name' => 'Name',
                 'account' => 'Account',
+                'budgets' => 'Amount',
+                'month' => 'Month',
+                'amount' => 'Amount',
+                'created_at' => 'Created at',
+                'updated_at' => 'Updated at',
+            ],
+            'income_budget' => [
+                'heading' => 'Incomes',
             ],
             'expense' => [
                 'name' => 'Name',

@@ -26,9 +26,22 @@ class IncomeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationGroup = NavigationGroup::Budgeting->value;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Budgeting->render();
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('filament-panels::pages/financial-setup.income.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-panels::pages/financial-setup.income.title');
+    }
 
     public static function form(Form $form): Form
     {
@@ -47,12 +60,15 @@ class IncomeResource extends Resource
             ->modifyQueryUsing(fn (IncomeBuilder $query): IncomeBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('filament-tables::table.columns.text.income.name'))
                     ->searchable(),
                 TextColumn::make('account.name')
+                    ->label(__('filament-tables::table.columns.text.income.account'))
                     ->searchable()
                     ->badge()
                     ->color(fn (Income $record) => Color::hex($record->account->legend)),
                 TextColumn::make('budgets.amount')
+                    ->label(__('filament-tables::table.columns.text.income.budgets'))
                     ->state(function (Income $record, Table $table) {
                         /** @var array{year: string, month: string} $period */
                         $period = $table->getFilter('period')->getState();

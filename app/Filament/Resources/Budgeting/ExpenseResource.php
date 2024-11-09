@@ -33,9 +33,12 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = NavigationGroup::Budgeting->value;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Budgeting->render();
+    }
 
     public static function form(Form $form): Form
     {
