@@ -146,7 +146,7 @@ class ExpenseResource extends Resource
             ])
             ->groups([
                 Group::make('category.name')
-                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
+                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->render()),
             ])
             ->emptyStateHeading('No Expense created')
             ->emptyStateDescription('Please complete your financial setup first.')
