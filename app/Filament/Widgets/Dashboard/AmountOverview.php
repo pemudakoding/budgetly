@@ -39,11 +39,11 @@ class AmountOverview extends BaseWidget
             ->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
 
         return [
-            Stat::make('Income', Money::format($income))
+            Stat::make(__('budgetly::widgets.dashboard.total_income'), Money::format($income))
                 ->icon('heroicon-o-banknotes'),
-            Stat::make('Expense', Money::format($expense))
+            Stat::make(__('budgetly::widgets.dashboard.total_expense'), Money::format($expense))
                 ->icon('heroicon-o-ticket'),
-            Stat::make('Saving', Money::format($saving))
+            Stat::make(__('budgetly::widgets.dashboard.monthly_saving'), Money::format($saving))
                 ->icon('heroicon-o-receipt-percent'),
         ];
     }

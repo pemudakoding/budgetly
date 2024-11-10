@@ -73,4 +73,23 @@ enum Period: string
             self::Custom => self::Custom->getDate()
         };
     }
+
+    public function render(): string
+    {
+        return __('budgetly::period.'.str($this->value)->lower()->kebab());
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function toArray(): array
+    {
+        $data = [];
+
+        foreach (Period::cases() as $case) {
+            $data[$value = (string) $case->value] = __('budgetly::period.'.str($value)->lower()->kebab());
+        }
+
+        return $data;
+    }
 }

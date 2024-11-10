@@ -37,6 +37,7 @@ class Dashboard extends BaseDashboard implements HasInfolists
                         Select::make('period')
                             ->options(Period::toArray())
                             ->default(Period::Today->value)
+                            ->label(__('filament-forms::components.text_input.label.period.name'))
                             ->afterStateUpdated(function (string $state, Set $set) {
                                 if ($state !== Period::Custom->value) {
                                     $set('startDate', null);
@@ -44,8 +45,10 @@ class Dashboard extends BaseDashboard implements HasInfolists
                                 }
                             }),
                         DatePicker::make('startDate')
+                            ->label(__('filament-forms::components.text_input.label.period.start_date'))
                             ->visible(fn (Get $get): bool => $get('period') == Period::Custom->value),
                         DatePicker::make('endDate')
+                            ->label(__('filament-forms::components.text_input.label.period.end_date'))
                             ->visible(fn (Get $get): bool => $get('period') == Period::Custom->value),
                     ])
                     ->columns(3),

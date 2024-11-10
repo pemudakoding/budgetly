@@ -501,6 +501,11 @@ return [
             'realized_at' => [
                 'name' => 'Realized at',
             ],
+            'period' => [
+                'name' => 'Period',
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+            ],
         ],
 
         'actions' => [

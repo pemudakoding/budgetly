@@ -14,9 +14,12 @@ class AccountSummary extends ApexChartWidget
 
     protected static ?string $chartId = 'AccountSummary';
 
-    protected static ?string $heading = 'Account Summary';
-
     protected int|string|array $columnSpan = 'full';
+
+    protected function getHeading(): ?string
+    {
+        return __('budgetly::widgets.dashboard.account_summary');
+    }
 
     /**
      * @return array<string, mixed>
