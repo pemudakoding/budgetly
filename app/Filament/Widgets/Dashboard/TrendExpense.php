@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets\Dashboard;
 
 use App\Concerns\HasFilterPeriod;
-use App\Enums\Period;
+use App\Handlers\TrendManager;
 use App\Models\ExpenseBudget;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -40,35 +40,7 @@ class TrendExpense extends ApexChartWidget
         $trend = Trend::query(ExpenseBudget::query()->whereBelongsToUser(auth()->user()))
             ->between($startDate, $endDate);
 
-        if ($filter === Period::Today->value) {
-            $trend->perHour();
-        } elseif ($filter === Period::Yesterday->value) {
-            $trend->perDay();
-        } elseif ($filter === Period::LastSevenDays->value) {
-            $trend->perDay();
-        } elseif ($filter === Period::LastMonth->value) {
-            $trend->perWeek();
-        } elseif ($filter === Period::ThisMonth->value) {
-            $trend->perWeek();
-        } elseif ($filter === Period::MonthToDate->value) {
-            $trend->perWeek();
-        } elseif ($filter === Period::YearToDate->value) {
-            $trend->perMonth();
-        } elseif ($filter === Period::Custom->value) {
-            $diffDays = intval($startDate->diffInDays($endDate));
-
-            if ($diffDays > 1) {
-                $trend->perDay();
-            } elseif ($diffDays >= 30) {
-                $trend->perWeek();
-            } elseif ($diffDays > 90) {
-                $trend->perMonth();
-            } else {
-                $trend->perHour();
-            }
-        } else {
-            $trend->perHour();
-        }
+        (new TrendManager)->setTrendInterval($filter, $trend, $startDate, $endDate);
 
         $expenses = $trend->sum('amount');
 
