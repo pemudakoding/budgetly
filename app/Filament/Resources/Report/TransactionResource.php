@@ -61,6 +61,10 @@ class TransactionResource extends Resource
                     ->state(fn (ExpenseBudget $record): string => $record->expense->enumerateCategory->render())
                     ->color(fn (ExpenseBudget $record): string => $record->expense->enumerateCategory->resolveColor())
                     ->icon(fn (ExpenseBudget $record): string => $record->expense->enumerateCategory->resolveIcon()),
+                Tables\Columns\TextColumn::make('expense.name')
+                    ->sortable()
+                    ->badge()
+                    ->label(__('filament-panels::pages/financial-setup.expense.title')),
                 Tables\Columns\TextColumn::make('description')
                     ->label(__('filament-tables::table.columns.text.expense_realization.description'))
                     ->formatStateUsing(fn (?string $state, ExpenseBudget $record) => $record->is_completed
@@ -100,6 +104,8 @@ class TransactionResource extends Resource
                 PeriodFilter::make('period', 'realized_at'),
             ])
             ->groups([
+                Group::make('expense.name')
+                    ->label(__('filament-panels::pages/financial-setup.expense.title')),
                 Group::make('expense.category.name')
                     ->getTitleFromRecordUsing(fn (ExpenseBudget $record): string => $record->expense->enumerateCategory->render()),
             ])
