@@ -4,7 +4,10 @@ namespace App\Filament\Widgets\Dashboard;
 
 use App\Concerns\FormatMoneyApexChart;
 use App\Concerns\HasFilterPeriod;
+use App\Enums\Month;
+use App\Enums\Period;
 use App\Models\Account;
+use App\Models\Builders\IncomeBudgetBuilder;
 use App\Models\IncomeBudget;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -30,10 +33,27 @@ class AccountSummary extends ApexChartWidget
         $period = $this->getFilterPeriod();
 
         [$startDate, $endDate] = $period;
+        /** @var Carbon $startDateWithEnLocale */
+        $startDateWithEnLocale = $startDate->clone()->locale('en');
 
         $accounts = Account::query()->where('user_id', auth()->id())->get();
         $balances = IncomeBudget::query()->whereBelongsToUser(auth()->user())
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->when(
+                $this->filters['period'] !== Period::Custom->value && $this->filters['period'] !== Period::YearToDate->value,
+                fn (IncomeBudgetBuilder $query): IncomeBudgetBuilder => $query->wherePeriod((string) $startDate->year, Month::tryFrom($startDateWithEnLocale->monthName))
+            )
+            ->when(
+                $this->filters['period'] !== Period::YearToDate->value && $this->filters['period'] !== Period::Custom->value,
+                fn (IncomeBudgetBuilder $query): IncomeBudgetBuilder => $query
+                    ->whereYear('created_at', $startDate->year)
+                    ->whereIn(
+                        'month',
+                        array_map(
+                            fn (int $month) => Carbon::create()->month($month)->format('F'),
+                            range($startDate->month, $endDate->month)
+                        ),
+                    )
+            )
             ->with('income.account')->get()
             ->groupBy('income.account.name')
             ->map(fn ($income) => $income->sum('amount'))
