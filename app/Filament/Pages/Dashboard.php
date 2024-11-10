@@ -36,7 +36,7 @@ class Dashboard extends BaseDashboard implements HasInfolists
                     ->schema([
                         Select::make('period')
                             ->options(Period::toArray())
-                            ->default(Period::Today)
+                            ->default(Period::Today->value)
                             ->afterStateUpdated(function (string $state, Set $set) {
                                 if ($state !== Period::Custom->value) {
                                     $set('startDate', null);
@@ -61,7 +61,7 @@ class Dashboard extends BaseDashboard implements HasInfolists
         ];
     }
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return __('filament-panels::pages/dashboard.title');
     }

@@ -13,7 +13,7 @@ enum NavigationGroup: string
     {
         return match ($this) {
             self::Budgeting => __('budgetly::navigation-group.budgeting'),
-            self::Report => __('budgetly::navigation-group.report'),
+            self::Report => __('budgetly::navigation-group.reports'),
             default => $this->value,
         };
     }
