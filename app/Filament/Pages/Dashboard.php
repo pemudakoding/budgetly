@@ -7,6 +7,7 @@ use App\Filament\Widgets\Dashboard\AccountSummary;
 use App\Filament\Widgets\Dashboard\AmountOverview;
 use App\Filament\Widgets\Dashboard\CategoryOverview;
 use App\Filament\Widgets\Dashboard\TrendExpense;
+use App\Filament\Widgets\Dashboard\TrendSaving;
 use CodeWithDennis\SimpleAlert\Components\Infolists\SimpleAlert;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -62,8 +63,9 @@ class Dashboard extends BaseDashboard implements HasInfolists
     {
         return [
             AmountOverview::class,
-            AccountSummary::class,
             TrendExpense::class,
+            TrendSaving::class,
+            AccountSummary::class,
             CategoryOverview::class,
         ];
     }

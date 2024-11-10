@@ -4,20 +4,24 @@ namespace App\Filament\Widgets\Dashboard;
 
 use App\Concerns\FormatMoneyApexChart;
 use App\Concerns\HasFilterPeriod;
-use App\Models\Account;
-use App\Models\IncomeBudget;
+use App\Enums\ExpenseCategory;
+use App\Handlers\TrendManager;
+use App\Models\Builders\ExpenseBuilder;
+use App\Models\ExpenseBudget;
+use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Flowframe\Trend\Trend;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class AccountSummary extends ApexChartWidget
+class TrendSaving extends ApexChartWidget
 {
     use FormatMoneyApexChart, HasFilterPeriod, InteractsWithPageFilters;
 
-    protected static ?string $chartId = 'AccountSummary';
+    protected static ?string $chartId = 'trendSaving';
 
     protected function getHeading(): ?string
     {
-        return __('budgetly::widgets.dashboard.account_summary');
+        return __('budgetly::widgets.dashboard.trend_saving');
     }
 
     /**
@@ -28,29 +32,35 @@ class AccountSummary extends ApexChartWidget
         /** @var array<int, mixed> $period */
         $period = $this->getFilterPeriod();
 
+        $filter = $this->filters['period'];
+
+        /**
+         * @var Carbon $startDate
+         * @var Carbon $endDate
+         */
         [$startDate, $endDate] = $period;
 
-        $accounts = Account::query()->where('user_id', auth()->id())->get();
-        $balances = IncomeBudget::query()->whereBelongsToUser(auth()->user())
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->with('income.account')->get()
-            ->groupBy('income.account.name')
-            ->map(fn ($income) => $income->sum('amount'))
-            ->values();
+        $trend = Trend::query(ExpenseBudget::query()->whereBelongsToUser(auth()->user())->whereHas('expense',
+            fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory(ExpenseCategory::Savings),
+        ))->between($startDate, $endDate);
+
+        (new TrendManager)->setTrendInterval($filter, $trend, $startDate, $endDate);
+
+        $savings = $trend->sum('amount');
 
         return [
             'chart' => [
                 'type' => 'bar',
-                'height' => 150,
+                'height' => 300,
             ],
             'series' => [
                 [
-                    'name' => __('budgetly::widgets.dashboard.total_balance'),
-                    'data' => $balances,
+                    'name' => __('budgetly::widgets.dashboard.total_savings'),
+                    'data' => $savings->pluck('aggregate')->toArray(),
                 ],
             ],
             'xaxis' => [
-                'categories' => $accounts->pluck('name')->toArray(),
+                'categories' => $savings->pluck('date')->toArray(),
                 'labels' => [
                     'style' => [
                         'fontFamily' => 'inherit',
@@ -64,11 +74,10 @@ class AccountSummary extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => $accounts->pluck('legend')->toArray(),
+            'colors' => [ExpenseCategory::Savings->resolveHexColor()],
             'plotOptions' => [
                 'bar' => [
                     'borderRadius' => 2,
-                    'horizontal' => true,
                 ],
             ],
         ];

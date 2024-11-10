@@ -2,7 +2,9 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
+use App\Concerns\FormatMoneyApexChart;
 use App\Concerns\HasFilterPeriod;
+use App\Enums\ExpenseCategory;
 use App\Handlers\TrendManager;
 use App\Models\ExpenseBudget;
 use Carbon\Carbon;
@@ -12,7 +14,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class TrendExpense extends ApexChartWidget
 {
-    use HasFilterPeriod, InteractsWithPageFilters;
+    use FormatMoneyApexChart, HasFilterPeriod, InteractsWithPageFilters;
 
     protected static ?string $chartId = 'trendExpense';
 
@@ -70,7 +72,7 @@ class TrendExpense extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => ['#10b91d'],
+            'colors' => [ExpenseCategory::Needs->resolveHexColor()],
             'plotOptions' => [
                 'bar' => [
                     'borderRadius' => 2,

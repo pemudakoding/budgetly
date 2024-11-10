@@ -43,7 +43,7 @@ class AmountOverview extends BaseWidget
                 ->icon('heroicon-o-banknotes'),
             Stat::make(__('budgetly::widgets.dashboard.total_expense'), Money::format($expense))
                 ->icon('heroicon-o-ticket'),
-            Stat::make(__('budgetly::widgets.dashboard.monthly_saving'), Money::format($saving))
+            Stat::make(__('budgetly::widgets.dashboard.total_savings'), Money::format($saving))
                 ->icon('heroicon-o-receipt-percent'),
         ];
     }
