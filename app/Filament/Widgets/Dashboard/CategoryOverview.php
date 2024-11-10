@@ -36,9 +36,10 @@ class CategoryOverview extends ApexChartWidget
         [$startDate, $endDate] = $period;
 
         $categories = ExpenseCategory::query()
-            ->whereBetween('realized_at', [$startDate, $endDate])
             ->whereHas('expenseBudgets',
-                fn (ExpenseBudgetBuilder $builder) => $builder->whereBelongsToUser(auth()->user()))
+                fn (ExpenseBudgetBuilder $builder) => $builder
+                    ->whereBetween('realized_at', [$startDate, $endDate])
+                    ->whereBelongsToUser(auth()->user()))
             ->withSum('expenseBudgets', 'amount')
             ->get();
 
