@@ -13,5 +13,6 @@ return [
         'total_expense' => 'Total Pengeluaran',
         'account_summary' => 'Ringkasan Rekening',
         'trend_expense' => 'Tren Pengeluaran',
+        'overview_expense' => 'Ringkasan Pengeluaran',
     ],
 ];

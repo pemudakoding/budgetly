@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\Period;
 use App\Filament\Widgets\Dashboard\AccountSummary;
 use App\Filament\Widgets\Dashboard\AmountOverview;
+use App\Filament\Widgets\Dashboard\CategoryOverview;
 use App\Filament\Widgets\Dashboard\TrendExpense;
 use CodeWithDennis\SimpleAlert\Components\Infolists\SimpleAlert;
 use Filament\Forms\Components\DatePicker;
@@ -63,6 +64,7 @@ class Dashboard extends BaseDashboard implements HasInfolists
             AmountOverview::class,
             AccountSummary::class,
             TrendExpense::class,
+            CategoryOverview::class,
         ];
     }
 

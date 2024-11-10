@@ -13,5 +13,6 @@ return [
         'total_expense' => 'Total Expense',
         'account_summary' => 'Account Summary',
         'trend_expense' => 'Trend Expense',
+        'overview_expense' => 'Overview Expense',
     ],
 ];
