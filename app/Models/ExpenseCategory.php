@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+/**
+ * @property float $expense_budgets_sum_amount
+ */
 class ExpenseCategory extends Model
 {
     /**

@@ -3,6 +3,8 @@
 namespace App\Enums;
 
 use App\Concerns\EnumToArray;
+use Filament\Support\Facades\FilamentColor;
+use Spatie\Color\Rgb;
 
 enum ExpenseCategory: string
 {
@@ -20,6 +22,16 @@ enum ExpenseCategory: string
             self::Needs => 'warning',
             self::Wants => 'secondary',
             self::Liabilities => 'danger',
+        };
+    }
+
+    public function resolveHexColor(): string
+    {
+        return match ($this) {
+            self::Savings => Rgb::fromString('rgb('.FilamentColor::getColors()[self::Savings->resolveColor()][500].')')->toHex(),
+            self::Needs => Rgb::fromString('rgb('.FilamentColor::getColors()[self::Needs->resolveColor()][500].')')->toHex(),
+            self::Wants => Rgb::fromString('rgb('.FilamentColor::getColors()[self::Wants->resolveColor()][500].')')->toHex(),
+            self::Liabilities => Rgb::fromString('rgb('.FilamentColor::getColors()[self::Liabilities->resolveColor()][500].')')->toHex(),
         };
     }
 

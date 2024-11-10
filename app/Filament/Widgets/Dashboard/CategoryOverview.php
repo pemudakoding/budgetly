@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\Dashboard;
 
 use App\Concerns\HasFilterPeriod;
+use App\Enums\ExpenseCategory as CategoryEnum;
 use App\Models\Builders\ExpenseBudgetBuilder;
 use App\Models\ExpenseCategory;
 use Carbon\Carbon;
@@ -28,44 +29,45 @@ class CategoryOverview extends ApexChartWidget
         /** @var array<int, mixed> $period */
         $period = $this->getFilterPeriod();
 
-        $filter = $this->filters['period'];
-
         /**
          * @var Carbon $startDate
          * @var Carbon $endDate
          */
         [$startDate, $endDate] = $period;
 
-        $expenseCategory = ExpenseCategory::query()
+        $categories = ExpenseCategory::query()
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereHas(
-                'expenseBudgets',
-                fn (ExpenseBudgetBuilder $builder) => $builder->whereBelongsToUser(auth()->user()),
-            )
+            ->whereHas('expenseBudgets',
+                fn (ExpenseBudgetBuilder $builder) => $builder->whereBelongsToUser(auth()->user()))
             ->withSum('expenseBudgets', 'amount')
             ->get();
 
-        $nameCategory = $expenseCategory->pluck('name');
-        $amountExpense = $expenseCategory->pluck('expense_budgets_sum_amount')->toArray();
-        $totalAmount = array_sum($amountExpense);
+        $totalExpenseAmount = $categories->pluck('expense_budgets_sum_amount')->sum();
 
-        $percentage = [];
-        $labels = [];
+        $categoryNames = ExpenseCategory::query()->pluck('name');
 
-        foreach ($amountExpense as $amount) {
-            $percentage[] = round(($amount / $totalAmount) * 100);
+        $expensePercentages = array_fill(0, $categoryNames->count(), 0);
+
+        $hexColors = $categoryNames->map(fn ($name) => CategoryEnum::from($name)->resolveHexColor())->toArray();
+
+        foreach ($categories as $category) {
+            /** @var ExpenseCategory $category */
+            $position = $categoryNames->search($category->name);
+
+            if ($position !== false && $totalExpenseAmount > 0) {
+                $expensePercentages[$position] = round(($category->expense_budgets_sum_amount / $totalExpenseAmount) * 100);
+            }
         }
 
-        foreach ($nameCategory as $name) {
-            $labels[] = __('budgetly::expense-category.'.str($name)->lower());
-        }
+        $labels = $categoryNames->map(fn ($name) => CategoryEnum::from($name)->render())->toArray();
 
         return [
             'chart' => [
                 'type' => 'donut',
             ],
-            'series' => $percentage,
+            'series' => $expensePercentages,
             'labels' => $labels,
+            'colors' => $hexColors,
             'legend' => [
                 'labels' => [
                     'fontFamily' => 'inherit',
