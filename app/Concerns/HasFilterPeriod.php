@@ -10,7 +10,7 @@ trait HasFilterPeriod
 {
     use InteractsWithPageFilters;
 
-    /** @return array<int, mixed> */
+    /** @return array<int, Carbon> */
     public function getFilterPeriod(): array
     {
         if ($this->filters['period'] === Period::Custom->value) {

@@ -20,9 +20,9 @@ enum Period: string
     case Custom = 'Custom';
 
     /**
-     * @return string|array<int, mixed>
+     * @return array<int, Carbon>
      */
-    public function getDate(): string|array
+    public function getDate(): array
     {
         return match ($this) {
             self::Today => [
@@ -58,19 +58,19 @@ enum Period: string
     }
 
     /**
-     * @return string|array<int, mixed>
+     * @return array<int, Carbon>
      */
-    public static function getDateFrom(Period $period): array|string
+    public static function getDateFrom(?Period $period): array
     {
         return match ($period) {
-            self::Today => self::Today->getDate(),
             self::Yesterday => self::Yesterday->getDate(),
             self::LastSevenDays => self::LastSevenDays->getDate(),
             self::LastMonth => self::LastMonth->getDate(),
             self::ThisMonth => self::ThisMonth->getDate(),
             self::MonthToDate => self::MonthToDate->getDate(),
             self::YearToDate => self::YearToDate->getDate(),
-            self::Custom => self::Custom->getDate()
+            self::Custom => self::Custom->getDate(),
+            default => self::Today->getDate(),
         };
     }
 

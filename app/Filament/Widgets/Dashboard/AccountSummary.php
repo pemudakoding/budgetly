@@ -6,6 +6,7 @@ use App\Concerns\FormatMoneyApexChart;
 use App\Concerns\HasFilterPeriod;
 use App\Models\Account;
 use App\Models\IncomeBudget;
+use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -25,7 +26,7 @@ class AccountSummary extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-        /** @var array<int, mixed> $period */
+        /** @var array<int, Carbon> $period */
         $period = $this->getFilterPeriod();
 
         [$startDate, $endDate] = $period;

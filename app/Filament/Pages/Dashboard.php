@@ -41,7 +41,7 @@ class Dashboard extends BaseDashboard implements HasInfolists
                             ->options(Period::toArray())
                             ->default(Period::Today->value)
                             ->label(__('filament-forms::components.text_input.label.period.name'))
-                            ->afterStateUpdated(function (string $state, Set $set) {
+                            ->afterStateUpdated(function (?string $state, Set $set) {
                                 if ($state !== Period::Custom->value) {
                                     $set('startDate', null);
                                     $set('endDate', null);
