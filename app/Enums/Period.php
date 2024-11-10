@@ -38,19 +38,19 @@ enum Period: string
                 Carbon::today(),
             ],
             self::LastMonth => [
-                Carbon::now()->subMonth()->startOf('month'),
-                Carbon::now()->subMonth()->endOf('month'),
+                Carbon::now()->subMonth()->startOfMonth(),
+                Carbon::now()->subMonth()->endOfMonth(),
             ],
             self::ThisMonth => [
-                Carbon::now()->startOf('month'),
-                Carbon::now()->endOf('month'),
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth(),
             ],
             self::MonthToDate => [
-                Carbon::now()->startOf('month'),
+                Carbon::now()->startOfMonth(),
                 Carbon::today(),
             ],
             self::YearToDate => [
-                Carbon::now()->startOf('year'),
+                Carbon::now()->startOfYear(),
                 Carbon::today(),
             ],
             self::Custom => throw new ValueError('Custom period requires specific start and end dates.')

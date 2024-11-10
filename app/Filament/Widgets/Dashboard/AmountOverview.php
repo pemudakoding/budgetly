@@ -27,15 +27,13 @@ class AmountOverview extends BaseWidget
         /** @var array<int, Carbon> $period */
         $period = $this->getFilterPeriod();
 
-        /** @var Carbon $startDate */
-        /** @var Carbon $endDate */
         [$startDate, $endDate] = $period;
         /** @var Carbon $startDateWithEnLocale */
-        $startDateWithEnLocale = $startDate->locale('en');
+        $startDateWithEnLocale = $startDate->clone()->locale('en');
         /** @var Carbon $startDateWithAppLocale */
-        $startDateWithAppLocale = $startDate->locale(app()->getLocale());
+        $startDateWithAppLocale = $startDate->clone()->locale(app()->getLocale());
         /** @var Carbon $endDateWithAppLocale */
-        $endDateWithAppLocale = $endDate->locale(app()->getLocale());
+        $endDateWithAppLocale = $endDate->clone()->locale(app()->getLocale());
 
         /** @var int|float $income */
         $income = IncomeBudget::query()->whereBelongsToUser(auth()->user())
