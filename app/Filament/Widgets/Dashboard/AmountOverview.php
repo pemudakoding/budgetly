@@ -29,14 +29,14 @@ class AmountOverview extends BaseWidget
 
         /** @var int|float $expense */
         $expense = ExpenseBudget::query()->whereBelongsToUser(auth()->user())
-            ->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+            ->whereBetween('realized_at', [$startDate, $endDate])->sum('amount');
 
         /** @var int|float $saving */
         $saving = ExpenseBudget::query()->whereBelongsToUser(auth()->user())
             ->whereHas('expense',
                 fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory(ExpenseCategory::Savings),
             )
-            ->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+            ->whereBetween('realized_at', [$startDate, $endDate])->sum('amount');
 
         return [
             Stat::make(__('budgetly::widgets.dashboard.total_income'), Money::format($income))

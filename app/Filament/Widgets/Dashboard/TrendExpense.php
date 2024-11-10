@@ -40,6 +40,7 @@ class TrendExpense extends ApexChartWidget
         [$startDate, $endDate] = $period;
 
         $trend = Trend::query(ExpenseBudget::query()->whereBelongsToUser(auth()->user()))
+            ->dateColumn('realized_at')
             ->between($startDate, $endDate);
 
         (new TrendManager)->setTrendInterval($filter, $trend, $startDate, $endDate);

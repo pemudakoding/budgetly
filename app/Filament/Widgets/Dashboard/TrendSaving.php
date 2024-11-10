@@ -40,9 +40,16 @@ class TrendSaving extends ApexChartWidget
          */
         [$startDate, $endDate] = $period;
 
-        $trend = Trend::query(ExpenseBudget::query()->whereBelongsToUser(auth()->user())->whereHas('expense',
-            fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory(ExpenseCategory::Savings),
-        ))->between($startDate, $endDate);
+        $trend = Trend::query(
+            ExpenseBudget::query()
+                ->whereBelongsToUser(auth()->user())
+                ->whereHas(
+                    'expense',
+                    fn (ExpenseBuilder $query): ExpenseBuilder => $query->whereCategory(ExpenseCategory::Savings),
+                )
+        )
+            ->dateColumn('realized_at')
+            ->between($startDate, $endDate);
 
         (new TrendManager)->setTrendInterval($filter, $trend, $startDate, $endDate);
 
