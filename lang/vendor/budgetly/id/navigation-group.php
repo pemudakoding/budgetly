@@ -2,5 +2,5 @@
 
 return [
     'budgeting' => 'Penganggaran',
-    'report' => 'Laporan',
+    'reports' => 'Laporan',
 ];

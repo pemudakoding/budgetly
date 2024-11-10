@@ -449,6 +449,11 @@ return [
             'realized_at' => [
                 'name' => 'Direalisasikan pada',
             ],
+            'period' => [
+                'name' => 'Periode',
+                'start_date' => 'Tanggal Mulai',
+                'end_date' => 'Tanggal Akhir',
+            ],
         ],
 
         'actions' => [
