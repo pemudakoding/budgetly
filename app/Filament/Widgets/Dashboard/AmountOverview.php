@@ -15,7 +15,6 @@ use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 
 class AmountOverview extends BaseWidget
@@ -45,7 +44,13 @@ class AmountOverview extends BaseWidget
                 $this->filters['period'] !== Period::YearToDate->value && $this->filters['period'] !== Period::Custom->value,
                 fn (IncomeBudgetBuilder $query): IncomeBudgetBuilder => $query
                     ->whereYear('created_at', $startDate->year)
-                    ->whereBetween(DB::raw('MONTH(created_at)'), [$startDate->month, $endDate->month])
+                    ->whereIn(
+                        'month',
+                        array_map(
+                            fn (int $month) => Carbon::create()->month($month)->format('F'),
+                            range($startDate->month, $endDate->month)
+                        ),
+                    )
             )
             ->sum('amount');
 
