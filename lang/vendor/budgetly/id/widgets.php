@@ -12,5 +12,6 @@ return [
         'monthly_saving' => 'Tabungan Bulanan',
         'total_expense' => 'Total Pengeluaran',
         'account_summary' => 'Ringkasan Rekening',
+        'trend_expense' => 'Tren Pengeluaran',
     ],
 ];

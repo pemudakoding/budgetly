@@ -12,5 +12,6 @@ return [
         'monthly_saving' => 'Monthly Saving',
         'total_expense' => 'Total Expense',
         'account_summary' => 'Account Summary',
+        'trend_expense' => 'Trend Expense',
     ],
 ];

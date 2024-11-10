@@ -27,7 +27,7 @@ enum Period: string
         return match ($this) {
             self::Today => [
                 Carbon::now()->startOfDay(),
-                Carbon::now()->endOfDay(),
+                Carbon::now(),
             ],
             self::Yesterday => [
                 Carbon::now()->subDay()->startOfDay(),

@@ -3,6 +3,7 @@
 namespace App\Concerns;
 
 use App\Enums\Period;
+use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 trait HasFilterPeriod
@@ -14,8 +15,8 @@ trait HasFilterPeriod
     {
         if ($this->filters['period'] === Period::Custom->value) {
             return [
-                $this->filters['startDate'] ?? now(),
-                $this->filters['endDate'] ?? now(),
+                Carbon::make($this->filters['startDate']) ?? now(),
+                Carbon::make($this->filters['endDate']) ?? now(),
             ];
         } else {
             return Period::getDateFrom(Period::tryFrom($this->filters['period']));
