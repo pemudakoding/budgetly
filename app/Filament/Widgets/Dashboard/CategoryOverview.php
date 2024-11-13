@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
+use App\Concerns\FormatMoneyApexChart;
 use App\Concerns\HasFilterPeriod;
 use App\Enums\ExpenseCategory as CategoryEnum;
 use App\Models\Builders\ExpenseBudgetBuilder;
@@ -12,7 +13,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class CategoryOverview extends ApexChartWidget
 {
-    use HasFilterPeriod, InteractsWithPageFilters;
+    use FormatMoneyApexChart, HasFilterPeriod, InteractsWithPageFilters;
 
     protected static ?string $chartId = 'categoryOverview';
 
@@ -56,7 +57,7 @@ class CategoryOverview extends ApexChartWidget
             $position = $categoryNames->search($category->name);
 
             if ($position !== false && $totalExpenseAmount > 0) {
-                $expensePercentages[$position] = round(($category->expense_budgets_sum_amount / $totalExpenseAmount) * 100);
+                $expensePercentages[$position] = (int) $category->expense_budgets_sum_amount;
             }
         }
 

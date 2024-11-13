@@ -42,7 +42,12 @@ trait FormatMoneyApexChart
                     }
                 },
                 dataLabels: {
-                    enabled: false,
+                    enabled: true,
+                    formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+                        if (w.config.labels[seriesIndex]) {
+                            return value.toFixed(2)+"%";
+                        }
+                    },
                 },
             }
         JS);
