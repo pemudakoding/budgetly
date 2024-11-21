@@ -6,4 +6,8 @@ return [
     ],
 
     'success_onboarding_financial_setup' => 'Great! Your financial setup is complete. You\'re all set to explore the features!',
+
+    'expense' => [
+        'failed_arrange_allocation' => 'Failed to arrange allocation',
+    ],
 ];

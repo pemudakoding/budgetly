@@ -465,6 +465,15 @@ return [
 
         'search_prompt' => 'Start typing to search...',
 
+        'label' => [
+            'action' => 'action',
+        ],
+
+        'options' => [
+            'add_amount' => 'Add amount',
+            'reduce_amount' => 'Reduce amount',
+            'set_amount' => 'Set amount',
+        ],
     ],
 
     'tags_input' => [

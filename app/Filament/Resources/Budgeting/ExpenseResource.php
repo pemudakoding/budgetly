@@ -6,6 +6,7 @@ use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Forms\MonthSelect;
 use App\Filament\Forms\YearSelect;
+use App\Filament\Resources\Budgeting\ExpenseResource\Actions\ArrangeAllocationAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Actions\QuickExpenseAction;
 use App\Filament\Resources\Budgeting\ExpenseResource\Pages;
 use App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers\AllocationsRelationManager;
@@ -93,7 +94,7 @@ class ExpenseResource extends Resource
                     ->label(__('filament-tables::table.columns.text.expense.name')),
                 TextColumn::make('allocations.amount')
                     ->label(__('filament-tables::table.columns.text.expense.allocations'))
-                    ->state(function (Expense $record, Pages\ListExpenses $livewire) {
+                    ->getStateUsing(function (Expense $record, Pages\ListExpenses $livewire) {
                         return $record
                             ->allocations()
                             ->wherePeriod(
@@ -142,6 +143,7 @@ class ExpenseResource extends Resource
                             'year' => $livewire->data['year'],
                         ]
                     )),
+                ArrangeAllocationAction::make(),
                 QuickExpenseAction::make(),
             ])
             ->groups([

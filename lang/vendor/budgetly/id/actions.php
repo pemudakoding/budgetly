@@ -17,6 +17,12 @@ return [
             'title' => 'Pengeluaran Baru',
             'modal_heading' => 'Buat Pengeluaran untuk',
         ],
+        'arrange_allocation' => [
+            'title' => 'Atur Alokasi',
+            'modal_heading' => 'Atur alokasi untuk',
+            'note' => 'Hasil akhir dari alokasi nggak boleh kurang dari nol.',
+            'amount_helper_text' => 'Jumlahnya nggak boleh negatif.',
+        ],
         'edit_allocations' => [
             'modal_heading' => 'Ubah alokasi dana untuk',
         ],

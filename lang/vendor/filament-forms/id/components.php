@@ -413,6 +413,15 @@ return [
 
         'search_prompt' => 'Ketik untuk mencari...',
 
+        'label' => [
+            'action' => 'Aksi',
+        ],
+
+        'options' => [
+            'add_amount' => 'Tambah jumlah',
+            'reduce_amount' => 'Kurangi jumlah',
+            'set_amount' => 'Tetapkan jumlah',
+        ],
     ],
 
     'tags_input' => [

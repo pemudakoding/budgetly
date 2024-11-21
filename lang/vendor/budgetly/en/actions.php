@@ -17,6 +17,12 @@ return [
             'title' => 'New expense',
             'modal_heading' => 'Create expense for',
         ],
+        'arrange_allocation' => [
+            'title' => 'Arrange Allocation',
+            'modal_heading' => 'Arrange Allocation for',
+            'note' => 'End result of allocations cannot be less than zero.',
+            'amount_helper_text' => 'The form of amount cannot be negative.',
+        ],
         'edit_allocations' => [
             'modal_heading' => 'Edit allocations for',
         ],
