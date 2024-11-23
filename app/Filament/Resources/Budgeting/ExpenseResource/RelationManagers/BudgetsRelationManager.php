@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting\ExpenseResource\RelationManagers;
 
+use App\Filament\Actions\ToggleCompletionAction;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\ExpenseBudget;
@@ -112,6 +113,7 @@ class BudgetsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ToggleCompletionAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

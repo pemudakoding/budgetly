@@ -32,5 +32,10 @@ return [
         'create_realization' => [
             'title' => 'Create realization of expense',
         ],
+        'toggle_completion' => [
+            'notification' => 'Success update record(s) completion status',
+            'label' => 'Mark as Done/Undone record(s)',
+            'modal_label' => 'Mark as Done/Undone selected :label',
+        ],
     ],
 ];

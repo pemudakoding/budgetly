@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Report;
 
 use App\Enums\NavigationGroup;
+use App\Filament\Actions\ToggleCompletionAction;
 use App\Filament\Resources\Report\TransactionResource\Pages;
 use App\Filament\Tables\Filters\PeriodFilter;
 use App\Models\Builders\ExpenseBudgetBuilder;
@@ -113,7 +114,7 @@ class TransactionResource extends Resource
                 //
             ])
             ->bulkActions([
-                //
+                ToggleCompletionAction::make(),
             ]);
     }
 

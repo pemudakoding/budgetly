@@ -32,5 +32,10 @@ return [
         'create_realization' => [
             'title' => 'Buat realisasi dana pengeluaran',
         ],
+        'toggle_completion' => [
+            'notification' => 'Sukses mengubah status penyelesaian data',
+            'label' => 'Selesaikan / Batal Selesaikan ',
+            'modal_label' => 'Selesaikan / Batal Selesaikan :label yang dipilih',
+        ],
     ],
 ];
