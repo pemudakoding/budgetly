@@ -56,6 +56,14 @@ return [
 
     'checkbox_list' => [
 
+        'label' => [
+
+            'income' => [
+                'is_fluctuating' => 'Fluktuatif?'
+            ],
+
+        ],
+
         'actions' => [
 
             'deselect_all' => [
@@ -261,6 +269,14 @@ return [
 
     'repeater' => [
 
+        'label' => [
+
+            'income' => [
+                'history' => 'Rincian pendapatan',
+            ],
+
+        ],
+
         'actions' => [
 
             'add' => [
@@ -438,6 +454,7 @@ return [
             'income' => [
                 'name' => 'Nama',
                 'account' => 'Rekening',
+                'history_date' => 'Tanggal Pendapatan',
             ],
             'expense' => [
                 'name' => 'Nama',

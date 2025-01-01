@@ -108,6 +108,14 @@ return [
 
     'checkbox_list' => [
 
+        'label' => [
+
+            'income' => [
+                'is_fluctuating' => 'Is Fluctuating?'
+            ],
+
+        ],
+
         'actions' => [
 
             'deselect_all' => [
@@ -313,6 +321,14 @@ return [
 
     'repeater' => [
 
+        'label' => [
+
+            'income' => [
+                'history' => 'Revenue details',
+            ],
+
+        ],
+
         'actions' => [
 
             'add' => [
@@ -490,6 +506,7 @@ return [
             'income' => [
                 'name' => 'Name',
                 'account' => 'Account',
+                'history_date' => 'Date of Revenue',
             ],
             'expense' => [
                 'name' => 'Name',

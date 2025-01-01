@@ -6,6 +6,7 @@ use App\Models\Builders\IncomeBudgetBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @method static IncomeBudgetBuilder query()
@@ -34,6 +35,17 @@ class IncomeBudget extends Model
         return $this->belongsTo(
             Income::class,
             'income_id',
+        );
+    }
+
+    /**
+     * @return HasMany<IncomeBudgetHistory>
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(
+            IncomeBudgetHistory::class,
+            'income_budget_id',
         );
     }
 }
