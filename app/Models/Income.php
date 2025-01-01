@@ -24,6 +24,7 @@ class Income extends Model
         'user_id',
         'name',
         'account_id',
+        'is_fluctuating',
     ];
 
     public function newEloquentBuilder($query): IncomeBuilder

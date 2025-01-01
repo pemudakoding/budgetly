@@ -25,6 +25,7 @@ return [
                 'amount' => 'Amount',
                 'created_at' => 'Created at',
                 'updated_at' => 'Updated at',
+                'is_fluctuating' => 'Fluctuating',
             ],
             'income_budget' => [
                 'heading' => 'Incomes',
