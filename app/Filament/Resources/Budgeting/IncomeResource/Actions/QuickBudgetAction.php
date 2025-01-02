@@ -72,7 +72,7 @@ class QuickBudgetAction extends CreateAction
 
                 $budget = $record->budgets()->createOrFirst($data);
 
-                $budget->histories()->createMany($data['history']);
+                $record->is_fluctuating && $budget->histories()->createMany($data['history']);
 
                 if ($arguments['another'] ?? false) {
                     $this->callAfter();
