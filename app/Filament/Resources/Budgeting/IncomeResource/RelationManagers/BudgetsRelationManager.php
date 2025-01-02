@@ -37,10 +37,12 @@ class BudgetsRelationManager extends RelationManager
                 Select::make('month')
                     ->label(__('filament-forms::components.text_input.label.month.name'))
                     ->options(Month::toArray())
+                    ->visible(! $income->is_fluctuating)
+                    ->default(Month::fromNumeric(now()->format('m')))
                     ->required()
                     ->unique(
-                        IncomeBudget::class,
-                        'month',
+                        table: IncomeBudget::class,
+                        column: 'month',
                         ignorable: fn (?IncomeBudget $record): ?IncomeBudget => $record?->created_at->year === Carbon::now()->year
                             ? $record
                             : null,
@@ -51,6 +53,12 @@ class BudgetsRelationManager extends RelationManager
                                 ->where('income_id', $this->getOwnerRecord()->getKey())
                         )
                     ),
+                Select::make('month')
+                    ->label(__('filament-forms::components.text_input.label.month.name'))
+                    ->options(Month::toArray())
+                    ->visible($income->is_fluctuating)
+                    ->default(Month::fromNumeric(now()->format('m')))
+                    ->required(),
                 Repeater::make('histories')
                     ->visible($income->is_fluctuating)
                     ->collapsible()
@@ -67,6 +75,7 @@ class BudgetsRelationManager extends RelationManager
                         DatePicker::make('revenue_at')
                             ->label(__('filament-forms::components.text_input.label.income.history_date'))
                             ->required()
+                            ->default(now())
                             ->maxDate(now()),
                     ]),
             ])
@@ -83,7 +92,7 @@ class BudgetsRelationManager extends RelationManager
 
         return $table
             ->heading(__('filament-tables::table.columns.text.income_budget.heading'))
-            ->recordTitleAttribute('amount')
+            ->recordTitleAttribute('month')
             ->columns([
                 Tables\Columns\TextColumn::make('amount')
                     ->label(__('filament-tables::table.columns.text.income.amount'))

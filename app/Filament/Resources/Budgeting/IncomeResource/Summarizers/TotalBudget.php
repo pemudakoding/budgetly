@@ -31,11 +31,11 @@ class TotalBudget extends Summarizer
         $query = $this->resolveQuery(fn (IncomeBudgetBuilder $query) => $query->wherePeriod(
             $filter->getState()['year'],
             Month::fromNumeric($filter->getState()['month'])
-        ));
+        )->withSum('histories', 'amount'));
 
         $asName = (string) str($this->getColumn()->getName())->afterLast('.');
 
-        return (float) $query->sum($asName);
+        return (float) $query->sum($asName) + $query->sum('histories_sum_amount');
     }
 
     public function getDefaultLabel(): ?string

@@ -38,6 +38,8 @@ class QuickBudgetAction extends CreateAction
                 Select::make('month')
                     ->label(__('filament-forms::components.text_input.label.month.name'))
                     ->options(Month::toArray())
+                    ->visible(fn (Income $income) => ! $income->is_fluctuating)
+                    ->default(Month::fromNumeric(now()->format('m')))
                     ->required()
                     ->unique(
                         IncomeBudget::class,
@@ -48,6 +50,12 @@ class QuickBudgetAction extends CreateAction
                                 ->where('income_id', $this->getRecord()->getKey())
                         )
                     ),
+                Select::make('month')
+                    ->label(__('filament-forms::components.text_input.label.month.name'))
+                    ->options(Month::toArray())
+                    ->visible(fn (Income $income) => $income->is_fluctuating)
+                    ->default(Month::fromNumeric(now()->format('m')))
+                    ->required(),
                 Repeater::make('history')
                     ->visible(fn (Income $income) => $income->is_fluctuating)
                     ->collapsible()
@@ -63,6 +71,7 @@ class QuickBudgetAction extends CreateAction
                         DatePicker::make('revenue_at')
                             ->label(__('filament-forms::components.text_input.label.income.history_date'))
                             ->required()
+                            ->default(now())
                             ->maxDate(now()),
                     ]),
             ])
@@ -70,7 +79,9 @@ class QuickBudgetAction extends CreateAction
             ->action(function (array $data, Income $record, QuickBudgetAction $action, Form $form, array $arguments): void {
                 $data['income_id'] = $record->id;
 
-                $budget = $record->budgets()->createOrFirst($data);
+                $budget = $record->budgets()->firstOrCreate([
+                    'month' => $data['month'],
+                ], $data);
 
                 $record->is_fluctuating && $budget->histories()->createMany($data['history']);
 
