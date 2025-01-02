@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @method static IncomeBudgetBuilder query()
+ *
+ * @property int $histories_sum_amount
  */
 class IncomeBudget extends Model
 {
