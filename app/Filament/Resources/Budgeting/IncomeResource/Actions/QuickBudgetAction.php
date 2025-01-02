@@ -48,7 +48,7 @@ class QuickBudgetAction extends CreateAction
                                 ->where('income_id', $this->getRecord()->getKey())
                         )
                     ),
-                Repeater::make('histories')
+                Repeater::make('history')
                     ->visible(fn (Income $income) => $income->is_fluctuating)
                     ->collapsible()
                     ->label(__('filament-forms::components.repeater.label.income.history'))
@@ -70,7 +70,9 @@ class QuickBudgetAction extends CreateAction
             ->action(function (array $data, Income $record, QuickBudgetAction $action, Form $form, array $arguments): void {
                 $data['income_id'] = $record->id;
 
-                $record->budgets()->createOrFirst($data);
+                $budget = $record->budgets()->createOrFirst($data);
+
+                $budget->histories()->createMany($data['history']);
 
                 if ($arguments['another'] ?? false) {
                     $this->callAfter();
