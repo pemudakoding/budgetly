@@ -25,6 +25,7 @@ return [
                 'amount' => 'Jumlah',
                 'created_at' => 'Dibuat pada',
                 'updated_at' => 'Diperbarui pada',
+                'is_fluctuating' => 'Fluktuatif',
             ],
             'income_budget' => [
                 'heading' => 'Pendapatan',

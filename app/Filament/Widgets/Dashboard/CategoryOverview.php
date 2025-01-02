@@ -43,7 +43,7 @@ class CategoryOverview extends ApexChartWidget
             ->whereHas('expenseBudgets', $appendFilterQuery)
             ->withSum(
                 [
-                    'expenseBudgets' => $appendFilterQuery
+                    'expenseBudgets' => $appendFilterQuery,
                 ],
                 'amount'
             )

@@ -40,7 +40,8 @@ class AccountSummary extends ApexChartWidget
         $balances = IncomeBudget::query()->whereBelongsToUser(auth()->user())
             ->when(
                 $this->filters['period'] !== Period::Custom->value && $this->filters['period'] !== Period::YearToDate->value,
-                fn (IncomeBudgetBuilder $query): IncomeBudgetBuilder => $query->wherePeriod((string) $startDate->year, Month::tryFrom($startDateWithEnLocale->monthName))
+                fn (IncomeBudgetBuilder $query): IncomeBudgetBuilder => $query->wherePeriod((string) $startDate->year,
+                    Month::tryFrom($startDateWithEnLocale->monthName)),
             )
             ->when(
                 $this->filters['period'] !== Period::YearToDate->value && $this->filters['period'] !== Period::Custom->value,
@@ -50,13 +51,14 @@ class AccountSummary extends ApexChartWidget
                         'month',
                         array_map(
                             fn (int $month) => Carbon::create()->month($month)->format('F'),
-                            range($startDate->month, $endDate->month)
+                            range($startDate->month, $endDate->month),
                         ),
-                    )
+                    ),
             )
-            ->with('income.account')->get()
+            ->with('income.account')
+            ->withSum('histories', 'amount')->get()
             ->groupBy('income.account.name')
-            ->map(fn ($income) => $income->sum('amount'))
+            ->map(fn ($income) => $income->sum('amount') + $income->sum('histories_sum_amount'))
             ->values();
 
         return [

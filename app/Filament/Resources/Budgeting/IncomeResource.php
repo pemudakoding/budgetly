@@ -73,13 +73,21 @@ class IncomeResource extends Resource
                         /** @var array{year: string, month: string} $period */
                         $period = $table->getFilter('period')->getState();
 
-                        return $record
-                            ->budgets()
-                            ->wherePeriod(
-                                $period['year'],
-                                Month::fromNumeric($period['month'])
-                            )
-                            ->sum('amount');
+                        return $record->is_fluctuating
+                            ? $record->historyBudgets()
+                                ->whereHas('budget', function ($query) use ($period) {
+                                    $query->wherePeriod(
+                                        $period['year'],
+                                        Month::fromNumeric($period['month'])
+                                    );
+                                })
+                                ->sum('income_budget_histories.amount')
+                            : $record->budgets()
+                                ->wherePeriod(
+                                    $period['year'],
+                                    Month::fromNumeric($period['month'])
+                                )
+                                ->sum('amount');
                     })
                     ->money('idr', locale: 'id')
                     ->summarize(TotalBudget::make()),

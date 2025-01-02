@@ -21,7 +21,7 @@ class ExpenseBudget extends Model
         'description',
         'amount',
         'realized_at',
-        'is_completed'
+        'is_completed',
     ];
 
     public function newEloquentBuilder($query): ExpenseBudgetBuilder

@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int|string|float $total
+ * @property bool $is_fluctuating
  */
 class Income extends Model
 {
@@ -24,6 +26,7 @@ class Income extends Model
         'user_id',
         'name',
         'account_id',
+        'is_fluctuating',
     ];
 
     public function newEloquentBuilder($query): IncomeBuilder
@@ -70,6 +73,19 @@ class Income extends Model
         return $this->hasMany(
             IncomeBudget::class,
             'income_id',
+        );
+    }
+
+    /**
+     * @return HasManyThrough<IncomeBudgetHistory>
+     */
+    public function historyBudgets(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            IncomeBudgetHistory::class,
+            IncomeBudget::class,
+            'income_id',
+            'income_budget_id'
         );
     }
 

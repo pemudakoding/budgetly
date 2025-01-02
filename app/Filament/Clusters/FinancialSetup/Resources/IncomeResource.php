@@ -6,12 +6,14 @@ use App\Filament\Clusters\FinancialSetup;
 use App\Models\Builders\AccountBuilder;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -50,6 +52,8 @@ class IncomeResource extends Resource
                         'name',
                         modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
                     ),
+                Checkbox::make('is_fluctuating')
+                    ->label(__('filament-forms::components.checkbox_list.label.income.is_fluctuating')),
             ]);
     }
 
@@ -66,6 +70,9 @@ class IncomeResource extends Resource
                     ->searchable()
                     ->badge()
                     ->color(fn (Income $record) => Color::hex($record->account->legend)),
+                IconColumn::make('is_fluctuating')
+                    ->boolean()
+                    ->label(__('filament-tables::table.columns.text.income.is_fluctuating')),
             ])
             ->filters([
                 //

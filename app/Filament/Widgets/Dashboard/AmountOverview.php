@@ -52,7 +52,9 @@ class AmountOverview extends BaseWidget
                         ),
                     )
             )
-            ->sum('amount');
+            ->withSum('histories', 'amount')
+            ->get()
+            ->sum(fn ($item) => $item->amount + $item->histories_sum_amount);
 
         /** @var int|float $expense */
         $expense = ExpenseBudget::query()->whereBelongsToUser(auth()->user())
