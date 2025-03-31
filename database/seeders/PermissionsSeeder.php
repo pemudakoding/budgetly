@@ -23,7 +23,7 @@ class PermissionsSeeder extends Seeder
 
         PermissionModel::query()->upsert(
             array_merge(...array_values($permissions)),
-            'name',
+            ['name', 'guard_name'],
             ['name', 'guard_name']
         );
     }
