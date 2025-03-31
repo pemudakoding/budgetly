@@ -32,11 +32,11 @@ class ManageAccountAction extends Action
     {
         parent::setUp();
 
-        $this->label(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
+        $this->label(fn(): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->icon('heroicon-o-credit-card');
 
-        $this->modalHeading(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
+        $this->modalHeading(fn(): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->modalSubmitActionLabel('Submit');
 
@@ -56,10 +56,12 @@ class ManageAccountAction extends Action
                 foreach ($categories as $category) {
                     $forms[] = Select::make($category)
                         ->label(ExpenseCategory::tryFrom($category)->render())
-                        ->options(Account::query()
-                            ->whereUserId(auth()->id())
-                            ->pluck('name', 'id')
+                        ->options(
+                            Account::query()
+                                ->whereUserId(auth()->id())
+                                ->pluck('name', 'id')
                         )
+                        ->multiple()
                         ->exists(Account::class, 'id');
                 }
 
@@ -72,8 +74,7 @@ class ManageAccountAction extends Action
                 foreach ($categories as $category) {
                     $data[$category->name] = ExpenseCategoryAccount::where('user_id', auth()->id())
                         ->where('expense_category_id', $category->id)
-                        ->first()
-                        ?->account_id;
+                        ->pluck('account_id');
                 }
 
                 return $data;
@@ -86,16 +87,17 @@ class ManageAccountAction extends Action
                 foreach ($categories as $category => $accountId) {
                     $categoryId = \App\Models\ExpenseCategory::where('name', $category)->first()->id;
 
-                    $data = [
-                        'user_id' => auth()->id(),
-                        'expense_category_id' => $categoryId,
-                        'account_id' => $accountId,
-                    ];
+                    foreach ($accountId as $id) {
+                        $data = [
+                            'user_id' => auth()->id(),
+                            'expense_category_id' => $categoryId,
+                            'account_id' => $id,
+                        ];
 
-                    ExpenseCategoryAccount::query()->updateOrCreate(
-                        ['user_id' => $data['user_id'], 'expense_category_id' => $data['expense_category_id']],
-                        $data
-                    );
+                        ExpenseCategoryAccount::query()->where('expense_category_id', $categoryId)->delete();
+
+                        ExpenseCategoryAccount::query()->create($data);
+                    }
                 }
             });
 
