@@ -38,6 +38,8 @@ return [
                 'unrealized_amount' => 'Jumlah Belum Terealisasi',
                 'usage_progress' => 'Kemajuan Penggunaan',
                 'usage_percentage' => '% Penggunaan',
+                'balance' => 'Saldo',
+                'tooltip' => 'Sisa saldo dari akun kategori yang terhubung',
             ],
             'expense_allocations' => [
                 'month' => 'Bulan',

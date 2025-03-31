@@ -32,11 +32,11 @@ class ManageAccountAction extends Action
     {
         parent::setUp();
 
-        $this->label(fn(): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
+        $this->label(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->icon('heroicon-o-credit-card');
 
-        $this->modalHeading(fn(): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
+        $this->modalHeading(fn (): string => __('filament-panels::pages/financial-setup.expense.actions.manage-account'));
 
         $this->modalSubmitActionLabel('Submit');
 

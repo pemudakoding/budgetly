@@ -19,6 +19,9 @@ use App\Filament\Tables\Columns\ExpenseProgressBar;
 use App\Filament\Tables\Columns\ExpenseProgressPercentage;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
+use App\Models\ExpenseCategoryAccount;
+use App\Models\Income;
+use App\Models\IncomeBudget;
 use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -92,6 +95,42 @@ class ExpenseResource extends Resource
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
                 TextColumn::make('name')
                     ->label(__('filament-tables::table.columns.text.expense.name')),
+                TextColumn::make('balance')
+                    ->label(__('filament-tables::table.columns.text.expense.balance'))
+                    ->tooltip(__('filament-tables::table.columns.text.expense.tooltip'))
+                    ->getStateUsing(function (Expense $record) {
+                        $accountIds = ExpenseCategoryAccount::query()
+                            ->where('expense_category_id', $record->expense_category_id)
+                            ->where('user_id', auth()->id())
+                            ->pluck('account_id');
+
+                        $incomeBudget = Income::query()
+                            ->whereIn('account_id', $accountIds)
+                            ->where('is_fluctuating', false)
+                            ->withSum('budgets', 'amount')
+                            ->get()
+                            ->sum('budgets_sum_amount');
+
+                        $incomeBudgetFluctuating = Income::query()
+                            ->whereIn('account_id', $accountIds)
+                            ->where('is_fluctuating', true)
+                            ->with('budgets.histories')
+                            ->get()
+                            ->flatMap(fn (Income $income) => $income->budgets)
+                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
+                            ->sum('amount');
+
+                        $expenseBudget = Expense::query()
+                            ->whereHas('category.accounts', function ($query) use ($accountIds) {
+                                $query->whereIn('account_id', $accountIds);
+                            })
+                            ->withSum('budgets', 'amount')
+                            ->get()
+                            ->sum('budgets_sum_amount');
+
+                        return $incomeBudget + $incomeBudgetFluctuating - $expenseBudget;
+                    })
+                    ->money(),
                 TextColumn::make('allocations.amount')
                     ->label(__('filament-tables::table.columns.text.expense.allocations'))
                     ->getStateUsing(function (Expense $record, Pages\ListExpenses $livewire) {
