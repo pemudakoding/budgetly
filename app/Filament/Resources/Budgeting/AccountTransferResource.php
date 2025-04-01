@@ -1,0 +1,150 @@
+<?php
+
+namespace App\Filament\Resources\Budgeting;
+
+use App\Enums\NavigationGroup;
+use App\Filament\Forms\MoneyInput;
+use App\Filament\Resources\Budgeting\AccountTransferResource\Pages;
+use App\Models\AccountTransfer;
+use App\Models\Expense;
+use App\Models\Income;
+use App\Models\IncomeBudget;
+use App\ValueObjects\Money;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class AccountTransferResource extends Resource
+{
+    protected static ?string $model = AccountTransfer::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $slug = 'transfers';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Budgeting->render();
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('budgetly::pages/transfer.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('budgetly::pages/transfer.title');
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                MoneyInput::make('amount')
+                    ->label(__('budgetly::pages/transfer.amount'))
+                    ->required()
+                    ->hint(function (Get $get) {
+                        $incomeBudget = Income::query()
+                            ->where('account_id', $get('from_account_id'))
+                            ->where('is_fluctuating', false)
+                            ->withSum('budgets', 'amount')
+                            ->get()
+                            ->sum('budgets_sum_amount');
+                        $incomeBudgetFluctuating = Income::query()
+                            ->where('account_id', $get('from_account_id'))
+                            ->where('is_fluctuating', true)
+                            ->with('budgets.histories')
+                            ->get()
+                            ->flatMap(fn (Income $income) => $income->budgets)
+                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
+                            ->sum('amount');
+
+                        $expenseBudget = Expense::query()
+                            ->whereHas('category.accounts', function ($query) use ($get) {
+                                $query->where('account_id', $get('from_account_id'));
+                            })
+                            ->withSum('budgets', 'amount')
+                            ->get()
+                            ->sum('budgets_sum_amount');
+
+                        return __('budgetly::pages/transfer.available_balance', [
+                            'balance' => Money::format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget),
+                        ]);
+                    }),
+                MoneyInput::make('fee')
+                    ->default(0)
+                    ->label(__('budgetly::pages/transfer.fee')),
+                Forms\Components\Select::make('from_account_id')
+                    ->required()
+                    ->live()
+                    ->label(__('budgetly::pages/transfer.from_account'))
+                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('to_account_id'))
+                    ->relationship('fromAccount', 'name'),
+                Forms\Components\Select::make('to_account_id')
+                    ->required()
+                    ->live()
+                    ->label(__('budgetly::pages/transfer.to_account'))
+                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('from_account_id'))
+                    ->relationship('toAccount', 'name'),
+                Forms\Components\TextInput::make('description')
+                    ->label(__('budgetly::pages/transfer.description')),
+                Forms\Components\DateTimePicker::make('trannsfer_date')
+                    ->required()
+                    ->default(now())
+                    ->label(__('budgetly::pages/transfer.transfer_date')),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('fromAccount.name')
+                    ->label(__('budgetly::pages/transfer.from_account')),
+                Tables\Columns\TextColumn::make('toAccount.name')
+                    ->label(__('budgetly::pages/transfer.to_account')),
+                Tables\Columns\TextColumn::make('amount')
+                    ->money()
+                    ->label(__('budgetly::pages/transfer.amount')),
+                Tables\Columns\TextColumn::make('fee')
+                    ->money()
+                    ->label(__('budgetly::pages/transfer.fee')),
+                Tables\Columns\TextColumn::make('description')
+                    ->limit(50)
+                    ->label(__('budgetly::pages/transfer.description')),
+                Tables\Columns\TextColumn::make('transfer_date')
+                    ->dateTime()
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListAccountTransfers::route('/'),
+        ];
+    }
+}
