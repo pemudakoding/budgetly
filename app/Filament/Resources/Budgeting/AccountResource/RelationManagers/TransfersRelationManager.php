@@ -1,54 +1,29 @@
 <?php
 
-namespace App\Filament\Resources\Budgeting;
+namespace App\Filament\Resources\Budgeting\AccountResource\RelationManagers;
 
-use App\Enums\NavigationGroup;
 use App\Filament\Forms\MoneyInput;
-use App\Filament\Resources\Budgeting\AccountTransferResource\Pages;
-use App\Models\AccountTransfer;
 use App\Models\Expense;
 use App\Models\Income;
 use App\Models\IncomeBudget;
-use App\ValueObjects\Money;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class AccountTransferResource extends Resource
+class TransfersRelationManager extends RelationManager
 {
-    protected static ?string $model = AccountTransfer::class;
+    protected static string $relationship = 'transfers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
-
-    protected static ?int $navigationSort = 3;
-
-    protected static ?string $slug = 'transfers';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return NavigationGroup::Budgeting->render();
-    }
-
-    public static function getLabel(): ?string
-    {
-        return __('budgetly::pages/transfer.title');
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('budgetly::pages/transfer.title');
-    }
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
                 MoneyInput::make('amount')
-                    ->label(__('budgetly::pages/transfer.amount'))
                     ->required()
+                    ->label(__('budgetly::pages/transfer.amount'))
                     ->hint(function (Get $get) {
                         $incomeBudget = Income::query()
                             ->where('account_id', $get('from_account_id'))
@@ -73,9 +48,7 @@ class AccountTransferResource extends Resource
                             ->get()
                             ->sum('budgets_sum_amount');
 
-                        return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => Money::format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget),
-                        ]);
+                        return 'Available Balance: Rp. '.number_format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget, 2, ',', '.');
                     }),
                 MoneyInput::make('fee')
                     ->default(0)
@@ -101,7 +74,7 @@ class AccountTransferResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -121,12 +94,17 @@ class AccountTransferResource extends Resource
                 Tables\Columns\TextColumn::make('transfer_date')
                     ->dateTime()
                     ->label(__('budgetly::pages/transfer.transfer_date')),
+
             ])
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -135,17 +113,8 @@ class AccountTransferResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
+    public function isReadOnly(): bool
     {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListAccountTransfers::route('/'),
-        ];
+        return false;
     }
 }

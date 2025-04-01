@@ -10,4 +10,6 @@ return [
     'transfer_date' => 'Tanggal Transfer',
     'available_balance' => 'Saldo Tersedia: Rp. :balance',
     'balance' => 'Saldo',
+    'transfer_account' => 'Transfer Akun: ',
+    'tooltip' => 'Saldo tersedia dihitung dari jumlah semua anggaran pendapatan dan anggaran pendapatan yang fluktuatif dikurangi semua anggaran pengeluaran.',
 ];
