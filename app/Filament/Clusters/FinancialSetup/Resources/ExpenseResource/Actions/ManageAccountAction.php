@@ -84,6 +84,8 @@ class ManageAccountAction extends Action
             $this->process(function (array $data): void {
                 $categories = array_filter($data);
 
+                ExpenseCategoryAccount::query()->where('user_id', auth()->id())->delete();
+
                 foreach ($categories as $category => $accountId) {
                     $categoryId = \App\Models\ExpenseCategory::where('name', $category)->first()->id;
 
@@ -93,8 +95,6 @@ class ManageAccountAction extends Action
                             'expense_category_id' => $categoryId,
                             'account_id' => $id,
                         ];
-
-                        ExpenseCategoryAccount::query()->where('expense_category_id', $categoryId)->delete();
 
                         ExpenseCategoryAccount::query()->create($data);
                     }
