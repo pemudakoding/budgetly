@@ -8,8 +8,9 @@ return [
     'fee' => 'Fee',
     'description' => 'Description',
     'transfer_date' => 'Transfer Date',
-    'available_balance' => 'Available Balance: Rp. :balance',
+    'available_balance' => 'Available Balance: :balance',
     'balance' => 'Balance',
     'transfer_account' => 'Transfer Account: ',
     'tooltip' => 'Available balance is calculated from the sum of all income budgets and fluctuating income budgets minus all expense budgets.',
+    'detail' => 'View Transfer :account\'s details'
 ];

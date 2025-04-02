@@ -2,14 +2,11 @@
 
 namespace App\Filament\Resources\Budgeting;
 
+use App\Concerns\AcccountBalanceCalculation;
 use App\Enums\NavigationGroup;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Resources\Budgeting\AccountTransferResource\Pages;
 use App\Models\AccountTransfer;
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\IncomeBudget;
-use App\ValueObjects\Money;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -19,6 +16,8 @@ use Filament\Tables\Table;
 
 class AccountTransferResource extends Resource
 {
+    use AcccountBalanceCalculation;
+
     protected static ?string $model = AccountTransfer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
@@ -50,31 +49,8 @@ class AccountTransferResource extends Resource
                     ->label(__('budgetly::pages/transfer.amount'))
                     ->required()
                     ->hint(function (Get $get) {
-                        $incomeBudget = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', false)
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-                        $incomeBudgetFluctuating = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', true)
-                            ->with('budgets.histories')
-                            ->get()
-                            ->flatMap(fn (Income $income) => $income->budgets)
-                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
-                            ->sum('amount');
-
-                        $expenseBudget = Expense::query()
-                            ->whereHas('category.accounts', function ($query) use ($get) {
-                                $query->where('account_id', $get('from_account_id'));
-                            })
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
                         return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => Money::format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget),
+                            'balance' => self::calculateRemainingBalance([$get('from_account_id')], true),
                         ]);
                     }),
                 MoneyInput::make('fee')

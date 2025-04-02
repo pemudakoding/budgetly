@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting;
 
+use App\Concerns\AcccountBalanceCalculation;
 use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Forms\MonthSelect;
@@ -20,8 +21,6 @@ use App\Filament\Tables\Columns\ExpenseProgressPercentage;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
 use App\Models\ExpenseCategoryAccount;
-use App\Models\Income;
-use App\Models\IncomeBudget;
 use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -33,6 +32,8 @@ use Filament\Tables\Table;
 
 class ExpenseResource extends Resource
 {
+    use AcccountBalanceCalculation;
+
     protected static ?string $model = Expense::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
@@ -104,31 +105,7 @@ class ExpenseResource extends Resource
                             ->where('user_id', auth()->id())
                             ->pluck('account_id');
 
-                        $incomeBudget = Income::query()
-                            ->whereIn('account_id', $accountIds)
-                            ->where('is_fluctuating', false)
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        $incomeBudgetFluctuating = Income::query()
-                            ->whereIn('account_id', $accountIds)
-                            ->where('is_fluctuating', true)
-                            ->with('budgets.histories')
-                            ->get()
-                            ->flatMap(fn (Income $income) => $income->budgets)
-                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
-                            ->sum('amount');
-
-                        $expenseBudget = Expense::query()
-                            ->whereHas('category.accounts', function ($query) use ($accountIds) {
-                                $query->whereIn('account_id', $accountIds);
-                            })
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        return $incomeBudget + $incomeBudgetFluctuating - $expenseBudget;
+                        return self::calculateRemainingBalance($accountIds->toArray());
                     })
                     ->money(),
                 TextColumn::make('allocations.amount')

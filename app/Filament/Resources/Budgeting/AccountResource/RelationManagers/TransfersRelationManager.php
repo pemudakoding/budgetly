@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\Budgeting\AccountResource\RelationManagers;
 
+use App\Concerns\AcccountBalanceCalculation;
 use App\Filament\Forms\MoneyInput;
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\IncomeBudget;
+use App\Models\Account;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class TransfersRelationManager extends RelationManager
 {
+    use AcccountBalanceCalculation;
+
     protected static string $relationship = 'transfers';
 
     public function form(Form $form): Form
@@ -24,46 +24,27 @@ class TransfersRelationManager extends RelationManager
                 MoneyInput::make('amount')
                     ->required()
                     ->label(__('budgetly::pages/transfer.amount'))
-                    ->hint(function (Get $get) {
-                        $incomeBudget = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', false)
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-                        $incomeBudgetFluctuating = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', true)
-                            ->with('budgets.histories')
-                            ->get()
-                            ->flatMap(fn (Income $income) => $income->budgets)
-                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
-                            ->sum('amount');
+                    ->hint(function () {
+                        /** @var Account $record */
+                        $record = $this->getOwnerRecord();
 
-                        $expenseBudget = Expense::query()
-                            ->whereHas('category.accounts', function ($query) use ($get) {
-                                $query->where('account_id', $get('from_account_id'));
-                            })
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        return 'Available Balance: Rp. '.number_format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget, 2, ',', '.');
+                        return __('budgetly::pages/transfer.available_balance', [
+                            'balance' => self::calculateRemainingBalance([$record->id], true),
+                        ]);
                     }),
                 MoneyInput::make('fee')
                     ->default(0)
                     ->label(__('budgetly::pages/transfer.fee')),
-                Forms\Components\Select::make('from_account_id')
-                    ->required()
-                    ->live()
-                    ->label(__('budgetly::pages/transfer.from_account'))
-                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('to_account_id'))
-                    ->relationship('fromAccount', 'name'),
                 Forms\Components\Select::make('to_account_id')
                     ->required()
                     ->live()
                     ->label(__('budgetly::pages/transfer.to_account'))
-                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('from_account_id'))
+                    ->disableOptionWhen(function (string $value) {
+                        /** @var Account $record */
+                        $record = $this->getOwnerRecord();
+
+                        return $value == $record->id;
+                    })
                     ->relationship('toAccount', 'name'),
                 Forms\Components\TextInput::make('description')
                     ->label(__('budgetly::pages/transfer.description')),
@@ -78,8 +59,6 @@ class TransfersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('fromAccount.name')
-                    ->label(__('budgetly::pages/transfer.from_account')),
                 Tables\Columns\TextColumn::make('toAccount.name')
                     ->label(__('budgetly::pages/transfer.to_account')),
                 Tables\Columns\TextColumn::make('amount')

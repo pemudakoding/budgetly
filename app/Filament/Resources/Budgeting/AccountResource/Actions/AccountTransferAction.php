@@ -2,21 +2,20 @@
 
 namespace App\Filament\Resources\Budgeting\AccountResource\Actions;
 
+use App\Concerns\AcccountBalanceCalculation;
 use App\Filament\Forms\MoneyInput;
 use App\Models\Account;
 use App\Models\AccountTransfer;
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\IncomeBudget;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Tables\Actions\CreateAction;
 
 class AccountTransferAction extends CreateAction
 {
+    use AcccountBalanceCalculation;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,45 +29,18 @@ class AccountTransferAction extends CreateAction
                 MoneyInput::make('amount')
                     ->required()
                     ->label(__('budgetly::pages/transfer.amount'))
-                    ->hint(function (Get $get) {
-                        $incomeBudget = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', false)
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-                        $incomeBudgetFluctuating = Income::query()
-                            ->where('account_id', $get('from_account_id'))
-                            ->where('is_fluctuating', true)
-                            ->with('budgets.histories')
-                            ->get()
-                            ->flatMap(fn (Income $income) => $income->budgets)
-                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
-                            ->sum('amount');
-
-                        $expenseBudget = Expense::query()
-                            ->whereHas('category.accounts', function ($query) use ($get) {
-                                $query->where('account_id', $get('from_account_id'));
-                            })
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        return 'Available Balance: Rp. '.number_format($incomeBudget + $incomeBudgetFluctuating - $expenseBudget, 2, ',', '.');
+                    ->hint(function (Account $record) {
+                        return __('budgetly::pages/transfer.available_balance', [
+                            'balance' => self::calculateRemainingBalance([$record->id], true),
+                        ]);
                     }),
                 MoneyInput::make('fee')
                     ->label(__('budgetly::pages/transfer.fee')),
-                Select::make('from_account_id')
-                    ->required()
-                    ->live()
-                    ->label(__('budgetly::pages/transfer.from_account'))
-                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('to_account_id'))
-                    ->options(Account::pluck('name', 'id')->toArray()),
                 Select::make('to_account_id')
                     ->required()
                     ->live()
                     ->label(__('budgetly::pages/transfer.to_account'))
-                    ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('from_account_id'))
+                    ->disableOptionWhen(fn (string $value, Account $record): bool => $value == $record->id)
                     ->options(Account::pluck('name', 'id')->toArray()),
                 TextInput::make('description')
                     ->label(__('budgetly::pages/transfer.description')),
@@ -79,6 +51,8 @@ class AccountTransferAction extends CreateAction
             ])
             ->modalHeading(fn (?Account $record): string => __('budgetly::pages/transfer.transfer_account').$record?->name)
             ->action(function (array $data, Account $record, AccountTransferAction $action, Form $form, array $arguments): void {
+                $data['from_account_id'] = $record->id;
+
                 AccountTransfer::create($data);
 
                 if ($arguments['another'] ?? false) {

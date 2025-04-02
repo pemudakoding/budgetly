@@ -2,14 +2,12 @@
 
 namespace App\Filament\Resources\Budgeting;
 
+use App\Concerns\AcccountBalanceCalculation;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\AccountResource\Actions\AccountTransferAction;
 use App\Filament\Resources\Budgeting\AccountResource\Pages;
 use App\Filament\Resources\Budgeting\AccountResource\RelationManagers\TransfersRelationManager;
 use App\Models\Account;
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\IncomeBudget;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -18,6 +16,8 @@ use Filament\Tables\Table;
 
 class AccountResource extends Resource
 {
+    use AcccountBalanceCalculation;
+
     protected static ?string $model = Account::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
@@ -60,33 +60,7 @@ class AccountResource extends Resource
                 Tables\Columns\TextColumn::make('balance')
                     ->label(__('filament-tables::table.columns.text.expense.balance'))
                     ->tooltip(__('budgetly::pages/transfer.tooltip'))
-                    ->getStateUsing(function (Account $record) {
-                        $incomeBudget = Income::query()
-                            ->where('account_id', $record->id)
-                            ->where('is_fluctuating', false)
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        $incomeBudgetFluctuating = Income::query()
-                            ->where('account_id', $record->id)
-                            ->where('is_fluctuating', true)
-                            ->with('budgets.histories')
-                            ->get()
-                            ->flatMap(fn (Income $income) => $income->budgets)
-                            ->flatMap(fn (IncomeBudget $budget) => $budget->histories)
-                            ->sum('amount');
-
-                        $expenseBudget = Expense::query()
-                            ->whereHas('category.accounts', function ($query) use ($record) {
-                                $query->where('account_id', $record->id);
-                            })
-                            ->withSum('budgets', 'amount')
-                            ->get()
-                            ->sum('budgets_sum_amount');
-
-                        return $incomeBudget + $incomeBudgetFluctuating - $expenseBudget;
-                    })
+                    ->getStateUsing(fn (Account $record) => self::calculateRemainingBalance([$record->id], true))
                     ->money(),
             ])
             ->filters([
@@ -114,7 +88,7 @@ class AccountResource extends Resource
     {
         return [
             'index' => Pages\ListAccounts::route('/'),
-            'view' => Pages\ViewExpense::route('/{record}'),
+            'view' => Pages\ViewAccount::route('/{record}'),
         ];
     }
 }
