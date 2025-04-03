@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting\AccountResource\Actions;
 
-use App\Concerns\AcccountBalanceCalculation;
+use App\Concerns\AccountBalanceCalculation;
 use App\Filament\Forms\MoneyInput;
 use App\Models\Account;
 use App\Models\AccountTransfer;
@@ -14,7 +14,7 @@ use Filament\Tables\Actions\CreateAction;
 
 class AccountTransferAction extends CreateAction
 {
-    use AcccountBalanceCalculation;
+    use AccountBalanceCalculation;
 
     protected function setUp(): void
     {
@@ -31,7 +31,7 @@ class AccountTransferAction extends CreateAction
                     ->label(__('budgetly::pages/transfer.amount'))
                     ->hint(function (Account $record) {
                         return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => self::calculateRemainingBalance([$record->id], true),
+                            'balance' => self::calculateRemainingBalance($record->id, true),
                         ]);
                     }),
                 MoneyInput::make('fee')

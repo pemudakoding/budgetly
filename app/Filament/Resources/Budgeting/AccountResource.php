@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting;
 
-use App\Concerns\AcccountBalanceCalculation;
+use App\Concerns\AccountBalanceCalculation;
 use App\Enums\NavigationGroup;
 use App\Filament\Resources\Budgeting\AccountResource\Actions\AccountTransferAction;
 use App\Filament\Resources\Budgeting\AccountResource\Pages;
@@ -16,7 +16,7 @@ use Filament\Tables\Table;
 
 class AccountResource extends Resource
 {
-    use AcccountBalanceCalculation;
+    use AccountBalanceCalculation;
 
     protected static ?string $model = Account::class;
 
@@ -60,7 +60,7 @@ class AccountResource extends Resource
                 Tables\Columns\TextColumn::make('balance')
                     ->label(__('filament-tables::table.columns.text.expense.balance'))
                     ->tooltip(__('budgetly::pages/transfer.tooltip'))
-                    ->getStateUsing(fn (Account $record) => self::calculateRemainingBalance([$record->id], true))
+                    ->getStateUsing(fn (Account $record) => self::calculateRemainingBalance($record->id, true))
                     ->money(),
             ])
             ->filters([

@@ -8,7 +8,7 @@ use App\Models\Income;
 use App\Models\IncomeBudget;
 use App\ValueObjects\Money;
 
-trait AcccountBalanceCalculation
+trait AccountBalanceCalculation
 {
     /**
      * Calculate the total non-fluctuating income budget for the given account IDs.
@@ -91,10 +91,14 @@ trait AcccountBalanceCalculation
     /**
      * Calculate the remaining balance after considering income and expense budgets.
      *
-     * @param  array<int|string>  $accountIds
+     * @param  array<int|string>|int|string  $accountIds
      */
-    public static function calculateRemainingBalance(array $accountIds, bool $format = false): float|string
+    public static function calculateRemainingBalance(array|int|string $accountIds, bool $format = false): float|string
     {
+        if (! is_array($accountIds)) {
+            $accountIds = [$accountIds];
+        }
+
         $incomeBudget = self::calculateIncomeBudget($accountIds);
         $fluctuatingIncomeBudget = self::calculateFluctuatingIncomeBudget($accountIds);
         $transferInAccount = self::calculateTransferInAccount($accountIds);

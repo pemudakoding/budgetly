@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting;
 
-use App\Concerns\AcccountBalanceCalculation;
+use App\Concerns\AccountBalanceCalculation;
 use App\Enums\Month;
 use App\Enums\NavigationGroup;
 use App\Filament\Forms\MonthSelect;
@@ -32,7 +32,7 @@ use Filament\Tables\Table;
 
 class ExpenseResource extends Resource
 {
-    use AcccountBalanceCalculation;
+    use AccountBalanceCalculation;
 
     protected static ?string $model = Expense::class;
 
@@ -106,7 +106,7 @@ class ExpenseResource extends Resource
                     ->label(__('filament-tables::table.columns.text.expense.balance'))
                     ->tooltip(__('filament-tables::table.columns.text.expense.tooltip'))
                     ->getStateUsing(function (Expense $record) {
-                        return self::calculateRemainingBalance([$record->account_id]);
+                        return self::calculateRemainingBalance($record->account_id);
                     })
                     ->money(),
                 TextColumn::make('allocations.amount')

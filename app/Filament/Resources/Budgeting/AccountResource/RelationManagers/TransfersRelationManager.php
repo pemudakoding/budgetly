@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting\AccountResource\RelationManagers;
 
-use App\Concerns\AcccountBalanceCalculation;
+use App\Concerns\AccountBalanceCalculation;
 use App\Filament\Forms\MoneyInput;
 use App\Models\Account;
 use Filament\Forms;
@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 
 class TransfersRelationManager extends RelationManager
 {
-    use AcccountBalanceCalculation;
+    use AccountBalanceCalculation;
 
     protected static string $relationship = 'transfers';
 
@@ -29,7 +29,7 @@ class TransfersRelationManager extends RelationManager
                         $record = $this->getOwnerRecord();
 
                         return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => self::calculateRemainingBalance([$record->id], true),
+                            'balance' => self::calculateRemainingBalance($record->id, true),
                         ]);
                     }),
                 MoneyInput::make('fee')

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Budgeting;
 
-use App\Concerns\AcccountBalanceCalculation;
+use App\Concerns\AccountBalanceCalculation;
 use App\Enums\NavigationGroup;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Resources\Budgeting\AccountTransferResource\Pages;
@@ -11,12 +11,13 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class AccountTransferResource extends Resource
 {
-    use AcccountBalanceCalculation;
+    use AccountBalanceCalculation;
 
     protected static ?string $model = AccountTransfer::class;
 
@@ -50,7 +51,7 @@ class AccountTransferResource extends Resource
                     ->required()
                     ->hint(function (Get $get) {
                         return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => self::calculateRemainingBalance([$get('from_account_id')], true),
+                            'balance' => self::calculateRemainingBalance($get('from_account_id'), true),
                         ]);
                     }),
                 MoneyInput::make('fee')
@@ -82,9 +83,13 @@ class AccountTransferResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('fromAccount.name')
-                    ->label(__('budgetly::pages/transfer.from_account')),
+                    ->label(__('budgetly::pages/transfer.from_account'))
+                    ->badge()
+                    ->color(fn (AccountTransfer $record) => Color::hex($record->fromAccount->legend)),
                 Tables\Columns\TextColumn::make('toAccount.name')
-                    ->label(__('budgetly::pages/transfer.to_account')),
+                    ->label(__('budgetly::pages/transfer.to_account'))
+                    ->badge()
+                    ->color(fn (AccountTransfer $record) => Color::hex($record->toAccount->legend)),
                 Tables\Columns\TextColumn::make('amount')
                     ->money()
                     ->label(__('budgetly::pages/transfer.amount')),
