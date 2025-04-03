@@ -35,6 +35,7 @@ class AccountTransferAction extends CreateAction
                         ]);
                     }),
                 MoneyInput::make('fee')
+                    ->default(0)
                     ->label(__('budgetly::pages/transfer.fee')),
                 Select::make('to_account_id')
                     ->required()
@@ -49,8 +50,15 @@ class AccountTransferAction extends CreateAction
                     ->default(now())
                     ->label(__('budgetly::pages/transfer.transfer_date')),
             ])
-            ->modalHeading(fn (?Account $record): string => __('budgetly::pages/transfer.transfer_account').$record?->name)
-            ->action(function (array $data, Account $record, AccountTransferAction $action, Form $form, array $arguments): void {
+            ->modalHeading(fn (?Account $record,
+            ): string => __('budgetly::pages/transfer.transfer_account').$record?->name)
+            ->action(function (
+                array $data,
+                Account $record,
+                AccountTransferAction $action,
+                Form $form,
+                array $arguments,
+            ): void {
                 $data['from_account_id'] = $record->id;
 
                 AccountTransfer::create($data);
@@ -68,7 +76,6 @@ class AccountTransferAction extends CreateAction
 
                 $this->success();
             });
-
     }
 
     public function canCreateAnother(): bool

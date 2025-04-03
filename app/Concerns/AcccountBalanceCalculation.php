@@ -51,9 +51,7 @@ trait AcccountBalanceCalculation
     public static function calculateExpenseBudget(array $accountIds): float
     {
         return Expense::query()
-            ->whereHas('category.accounts', function ($query) use ($accountIds) {
-                $query->whereIn('account_id', $accountIds);
-            })
+            ->whereIn('account_id', $accountIds)
             ->withSum('budgets', 'amount')
             ->get()
             ->sum('budgets_sum_amount');
@@ -84,7 +82,8 @@ trait AcccountBalanceCalculation
         /** @var float $result */
         $result = AccountTransfer::query()
             ->whereIn('from_account_id', $accountIds)
-            ->sum('amount');
+            ->selectRaw('COALESCE(SUM(COALESCE(amount, 0) + COALESCE(fee, 0)), 0) as total')
+            ->value('total');
 
         return $result;
     }

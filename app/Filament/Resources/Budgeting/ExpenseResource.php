@@ -20,10 +20,10 @@ use App\Filament\Tables\Columns\ExpenseProgressBar;
 use App\Filament\Tables\Columns\ExpenseProgressPercentage;
 use App\Models\Builders\ExpenseBuilder;
 use App\Models\Expense;
-use App\Models\ExpenseCategoryAccount;
 use Exception;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -94,18 +94,19 @@ class ExpenseResource extends Resource
                     ->state(fn (Expense $record): string => $record->enumerateCategory->render())
                     ->color(fn (Expense $record): string => $record->enumerateCategory->resolveColor())
                     ->icon(fn (Expense $record): string => $record->enumerateCategory->resolveIcon()),
+                TextColumn::make('account.name')
+                    ->label(__('filament-tables::table.columns.text.income.account'))
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (Expense $record) => Color::hex($record->account->legend)),
                 TextColumn::make('name')
-                    ->label(__('filament-tables::table.columns.text.expense.name')),
+                    ->label(__('filament-tables::table.columns.text.expense.name'))
+                    ->sortable(),
                 TextColumn::make('balance')
                     ->label(__('filament-tables::table.columns.text.expense.balance'))
                     ->tooltip(__('filament-tables::table.columns.text.expense.tooltip'))
                     ->getStateUsing(function (Expense $record) {
-                        $accountIds = ExpenseCategoryAccount::query()
-                            ->where('expense_category_id', $record->expense_category_id)
-                            ->where('user_id', auth()->id())
-                            ->pluck('account_id');
-
-                        return self::calculateRemainingBalance($accountIds->toArray());
+                        return self::calculateRemainingBalance([$record->account_id]);
                     })
                     ->money(),
                 TextColumn::make('allocations.amount')
@@ -115,7 +116,7 @@ class ExpenseResource extends Resource
                             ->allocations()
                             ->wherePeriod(
                                 $livewire->data['year'],
-                                Month::fromNumeric($livewire->data['month'])
+                                Month::fromNumeric($livewire->data['month']),
                             )
                             ->sum('amount');
                     })
@@ -132,7 +133,7 @@ class ExpenseResource extends Resource
                             ->budgets()
                             ->wherePeriod(
                                 $livewire->data['year'],
-                                Month::fromNumeric($livewire->data['month'])
+                                Month::fromNumeric($livewire->data['month']),
                             )
                             ->sum('amount');
                     })
@@ -142,7 +143,8 @@ class ExpenseResource extends Resource
                     ]),
                 TextColumn::make('unrealized_amount')
                     ->label(__('filament-tables::table.columns.text.expense.unrealized_amount'))
-                    ->state(fn (TextColumn $component) => $component->getTable()->getColumn('allocations.amount')->getState() - $component->getTable()->getColumn('budgets.amount')->getState())
+                    ->state(fn (TextColumn $component,
+                    ) => $component->getTable()->getColumn('allocations.amount')->getState() - $component->getTable()->getColumn('budgets.amount')->getState())
                     ->money(),
                 ExpenseProgressBar::make('budgets-bar')
                     ->label(__('filament-tables::table.columns.text.expense.usage_progress')),
@@ -157,14 +159,17 @@ class ExpenseResource extends Resource
                             'record' => $record,
                             'month' => $livewire->data['month'],
                             'year' => $livewire->data['year'],
-                        ]
+                        ],
                     )),
                 ArrangeAllocationAction::make(),
                 QuickExpenseAction::make(),
             ])
             ->groups([
                 Group::make('category.name')
+                    ->label(__('filament-tables::table.grouping.label.category'))
                     ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->render()),
+                Group::make('account.name')
+                    ->label(__('filament-panels::pages/financial-setup.account.title')),
             ])
             ->emptyStateHeading('No Expense created')
             ->emptyStateDescription('Please complete your financial setup first.')

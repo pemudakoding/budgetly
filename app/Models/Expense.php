@@ -27,6 +27,7 @@ class Expense extends Model
         'name',
         'expense_category_id',
         'user_id',
+        'account_id',
     ];
 
     public function newEloquentBuilder($query): ExpenseBuilder
@@ -95,6 +96,17 @@ class Expense extends Model
     {
         return Attribute::make(
             get: fn (): int|float|string => $this->budgets()->sum('amount')
+        );
+    }
+
+    /**
+     * @return BelongsTo<Account, Expense>
+     */
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(
+            Account::class,
+            'account_id'
         );
     }
 }

@@ -57,4 +57,15 @@ class Account extends Model
             'to_account_id',
         );
     }
+
+    /**
+     * @return HasMany<Expense>
+     */
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(
+            Expense::class,
+            'account_id',
+        );
+    }
 }

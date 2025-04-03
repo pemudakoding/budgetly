@@ -10,6 +10,7 @@ use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -49,6 +50,10 @@ class ExpenseResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn (ExpenseCategory $record) => __('budgetly::expense-category.'.str($record->name)->lower()))
                     ->required()
                     ->exists(\App\Models\ExpenseCategory::class, column: 'id'),
+                Forms\Components\Select::make('account_id')
+                    ->label(__('filament-panels::pages/financial-setup.account.title'))
+                    ->relationship('account', 'name')
+                    ->required(),
             ])
             ->columns(1);
     }
@@ -63,6 +68,10 @@ class ExpenseResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament-tables::table.columns.text.expense.name')),
+                Tables\Columns\TextColumn::make('account.name')
+                    ->label(__('filament-panels::pages/financial-setup.account.title'))
+                    ->badge()
+                    ->color(fn (Expense $record) => Color::hex($record->account->legend)),
                 TextColumn::make('category.name')
                     ->label(__('filament-tables::table.columns.text.expense.category'))
                     ->badge()
@@ -85,14 +94,16 @@ class ExpenseResource extends Resource
             ->groups([
                 Tables\Grouping\Group::make('category.name')
                     ->label(__('filament-tables::table.grouping.label.category'))
-                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->value),
+                    ->getTitleFromRecordUsing(fn (Expense $record): string => $record->enumerateCategory->render()),
+                Tables\Grouping\Group::make('account.name')
+                    ->label(__('filament-panels::pages/financial-setup.account.title')),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Pages\ManageExpenses::route('/'),
+            'index' => ExpenseResource\Pages\ManageExpenses::route('/'),
         ];
     }
 }
