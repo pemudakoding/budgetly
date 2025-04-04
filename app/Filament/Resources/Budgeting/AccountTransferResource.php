@@ -7,6 +7,7 @@ use App\Enums\NavigationGroup;
 use App\Filament\Forms\MoneyInput;
 use App\Filament\Resources\Budgeting\AccountTransferResource\Pages;
 use App\Models\AccountTransfer;
+use App\Models\Builders\AccountBuilder;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AccountTransferResource extends Resource
 {
@@ -51,7 +53,7 @@ class AccountTransferResource extends Resource
                     ->required()
                     ->hint(function (Get $get) {
                         return __('budgetly::pages/transfer.available_balance', [
-                            'balance' => self::calculateRemainingBalance($get('from_account_id'), true),
+                            'balance' => self::calculateRemainingBalance($get('from_account_id') ?? [], true),
                         ]);
                     }),
                 MoneyInput::make('fee')
@@ -62,16 +64,24 @@ class AccountTransferResource extends Resource
                     ->live()
                     ->label(__('budgetly::pages/transfer.from_account'))
                     ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('to_account_id'))
-                    ->relationship('fromAccount', 'name'),
+                    ->relationship(
+                        name: 'fromAccount',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
+                    ),
                 Forms\Components\Select::make('to_account_id')
                     ->required()
                     ->live()
                     ->label(__('budgetly::pages/transfer.to_account'))
                     ->disableOptionWhen(fn (string $value, Get $get): bool => $value === $get('from_account_id'))
-                    ->relationship('toAccount', 'name'),
+                    ->relationship(
+                        name: 'toAccount',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
+                    ),
                 Forms\Components\TextInput::make('description')
                     ->label(__('budgetly::pages/transfer.description')),
-                Forms\Components\DateTimePicker::make('trannsfer_date')
+                Forms\Components\DateTimePicker::make('transfer_date')
                     ->required()
                     ->default(now())
                     ->label(__('budgetly::pages/transfer.transfer_date')),
@@ -81,6 +91,10 @@ class AccountTransferResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereHas(
+                relation: 'fromAccount',
+                callback: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
+            ))
             ->columns([
                 Tables\Columns\TextColumn::make('fromAccount.name')
                     ->label(__('budgetly::pages/transfer.from_account'))

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Budgeting\AccountResource\RelationManagers;
 use App\Concerns\AccountBalanceCalculation;
 use App\Filament\Forms\MoneyInput;
 use App\Models\Account;
+use App\Models\Builders\AccountBuilder;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -45,10 +46,14 @@ class TransfersRelationManager extends RelationManager
 
                         return $value == $record->id;
                     })
-                    ->relationship('toAccount', 'name'),
+                    ->relationship(
+                        name: 'toAccount',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
+                    ),
                 Forms\Components\TextInput::make('description')
                     ->label(__('budgetly::pages/transfer.description')),
-                Forms\Components\DateTimePicker::make('trannsfer_date')
+                Forms\Components\DateTimePicker::make('transfer_date')
                     ->required()
                     ->default(now())
                     ->label(__('budgetly::pages/transfer.transfer_date')),

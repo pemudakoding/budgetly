@@ -42,10 +42,10 @@ class AccountTransferAction extends CreateAction
                     ->live()
                     ->label(__('budgetly::pages/transfer.to_account'))
                     ->disableOptionWhen(fn (string $value, Account $record): bool => $value == $record->id)
-                    ->options(Account::pluck('name', 'id')->toArray()),
+                    ->options(Account::whereUserId(auth()->id())->pluck('name', 'id')->toArray()),
                 TextInput::make('description')
                     ->label(__('budgetly::pages/transfer.description')),
-                DateTimePicker::make('trannsfer_date')
+                DateTimePicker::make('transfer_date')
                     ->required()
                     ->default(now())
                     ->label(__('budgetly::pages/transfer.transfer_date')),

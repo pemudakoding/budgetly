@@ -8,6 +8,7 @@ use App\Filament\Resources\Budgeting\AccountResource\Actions\AccountTransferActi
 use App\Filament\Resources\Budgeting\AccountResource\Pages;
 use App\Filament\Resources\Budgeting\AccountResource\RelationManagers\TransfersRelationManager;
 use App\Models\Account;
+use App\Models\Builders\AccountBuilder;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -50,6 +51,7 @@ class AccountResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user()))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('filament-tables::table.columns.text.income.account'))
