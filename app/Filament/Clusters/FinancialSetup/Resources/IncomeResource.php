@@ -6,6 +6,7 @@ use App\Filament\Clusters\FinancialSetup;
 use App\Models\Builders\AccountBuilder;
 use App\Models\Builders\IncomeBuilder;
 use App\Models\Income;
+use App\Models\IncomeBudget;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -53,6 +54,8 @@ class IncomeResource extends Resource
                         modifyQueryUsing: fn (AccountBuilder $query): AccountBuilder => $query->whereOwnedBy(auth()->user())
                     ),
                 Checkbox::make('is_fluctuating')
+                    ->disabled(fn (?Income $record): bool => IncomeBudget::whereIncomeId($record?->getKey())->exists())
+                    ->helperText(__('filament-forms::components.checkbox_list.label.income.fluctuating_helper_text'))
                     ->label(__('filament-forms::components.checkbox_list.label.income.is_fluctuating')),
             ]);
     }

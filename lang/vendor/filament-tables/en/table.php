@@ -38,6 +38,8 @@ return [
                 'unrealized_amount' => 'Unrealized Amount',
                 'usage_progress' => 'Usage Progress',
                 'usage_percentage' => '% Percentage',
+                'balance' => 'Balance',
+                'tooltip' => 'Remaining balance from linked category accounts',
             ],
             'expense_allocations' => [
                 'month' => 'Month',

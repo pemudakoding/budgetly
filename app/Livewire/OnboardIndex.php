@@ -84,7 +84,8 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
                                         ->hintIconTooltip(__('budgetly::pages/onboard.wizard.income.hint.account'))
                                         ->required()
                                         ->options(function (Get $get) {
-                                            $accountsState = array_filter($get('../../accounts'), fn (array $accountState) => $accountState['name'] !== null);
+                                            $accountsState = array_filter($get('../../accounts'),
+                                                fn (array $accountState) => $accountState['name'] !== null);
 
                                             return array_column($accountsState, 'name', 'name');
                                         }),
@@ -111,15 +112,28 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
                                         ->label(__('filament-forms::components.text_input.label.expense.category'))
                                         ->hintIcon('heroicon-o-question-mark-circle')
                                         ->hintIconTooltip(__('budgetly::pages/onboard.wizard.expense.hint.category'))
-                                        ->options(array_map(fn (string $expense) => __('budgetly::expense-category.'.str($expense)->lower()), ExpenseCategory::pluck('name', 'id')->toArray()))
+                                        ->options(array_map(fn (string $expense,
+                                        ) => __('budgetly::expense-category.'.str($expense)->lower()),
+                                            ExpenseCategory::pluck('name', 'id')->toArray()))
                                         ->exists(ExpenseCategory::class, column: 'id'),
+                                    Select::make('account')
+                                        ->label(__('filament-forms::components.text_input.label.income.account'))
+                                        ->hintIcon('heroicon-o-question-mark-circle')
+                                        ->hintIconTooltip(__('budgetly::pages/onboard.wizard.income.hint.account'))
+                                        ->required()
+                                        ->options(function (Get $get) {
+                                            $accountsState = array_filter($get('../../accounts'),
+                                                fn (array $accountState) => $accountState['name'] !== null);
+
+                                            return array_column($accountsState, 'name', 'name');
+                                        }),
                                 ]),
                         ]),
                 ])
                     ->submitAction(
                         Action::make('submit')
                             ->label('Submit')
-                            ->submit('submit')
+                            ->submit('submit'),
                     ),
             ])
             ->model(Auth::user())
@@ -148,22 +162,23 @@ class OnboardIndex extends Page implements HasForms, HasInfolists
         $incomes = array_map($addDateTime, $incomes);
 
         $user->accounts()->upsert($accounts, ['name', 'user_id']);
-        $user->expenses()->upsert($expenses, ['name', 'user_id']);
 
         $accounts = $user->refresh()->accounts->pluck('id', 'name');
 
-        $incomes = array_map(
-            function (array $income) use ($accounts) {
-                $income['account_id'] = $accounts[$income['account']];
+        $setAccountId = function (array $item) use ($accounts): array {
+            $item['account_id'] = $accounts[$item['account']];
 
-                unset($income['account']);
+            unset($item['account']);
 
-                return $income;
-            },
-            $incomes
-        );
+            return $item;
+        };
 
-        $user->incomes()->upsert($incomes, ['name', 'user_id']);
+        $expenses = array_map($setAccountId, $expenses);
+
+        $incomes = array_map($setAccountId, $incomes);
+
+        $user->expenses()->upsert($expenses, ['name', 'user_id', 'account_id']);
+        $user->incomes()->upsert($incomes, ['name', 'user_id', 'account_id']);
 
         Notification::make()
             ->title(__('filament-notifications::common.success'))

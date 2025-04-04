@@ -4,7 +4,7 @@ namespace App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Pages;
 
 use App\Enums\ExpenseCategory;
 use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource;
-use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions\ManageAccountAction;
+//use App\Filament\Clusters\FinancialSetup\Resources\ExpenseResource\Actions\ManageAccountAction;
 use App\Models\Builders\ExpenseBuilder;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
@@ -47,7 +47,7 @@ class ManageExpenses extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            ManageAccountAction::make(),
+            //            ExpenseResource\Actions\ManageAccountAction::make(), // Disabling the account management feature since linking expenses to accounts and categories will be done directly during the expense creation.
             Actions\CreateAction::make()
                 ->using(function (array $data, HasActions $livewire, Actions\CreateAction $action): Model {
                     $data = [

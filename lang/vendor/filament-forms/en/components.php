@@ -111,7 +111,8 @@ return [
         'label' => [
 
             'income' => [
-                'is_fluctuating' => 'Is Fluctuating?'
+                'is_fluctuating' => 'Is Fluctuating?',
+                'fluctuating_helper_text' => 'Once an income has been budgeted, it cannot change its fluctuating status.',
             ],
 
         ],

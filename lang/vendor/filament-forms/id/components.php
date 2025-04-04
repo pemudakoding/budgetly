@@ -59,7 +59,8 @@ return [
         'label' => [
 
             'income' => [
-                'is_fluctuating' => 'Fluktuatif?'
+                'is_fluctuating' => 'Fluktuatif?',
+                'fluctuating_helper_text' => 'Sekali pendapatan telah dialokasikan, tidak dapat mengubah status fluktuatifnya.',
             ],
 
         ],
